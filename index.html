@@ -1,0 +1,1848 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Hedra — Offline Attendance v3</title>
+
+  <!-- Favicon (SVG inline as data URI) -->
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0" stop-color="%232563eb"/>
+        <stop offset="1" stop-color="%2316a34a"/>
+      </linearGradient>
+    </defs>
+    <rect width="512" height="512" rx="120" fill="url(%23g)"/>
+    <circle cx="392" cy="120" r="44" fill="rgba(255,255,255,.18)"/>
+    <path d="M160 140h70v88h52v-88h70v232h-70v-92h-52v92h-70z" fill="white" opacity="0.96"/>
+  </svg>'>
+
+  <style>
+    :root{
+      --bg:#f8fafc;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow:0 14px 26px rgba(15,23,42,.10);
+
+      /* Only 3 colors */
+      --blue:#2563eb;
+      --green:#16a34a;
+      --red:#dc2626;
+
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
+    body{
+      margin:0; color:var(--text);
+      background:
+        radial-gradient(900px 520px at 85% -10%, rgba(37,99,235,.18), transparent 60%),
+        radial-gradient(900px 520px at -10% 10%, rgba(22,163,74,.10), transparent 60%),
+        linear-gradient(180deg, #f8fafc, #ffffff);
+    }
+
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      background:rgba(255,255,255,.88);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+      padding:12px 12px;
+    }
+    .topbar .wrap{
+      max-width:1120px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+
+    .brand{display:flex; align-items:center; gap:10px}
+    .logo{
+      width:52px; height:52px; border-radius:18px;
+      background:linear-gradient(135deg, rgba(37,99,235,.95), rgba(22,163,74,.85));
+      box-shadow:0 12px 22px rgba(15,23,42,.16);
+      display:grid; place-items:center;
+      font-size:20px; font-weight:1000; color:#fff;
+    }
+    .brand .title{font-weight:1000; font-size:15px}
+    .brand .sub{color:var(--muted); font-size:12px; margin-top:2px}
+
+    .nav{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+
+    .btn{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      padding:14px 18px; min-height:60px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      cursor:pointer;
+      font-weight:900;
+      font-size:15px;
+      box-shadow:var(--shadow);
+      transition: transform .08s ease, border-color .12s ease, box-shadow .12s ease;
+      user-select:none;
+      text-decoration:none;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color:#cbd5e1; box-shadow:0 16px 26px rgba(15,23,42,.12); }
+    .btn.small{ min-height:44px; padding:10px 14px; font-size:14px; border-radius:16px; }
+
+    .btn.blue{ border-color:#c7d2fe; background:#eff6ff; color:#1d4ed8; }
+    .btn.green{ border-color:#bbf7d0; background:#ecfdf5; color:#166534; }
+    .btn.red{ border-color:#fecaca; background:#fef2f2; color:#7f1d1d; }
+
+    .iconBtn{
+      min-height:66px;
+      padding:12px 16px;
+      border-radius:18px;
+      display:flex; align-items:center; gap:12px;
+    }
+    .icon{
+      width:52px; height:52px; border-radius:18px;
+      display:grid; place-items:center;
+      font-size:22px;
+      background:rgba(37,99,235,.10);
+      border:1px solid rgba(37,99,235,.18);
+    }
+    .iconBtn .txt{display:flex; flex-direction:column; gap:2px}
+    .iconBtn .txt b{font-size:14px}
+    .iconBtn .txt span{font-size:11px; color:var(--muted)}
+
+    .container{max-width:1120px; margin:0 auto; padding:14px 12px 120px}
+    .grid{display:grid; gap:14px}
+    @media(min-width:980px){ .grid.two{grid-template-columns: 1.15fr .85fr;} }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h2{margin:0 0 6px; font-size:16px}
+    .muted{color:var(--muted); font-size:12px}
+
+    .divider{height:1px; background:rgba(15,23,42,.08); margin:12px 0}
+
+    label{display:block; font-weight:1000; margin:10px 0 6px; font-size:13px}
+    input,select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color:var(--text);
+      outline:none;
+      font-size:15px;
+      min-height:52px;
+    }
+    input::placeholder{color:rgba(100,116,139,.85)}
+    input:focus,select:focus{border-color:rgba(37,99,235,.55)}
+    option{background:#fff}
+
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .row > *{flex:1}
+    .row.compact > *{flex:unset}
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.86);
+      font-weight:1000;
+      font-size:13px;
+      box-shadow:0 10px 18px rgba(15,23,42,.08);
+      user-select:none;
+    }
+    .pill small{font-weight:900; color:var(--muted)}
+    .pill.blue{border-color:#c7d2fe; background:#eff6ff}
+    .pill.red{border-color:#fecaca; background:#fef2f2}
+    .pill.green{border-color:#bbf7d0; background:#ecfdf5}
+
+    .list{display:flex; flex-direction:column; gap:10px}
+
+    .item{
+      display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+      padding:14px;
+      border-radius:20px;
+      border:1px solid rgba(15,23,42,.10);
+      background:rgba(255,255,255,.92);
+      box-shadow:0 10px 18px rgba(15,23,42,.08);
+    }
+    .item .name{font-weight:1100; font-size:15px}
+    .item .meta{color:var(--muted); font-size:12px; margin-top:6px; line-height:1.6}
+    .item .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-start}
+
+    .payBtn{
+      min-width:180px;
+      justify-content:center;
+      font-size:15px;
+      border-radius:18px;
+      min-height:56px;
+    }
+
+    .bottom{
+      position:fixed; left:0; right:0; bottom:0; z-index:60;
+      background:rgba(255,255,255,.88);
+      backdrop-filter: blur(10px);
+      border-top:1px solid var(--border);
+      padding:10px 12px;
+    }
+    .bottom .wrap{
+      max-width:1120px; margin:0 auto;
+      display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+
+    .toast{
+      position:fixed; left:12px; bottom:128px;
+      background:rgba(255,255,255,.96);
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      display:none;
+      max-width:92vw;
+      font-weight:1000;
+    }
+
+    .modalOverlay{
+      position:fixed; inset:0;
+      background:rgba(15,23,42,.45);
+      display:none;
+      z-index:100;
+      padding:16px;
+    }
+    .modal{
+      max-width:560px;
+      margin:7vh auto;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .modal h3{margin:0 0 6px; font-size:16px}
+    .modal .info{color:var(--muted); font-size:13px; line-height:1.7}
+    .modal .bigChoices{display:grid; grid-template-columns:1fr; gap:10px; margin-top:12px}
+    @media(min-width:540px){ .modal .bigChoices{grid-template-columns:1fr 1fr;} }
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace}
+
+    .subCard{
+      margin-top:10px;
+      border:1px dashed rgba(15,23,42,.18);
+      border-radius:18px;
+      padding:12px;
+      background:rgba(255,255,255,.75);
+    }
+    .subCard h4{margin:0 0 6px; font-size:13px}
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo">H</div>
+        <div>
+          <div class="title" data-i18n="appTitle">Hedra — برنامج الحضور والمحاسبة (أوفلاين)</div>
+          <div class="sub" id="todayTop">—</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button class="btn iconBtn blue" id="navRun">
+          <div class="icon">▶️</div>
+          <div class="txt"><b data-i18n="navRun">التشغيل</b><span data-i18n="navRunSub">حضور + دفع</span></div>
+        </button>
+        <button class="btn iconBtn blue" id="navSettings">
+          <div class="icon">⚙️</div>
+          <div class="txt"><b data-i18n="navSettings">الإعدادات</b><span data-i18n="navSettingsSub">مجموعات + طلاب</span></div>
+        </button>
+        <button class="btn iconBtn blue" id="navManage">
+          <div class="icon">🧾</div>
+          <div class="txt"><b data-i18n="navManage">الإدارة</b><span data-i18n="navManageSub">تعديلات يدوية</span></div>
+        </button>
+        <button class="btn iconBtn blue" id="navHome">
+          <div class="icon">🏠</div>
+          <div class="txt"><b data-i18n="navHome">الرئيسية</b><span data-i18n="navHomeSub">ملخص</span></div>
+        </button>
+
+        <a class="btn small green" href="#" id="btnDownloadPack" title="Download PWA package">
+          ⬇️ <span data-i18n="downloadPack">تحميل البرنامج</span>
+        </a>
+
+        <button class="btn small blue" id="btnLang" title="Arabic / English">AR / EN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- HOME -->
+    <section id="pageHome" class="grid two">
+      <div class="card">
+        <h2 data-i18n="groupsTitle">المجموعات</h2>
+        <div class="muted" data-i18n="groupsHint">اختر مجموعة وشاهد ملخص الدورة الحالية</div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <input id="newGroupName" data-i18n-ph="newGroupPh" placeholder="اسم المجموعة الجديدة"/>
+          <button class="btn blue" id="btnAddGroup" data-i18n="addGroupBtn">إضافة مجموعة</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="list" id="groupsList"></div>
+
+        <div class="divider"></div>
+        <div class="row compact" style="gap:10px; flex-wrap:wrap">
+          <button class="btn small blue" id="btnExport" data-i18n="exportBtn">تصدير</button>
+          <button class="btn small blue" id="btnImport" data-i18n="importBtn">استيراد</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="quickSummary">ملخص سريع</h2>
+        <div class="muted" id="homeSelectedGroup">—</div>
+
+        <div class="divider"></div>
+
+        <div class="row compact" style="gap:10px; flex-wrap:wrap">
+          <div class="pill red"><span>📌</span><div data-i18n="totalDebt">إجمالي مديونية</div><small id="homeDebt">0</small></div>
+          <div class="pill green"><span>✅</span><div data-i18n="totalCredit">إجمالي دائن</div><small id="homeCredit">0</small></div>
+          <div class="pill blue"><span>🧾</span><div data-i18n="sessions">حصص</div><small id="homeSessions">0</small></div>
+          <div class="pill blue"><span>🎯</span><div data-i18n="limit">حد الدورة</div><small id="homeLimit">8</small></div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="muted" data-i18n="rulesHint">
+          ✅ كل الطلاب يتحاسبوا على الحصة طالما تابعين للمجموعة (حضر/غاب).<br/>
+          ✅ يدعم دائن/مدين (مقدم/تأخير).<br/>
+          ✅ الدورة مرنة: 4 أو 8 أو 12 (وأي رقم) + تاريخ من/إلى.
+        </div>
+
+        <div class="divider"></div>
+        <div class="muted" id="pwaHint"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="pageSettings" class="grid two" style="display:none">
+      <div class="card">
+        <h2 data-i18n="groupSettings">إعدادات المجموعة</h2>
+        <div class="muted" data-i18n="groupSettingsHint">الاشتراك + عدد الحصص + أيام</div>
+
+        <label data-i18n="chooseGroup">اختر المجموعة</label>
+        <select id="settingsGroupSelect"></select>
+
+        <div class="row">
+          <div>
+            <label data-i18n="subLabel">الاشتراك (سعر الدورة)</label>
+            <input id="price8" type="number" min="0" step="1" placeholder="400"/>
+          </div>
+          <div>
+            <label data-i18n="sessionsDefaultLabel">عدد حصص الدورة</label>
+            <select id="sessionsDefault">
+              <option value="4">4</option>
+              <option value="8">8</option>
+              <option value="12">12</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label data-i18n="roundingLabel">تقريب الحساب</label>
+            <select id="rounding">
+              <option value="0" data-i18n="roundNone">بدون</option>
+              <option value="1" data-i18n="round1">لأقرب 1</option>
+              <option value="0.5" data-i18n="round05">لأقرب 0.5</option>
+            </select>
+          </div>
+          <div>
+            <label data-i18n="blockStartLabel">تاريخ بداية الدورة الجديدة</label>
+            <input id="blockStart" type="date"/>
+          </div>
+        </div>
+
+        <label data-i18n="blockEndLabel">تاريخ نهاية الدورة الجديدة (اختياري)</label>
+        <input id="blockEnd" type="date"/>
+
+        <div class="divider"></div>
+
+        <h2 style="font-size:15px; margin:0 0 6px" data-i18n="daysTitle">أيام الحصص</h2>
+        <div class="row compact" id="daysWrap" style="gap:10px; flex-wrap:wrap"></div>
+
+        <label data-i18n="extraDayLabel">يوم إضافي (اختياري)</label>
+        <select id="extraDaySelect"></select>
+
+        <div class="divider"></div>
+
+        <div class="row compact" style="gap:10px; flex-wrap:wrap">
+          <button class="btn green" id="btnSaveGroupSettings" data-i18n="saveBtn">حفظ</button>
+          <button class="btn blue" id="btnNewBlock" data-i18n="newBlockBtn">فتح دورة جديدة</button>
+          <button class="btn red" id="btnDeleteGroup" data-i18n="deleteGroupBtn">حذف</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="muted" data-i18n="newBlockHint">
+          فتح دورة جديدة = دورة بتاريخ + عدد حصص مرن. (الرصيد دائن/مدين محفوظ تلقائيًا).
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="studentsTitle">الطلاب</h2>
+        <div class="muted" data-i18n="studentsHint">إضافة طلاب + خصم/إعفاء عربي (اختياري) + إيقاف</div>
+
+        <div class="row">
+          <input id="newStudentName" data-i18n-ph="newStudentPh" placeholder="اسم الطالب"/>
+          <button class="btn blue" id="btnAddStudent" data-i18n="addBtn">إضافة</button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="list" id="studentsSettingsList"></div>
+      </div>
+    </section>
+
+    <!-- MANAGE -->
+    <section id="pageManage" class="grid two" style="display:none">
+      <div class="card">
+        <h2 data-i18n="manageTitle">الإدارة</h2>
+        <div class="muted" data-i18n="manageHint">تعديل رصيد الطالب + ملاحظات</div>
+
+        <label data-i18n="chooseGroup">اختر المجموعة</label>
+        <select id="manageGroupSelect"></select>
+
+        <div class="row">
+          <div>
+            <label data-i18n="chooseBlock">اختر الدورة</label>
+            <select id="manageMonthSelect"></select>
+          </div>
+          <div>
+            <label data-i18n="searchLabel">بحث</label>
+            <input id="manageSearch" data-i18n-ph="searchPh" placeholder="بحث باسم الطالب..."/>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="list" id="manageList"></div>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="helpTitle">مساعدة</h2>
+        <div class="muted" data-i18n="helpText">
+          - الحساب على الحصة لكل الطلاب (حضر/غاب).<br/>
+          - الدفع يرفع رصيد الطالب (قد يصبح دائن).<br/>
+          - التثبيت كـ App يحتاج فتحه عبر http/https وليس file://.
+        </div>
+      </div>
+    </section>
+
+    <!-- RUN -->
+    <section id="pageRun" class="grid" style="display:none">
+      <div class="card">
+        <div class="row.compact" style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap">
+          <div>
+            <h2 style="margin:0" data-i18n="runTitle">التشغيل</h2>
+            <div class="muted" id="runHeader">—</div>
+          </div>
+          <div class="row compact" style="gap:10px; align-items:center; flex-wrap:wrap">
+            <select id="runGroupSelect" style="min-width:260px"></select>
+            <select id="monthSelect" style="min-width:220px"></select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row compact" style="gap:10px; flex-wrap:wrap">
+          <button class="btn blue" id="btnAddSession" data-i18n="addSessionBtn">تسجيل حصة</button>
+          <button class="btn red" id="btnCancelSession" data-i18n="cancelLastSessionBtn">إلغاء آخر حصة</button>
+          <button class="btn blue" id="btnNextBlock" data-i18n="openNewBlockBtn">فتح دورة جديدة</button>
+          <div class="pill blue"><span>🎯</span><div data-i18n="blockLimit">حد الدورة</div><small id="runLimit">8</small></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <input id="searchStudent" data-i18n-ph="searchPh" placeholder="بحث باسم الطالب..."/>
+          <select id="filterStudents">
+            <option value="all" data-i18n="filterAll">الكل</option>
+            <option value="debt" data-i18n="filterDebt">مدين</option>
+            <option value="credit" data-i18n="filterCredit">دائن</option>
+            <option value="paused" data-i18n="filterPaused">متوقف</option>
+          </select>
+        </div>
+
+        <div class="divider"></div>
+        <div class="list" id="studentsRunList"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom">
+    <div class="wrap">
+      <div class="pill"><span>📅</span><div class="mono" id="todayBottom">—</div></div>
+      <div class="pill blue"><span>👥</span><div data-i18n="group">المجموعة</div><small id="barGroup">—</small></div>
+      <div class="pill blue"><span>🗓️</span><div data-i18n="block">الدورة</div><small id="barMonth">—</small></div>
+      <div class="pill red"><span>📌</span><div data-i18n="totalDebt">مدين</div><small id="barDebt">0</small></div>
+      <div class="pill green"><span>✅</span><div data-i18n="totalCredit">دائن</div><small id="barCredit">0</small></div>
+      <div class="pill blue"><span>🧾</span><div data-i18n="sessions">حصص</div><small id="barSessions">0</small></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Pay Modal -->
+  <div class="modalOverlay" id="payModalOverlay">
+    <div class="modal">
+      <h3 id="payModalTitle">—</h3>
+      <div class="info" id="payModalInfo">—</div>
+
+      <div class="bigChoices">
+        <button class="btn green" id="btnPayAll" data-i18n="payAllBtn">تصفير المديونية</button>
+        <button class="btn blue" id="btnPayPart" data-i18n="payPartBtn">دفع مبلغ</button>
+      </div>
+
+      <div class="row compact" style="gap:10px; margin-top:12px; flex-wrap:wrap">
+        <button class="btn small blue" id="btnPayClose" data-i18n="closeBtn">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   Hedra v3 — Offline Attendance + Accounting (Charge per session for all students)
+   - Every student is charged per session (present/absent)
+   - Flexible block sessions limit (4/8/12/any)
+   - Block label by date range
+   - Student balance supports credit/debt (advance payments / unpaid blocks)
+   - Arabic discount UI (optional)
+   - Auto-save
+========================================================= */
+
+const DB_KEY_V3 = "hedra_attendance_blocks_v3";
+const DB_KEY_OLD = "hedra_attendance_blocks_v2";
+
+/* ---------- i18n ---------- */
+const I18N = {
+  ar: {
+    appTitle: "Hedra — برنامج الحضور والمحاسبة (v3 أوفلاين)",
+    navRun:"التشغيل", navRunSub:"حصة + دفع",
+    navSettings:"الإعدادات", navSettingsSub:"مجموعات + طلاب",
+    navManage:"الإدارة", navManageSub:"تعديلات",
+    navHome:"الرئيسية", navHomeSub:"ملخص",
+    downloadPack:"تحميل البرنامج",
+
+    groupsTitle:"المجموعات", groupsHint:"اختر مجموعة وشاهد ملخص الدورة الحالية",
+    newGroupPh:"اسم المجموعة الجديدة", addGroupBtn:"إضافة مجموعة",
+    exportBtn:"تصدير", importBtn:"استيراد",
+
+    quickSummary:"ملخص سريع",
+    totalDebt:"إجمالي مديونية",
+    totalCredit:"إجمالي دائن",
+    sessions:"حصص",
+    limit:"حد الدورة",
+    rulesHint:"",
+
+    groupSettings:"إعدادات المجموعة", groupSettingsHint:"الاشتراك + عدد الحصص + أيام",
+    chooseGroup:"اختر المجموعة",
+    subLabel:"الاشتراك (سعر الدورة)",
+    sessionsDefaultLabel:"عدد حصص الدورة",
+    roundingLabel:"تقريب الحساب",
+    roundNone:"بدون", round1:"لأقرب 1", round05:"لأقرب 0.5",
+    blockStartLabel:"تاريخ بداية الدورة الجديدة",
+    blockEndLabel:"تاريخ نهاية الدورة الجديدة (اختياري)",
+    daysTitle:"أيام الحصص",
+    extraDayLabel:"يوم إضافي (اختياري)",
+    saveBtn:"حفظ",
+    newBlockBtn:"فتح دورة جديدة",
+    deleteGroupBtn:"حذف",
+    newBlockHint:"فتح دورة جديدة = دورة بتاريخ + عدد حصص مرن.",
+
+    studentsTitle:"الطلاب",
+    studentsHint:"إضافة طلاب + خصم/إعفاء عربي (اختياري) + إيقاف",
+    newStudentPh:"اسم الطالب",
+    addBtn:"إضافة",
+
+    discountTitle:"الخصم/الإعفاء (اختياري)",
+    discountType:"النوع",
+    discountNone:"بدون",
+    discountPercent:"خصم نسبة",
+    discountFixed:"خصم مبلغ",
+    discountExempt:"إعفاء كامل",
+    discountValue:"القيمة",
+    balanceLabel:"الرصيد",
+    credit:"دائن",
+    debt:"مدين",
+    paused:"متوقف",
+    resume:"تشغيل",
+    pause:"إيقاف",
+    delete:"حذف",
+
+    manageTitle:"الإدارة",
+    manageHint:"تعديل رصيد الطالب + ملاحظات",
+    chooseBlock:"اختر الدورة",
+    searchLabel:"بحث",
+    searchPh:"بحث باسم الطالب...",
+
+    helpTitle:"مساعدة",
+    helpText:"- الحساب على الحصة لكل الطلاب (حضر/غاب).<br/>- الدفع يرفع رصيد الطالب (قد يصبح دائن).<br/>- التثبيت كـ App يحتاج فتحه عبر http/https وليس file://.",
+
+    runTitle:"التشغيل",
+    addSessionBtn:"تسجيل حصة",
+    cancelLastSessionBtn:"إلغاء آخر حصة",
+    openNewBlockBtn:"فتح دورة جديدة",
+    blockLimit:"حد الدورة",
+
+    filterAll:"الكل",
+    filterDebt:"مدين",
+    filterCredit:"دائن",
+    filterPaused:"متوقف",
+
+    group:"المجموعة",
+    block:"الدورة",
+
+    payAllBtn:"تصفير المديونية",
+    payPartBtn:"دفع مبلغ",
+    closeBtn:"إغلاق",
+
+    confirmDeleteGroup:"حذف المجموعة؟ اكتب DELETE للتأكيد",
+    confirmDeleteStudent:"حذف الطالب؟ اكتب DELETE للتأكيد",
+    enterGroupName:"اكتب اسم المجموعة",
+    enterStudentName:"اكتب اسم الطالب",
+    groupExists:"المجموعة موجودة بالفعل",
+    studentExists:"الطالب موجود بالفعل",
+    noGroups:"لا توجد مجموعات. أضف مجموعة جديدة.",
+    chooseGroupFirst:"اختر مجموعة.",
+    noStudents:"لا يوجد طلاب.",
+    imported:"تم الاستيراد",
+    exported:"تم التصدير",
+    saved:"تم الحفظ",
+    addedGroup:"تمت إضافة المجموعة",
+    deletedGroup:"تم حذف المجموعة",
+    addedStudent:"تمت إضافة الطالب",
+    deletedStudent:"تم حذف الطالب",
+    sessionAdded:"تم تسجيل حصة (وتم التحميل على كل الطلاب)",
+    sessionCancelled:"تم إلغاء الحصة",
+    noSessionsToCancel:"لا توجد حصص لإلغائها",
+    payRecorded:"تم تسجيل دفع",
+    notValidAmount:"اكتب مبلغ صحيح أكبر من صفر",
+    pwaHint:"ملاحظة: للتثبيت كـ App افتح البرنامج عبر http/https (مثلاً localhost) ثم اضغط «تحميل البرنامج».",
+    packDone:"تم تحميل ملفات البرنامج. ضعها في فولدر واحد وافتحها على سيرفر (localhost)."
+  },
+
+  en: {
+    appTitle: "Hedra — Offline Attendance (v3)",
+    navRun:"Run", navRunSub:"Session + Pay",
+    navSettings:"Settings", navSettingsSub:"Groups + Students",
+    navManage:"Manage", navManageSub:"Edits",
+    navHome:"Home", navHomeSub:"Summary",
+    downloadPack:"Download App",
+
+    groupsTitle:"Groups", groupsHint:"Pick a group and see current block summary",
+    newGroupPh:"New group name", addGroupBtn:"Add Group",
+    exportBtn:"Export", importBtn:"Import",
+
+    quickSummary:"Quick Summary",
+    totalDebt:"Total Debt",
+    totalCredit:"Total Credit",
+    sessions:"Sessions",
+    limit:"Block limit",
+
+    groupSettings:"Group Settings", groupSettingsHint:"Subscription + sessions + days",
+    chooseGroup:"Choose group",
+    subLabel:"Subscription (block price)",
+    sessionsDefaultLabel:"Sessions per block",
+    roundingLabel:"Rounding",
+    roundNone:"None", round1:"Nearest 1", round05:"Nearest 0.5",
+    blockStartLabel:"New block start date",
+    blockEndLabel:"New block end date (optional)",
+    daysTitle:"Session days",
+    extraDayLabel:"Extra day (optional)",
+    saveBtn:"Save",
+    newBlockBtn:"Open new block",
+    deleteGroupBtn:"Delete",
+    newBlockHint:"New block = date range + flexible session count.",
+
+    studentsTitle:"Students",
+    studentsHint:"Add students + Arabic discount UI + pause",
+    newStudentPh:"Student name",
+    addBtn:"Add",
+
+    discountTitle:"Discount/Exempt (optional)",
+    discountType:"Type",
+    discountNone:"None",
+    discountPercent:"Percent",
+    discountFixed:"Fixed amount",
+    discountExempt:"Exempt",
+    discountValue:"Value",
+    balanceLabel:"Balance",
+    credit:"Credit",
+    debt:"Debt",
+    paused:"Paused",
+    resume:"Resume",
+    pause:"Pause",
+    delete:"Delete",
+
+    manageTitle:"Manage",
+    manageHint:"Edit student balance + notes",
+    chooseBlock:"Choose block",
+    searchLabel:"Search",
+    searchPh:"Search student name...",
+
+    helpTitle:"Help",
+    helpText:"- Each session charges all students (present/absent).<br/>- Payments increase balance (can become credit).<br/>- Install as App requires http/https (not file://).",
+
+    runTitle:"Run",
+    addSessionBtn:"Add session",
+    cancelLastSessionBtn:"Cancel last",
+    openNewBlockBtn:"Open new block",
+    blockLimit:"Block limit",
+
+    filterAll:"All",
+    filterDebt:"Debt",
+    filterCredit:"Credit",
+    filterPaused:"Paused",
+
+    group:"Group",
+    block:"Block",
+
+    payAllBtn:"Clear debt",
+    payPartBtn:"Pay amount",
+    closeBtn:"Close",
+
+    confirmDeleteGroup:"Delete group? Type DELETE to confirm",
+    confirmDeleteStudent:"Delete student? Type DELETE to confirm",
+    enterGroupName:"Enter group name",
+    enterStudentName:"Enter student name",
+    groupExists:"Group already exists",
+    studentExists:"Student already exists",
+    noGroups:"No groups yet. Add a new group.",
+    chooseGroupFirst:"Choose a group.",
+    noStudents:"No students.",
+    imported:"Imported",
+    exported:"Exported",
+    saved:"Saved",
+    addedGroup:"Group added",
+    deletedGroup:"Group deleted",
+    addedStudent:"Student added",
+    deletedStudent:"Student deleted",
+    sessionAdded:"Session added (charged to all students)",
+    sessionCancelled:"Session cancelled",
+    noSessionsToCancel:"No sessions to cancel",
+    payRecorded:"Payment saved",
+    notValidAmount:"Enter a valid amount > 0",
+    pwaHint:"Note: To install as App, open via http/https (localhost) then click “Download App”.",
+    packDone:"Downloaded app files. Put them in one folder and open via a local server (localhost)."
+  }
+};
+
+let LANG = localStorage.getItem("hedra_lang") || "ar";
+function T(k){ return (I18N[LANG] && I18N[LANG][k]) ? I18N[LANG][k] : k; }
+
+function applyI18N(){
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = (LANG==="ar") ? "rtl" : "ltr";
+
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    el.innerHTML = T(key);
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
+    const key = el.getAttribute("data-i18n-ph");
+    el.placeholder = T(key);
+  });
+
+  renderToday();
+  document.getElementById("pwaHint").textContent = T("pwaHint");
+}
+
+/* ---------- Days ---------- */
+const DAYS = [
+  { key:"sat", ar:"السبت", en:"Sat" }, { key:"sun", ar:"الأحد", en:"Sun" }, { key:"mon", ar:"الاثنين", en:"Mon" },
+  { key:"tue", ar:"الثلاثاء", en:"Tue" }, { key:"wed", ar:"الأربعاء", en:"Wed" }, { key:"thu", ar:"الخميس", en:"Thu" }, { key:"fri", ar:"الجمعة", en:"Fri" },
+];
+function dayName(k){
+  const d = DAYS.find(x=>x.key===k);
+  if(!d) return k;
+  return (LANG==="ar") ? d.ar : d.en;
+}
+
+/* ---------- Utils ---------- */
+function uid(prefix="id"){ return prefix+"_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
+function nowISO(){ return new Date().toISOString(); }
+function todayKey(){ return ["sun","mon","tue","wed","thu","fri","sat"][new Date().getDay()]; }
+function todayISODate(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function formatDate(d){
+  const locale = (LANG==="ar") ? "ar-EG" : "en-US";
+  return d.toLocaleDateString(locale,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+}
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;
+  t.style.display="block";
+  clearTimeout(toast._timer);
+  toast._timer=setTimeout(()=>t.style.display="none",2400);
+}
+function renderToday(){
+  const top=document.getElementById("todayTop");
+  const bot=document.getElementById("todayBottom");
+  const s = formatDate(new Date());
+  top.textContent=s; bot.textContent=s;
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+function fmtMoney(n){
+  const x=Number(n||0);
+  if(Math.abs(x - Math.round(x)) < 1e-9) return String(Math.round(x));
+  return (Math.round(x*100)/100).toString();
+}
+
+/* ---------- Safe delete + auto backup ---------- */
+function autoBackup(){
+  try{ localStorage.setItem("hedra_backup_"+Date.now(), JSON.stringify(db)); }catch{}
+}
+function safeDelete(promptText){
+  const v = prompt(promptText);
+  return v === "DELETE";
+}
+
+/* ---------- DB (v3) ---------- */
+let db = { groups: [], settings: { currentGroupId:"" } };
+
+function loadDB(){
+  const raw=localStorage.getItem(DB_KEY_V3);
+  if(raw){
+    try{
+      const parsed=JSON.parse(raw);
+      if(parsed && typeof parsed==="object") db=parsed;
+    }catch{}
+    return;
+  }
+
+  // Migration from v2 if exists
+  const old=localStorage.getItem(DB_KEY_OLD);
+  if(old){
+    try{
+      const parsed=JSON.parse(old);
+      if(parsed && typeof parsed==="object"){
+        db=parsed;
+        // We'll convert to v3 shape in normalize()
+      }
+    }catch{}
+  }
+}
+function saveDB(){ localStorage.setItem(DB_KEY_V3, JSON.stringify(db)); }
+
+function newBlockObject(label, sessionsLimit=8, startDate="", endDate=""){
+  return {
+    id:uid("b"),
+    label,
+    createdAt: nowISO(),
+    sessionsLimit,
+    startDate,
+    endDate,
+    sessions: [],        // sessions list
+    payments: {},        // per student id total payments (for reports)
+    charges: {},         // per student id total charges (for reports)
+    notes: {},           // per student notes
+    closed: false
+  };
+}
+function defaultBlockLabel(startISO, endISO, limit){
+  const s = startISO || todayISODate();
+  const e = endISO || "—";
+  return (LANG==="ar") ? `${s} → ${e} (${limit} حصص)` : `${s} → ${e} (${limit} sessions)`;
+}
+
+/* ---------- Normalize + v2->v3 conversion ---------- */
+function normalize(){
+  let changed=false;
+
+  if(!db || typeof db!=="object"){ db={groups:[],settings:{currentGroupId:""}}; changed=true; }
+  if(!Array.isArray(db.groups)) { db.groups=[]; changed=true; }
+  if(!db.settings) { db.settings={currentGroupId:""}; changed=true; }
+
+  db.groups.forEach(g=>{
+    if(!g.id){ g.id=uid("g"); changed=true; }
+    if(typeof g.name!=="string") g.name=(LANG==="ar")?"مجموعة":"Group";
+    if(typeof g.price8!=="number"){ g.price8=Number(g.price8||0); changed=true; } // price8 is now "subscription"
+    if(typeof g.rounding!=="number"){ g.rounding=Number(g.rounding||0); changed=true; }
+    if(typeof g.sessionsDefault!=="number"){ g.sessionsDefault=Number(g.sessionsDefault||8); changed=true; }
+    if(!Array.isArray(g.days)){ g.days=[]; changed=true; }
+    if(typeof g.extraDay!=="string"){ g.extraDay=""; changed=true; }
+    if(!Array.isArray(g.students)){ g.students=[]; changed=true; }
+    if(!Array.isArray(g.blocks)){ g.blocks=[]; changed=true; }
+
+    g.students.forEach(s=>{
+      if(!s.id){ s.id=uid("s"); changed=true; }
+      if(typeof s.name!=="string") s.name=(LANG==="ar")?"طالب":"Student";
+      if(!s.discountType){ s.discountType="none"; changed=true; }
+      if(typeof s.discountValue!=="number"){ s.discountValue=Number(s.discountValue||0); changed=true; }
+      if(typeof s.paused!=="boolean"){ s.paused=false; changed=true; }
+      if(typeof s.balance!=="number"){
+        // v2 => try to derive some balance: we can't perfectly, so start at 0
+        s.balance = Number(s.balance||0);
+        changed=true;
+      }
+    });
+
+    if(g.blocks.length===0){
+      const start=todayISODate();
+      const limit=Number(g.sessionsDefault||8);
+      g.blocks.push(newBlockObject(defaultBlockLabel(start,"",limit), limit, start, ""));
+      changed=true;
+    }
+
+    g.blocks.forEach((b,idx)=>{
+      if(!b.id){ b.id=uid("b"); changed=true; }
+      if(typeof b.sessionsLimit!=="number") { b.sessionsLimit=Number(b.sessionsLimit||g.sessionsDefault||8); changed=true; }
+      if(typeof b.startDate!=="string") { b.startDate=b.startDate||""; changed=true; }
+      if(typeof b.endDate!=="string") { b.endDate=b.endDate||""; changed=true; }
+      if(!b.label){ b.label=defaultBlockLabel(b.startDate,b.endDate,b.sessionsLimit); changed=true; }
+      if(!Array.isArray(b.sessions)){ b.sessions=[]; changed=true; }
+      if(!b.payments || typeof b.payments!=="object"){ b.payments={}; changed=true; }
+      if(!b.charges || typeof b.charges!=="object"){ b.charges={}; changed=true; }
+      if(!b.notes || typeof b.notes!=="object"){ b.notes={}; changed=true; }
+      if(typeof b.closed!=="boolean"){ b.closed=false; changed=true; }
+
+      // v2 sessions had {att, cancelled}; v3 keeps only cancelled; keep compatibility
+      b.sessions.forEach(ss=>{
+        if(!ss.id){ ss.id=uid("ss"); changed=true; }
+        if(typeof ss.ts!=="string"){ ss.ts=nowISO(); changed=true; }
+        if(typeof ss.dayKey!=="string"){ ss.dayKey=todayKey(); changed=true; }
+        if(typeof ss.cancelled!=="boolean"){ ss.cancelled=false; changed=true; }
+      });
+
+      // Ensure charges/payments keys exist for all students
+      g.students.forEach(s=>{
+        if(b.payments[s.id]===undefined) b.payments[s.id]=Number(b.payments[s.id]||0);
+        if(b.charges[s.id]===undefined) b.charges[s.id]=Number(b.charges[s.id]||0);
+      });
+
+      // auto-label if looks like old month label
+      if(idx===g.blocks.length-1 && (!b.startDate && !b.endDate)){
+        // keep as-is, user can start using date labels from now
+      }
+    });
+  });
+
+  if(!db.settings.currentGroupId && db.groups[0]){ db.settings.currentGroupId=db.groups[0].id; changed=true; }
+  if(changed) saveDB();
+}
+
+function getGroup(id){ return db.groups.find(g=>g.id===id) || null; }
+function currentGroup(){ return getGroup(db.settings.currentGroupId) || db.groups[0] || null; }
+function groupBlock(group, blockId){ return group.blocks.find(b=>b.id===blockId) || null; }
+
+/* ---------- Money ---------- */
+function roundMoney(g, amount){
+  const r=Number(g.rounding||0);
+  if(!r) return Math.round(amount*100)/100;
+  return Math.round(amount/r)*r;
+}
+function activeSessions(b){ return (b.sessions||[]).filter(ss=>!ss.cancelled); }
+function perSessionPrice(g, b){
+  const limit = Number(b.sessionsLimit || g.sessionsDefault || 8);
+  const sub = Number(g.price8||0);
+  return roundMoney(g, sub / Math.max(1,limit));
+}
+function sessionCharge(g, b, student){
+  if(student.paused) return 0;
+  const base = perSessionPrice(g, b);
+  const t = student.discountType || "none";
+  const v = Number(student.discountValue || 0);
+
+  if(t === "exempt") return 0;
+
+  if(t === "percent"){
+    const p = Math.max(0, Math.min(100, v));
+    return roundMoney(g, base * (1 - p/100));
+  }
+
+  if(t === "fixed"){
+    const limit = Number(b.sessionsLimit || g.sessionsDefault || 8);
+    const offPer = Math.max(0, v) / Math.max(1,limit);
+    return roundMoney(g, Math.max(0, base - offPer));
+  }
+
+  return roundMoney(g, base);
+}
+
+function studentBalanceInfo(g, s){
+  const bal = roundMoney(g, Number(s.balance||0));
+  const debt = Math.max(0, -bal);
+  const credit = Math.max(0, bal);
+  return { balance: bal, debt: roundMoney(g,debt), credit: roundMoney(g,credit) };
+}
+
+function groupBalanceTotals(g){
+  let debt=0, credit=0;
+  g.students.forEach(s=>{
+    const bi = studentBalanceInfo(g,s);
+    debt += bi.debt;
+    credit += bi.credit;
+  });
+  return { debt: roundMoney(g,debt), credit: roundMoney(g,credit) };
+}
+
+/* ---------- Pages ---------- */
+const pageHome = document.getElementById("pageHome");
+const pageSettings = document.getElementById("pageSettings");
+const pageRun = document.getElementById("pageRun");
+const pageManage = document.getElementById("pageManage");
+
+function showPage(p){
+  pageHome.style.display = (p==="home") ? "" : "none";
+  pageSettings.style.display = (p==="settings") ? "" : "none";
+  pageRun.style.display = (p==="run") ? "" : "none";
+  pageManage.style.display = (p==="manage") ? "" : "none";
+  renderAll();
+}
+document.getElementById("navHome").onclick=()=>showPage("home");
+document.getElementById("navSettings").onclick=()=>showPage("settings");
+document.getElementById("navRun").onclick=()=>showPage("run");
+document.getElementById("navManage").onclick=()=>showPage("manage");
+
+/* ---------- Language toggle ---------- */
+document.getElementById("btnLang").onclick=()=>{
+  LANG = (LANG==="ar") ? "en" : "ar";
+  localStorage.setItem("hedra_lang", LANG);
+  applyI18N();
+  buildDaysUI();
+  renderAll();
+};
+
+/* ---------- Export / Import ---------- */
+document.getElementById("btnExport").onclick=()=>{
+  const data=JSON.stringify(db,null,2);
+  const blob=new Blob([data],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="Hedra_Backup_v3.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast(T("exported"));
+};
+
+document.getElementById("btnImport").onclick=()=>{
+  const inp=document.createElement("input");
+  inp.type="file"; inp.accept="application/json";
+  inp.onchange=()=>{
+    const f=inp.files?.[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const parsed=JSON.parse(r.result);
+        if(!parsed || typeof parsed!=="object") throw new Error();
+        autoBackup();
+        db=parsed;
+        if(!db.settings) db.settings={currentGroupId:""};
+        if(!Array.isArray(db.groups)) db.groups=[];
+        saveDB(); normalize(); toast(T("imported")); renderAll();
+      }catch{ alert("Invalid file"); }
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+};
+
+/* ---------- HOME: groups ---------- */
+document.getElementById("btnAddGroup").onclick=()=>{
+  const name=(document.getElementById("newGroupName").value||"").trim();
+  if(!name) return alert(T("enterGroupName"));
+  if(db.groups.some(g=>g.name.trim().toLowerCase()===name.toLowerCase())) return alert(T("groupExists"));
+
+  const start=todayISODate();
+  const g={ id:uid("g"), name, price8:0, sessionsDefault:8, rounding:0, days:[], extraDay:"", students:[], blocks:[ newBlockObject(defaultBlockLabel(start,"",8),8,start,"") ] };
+  db.groups.push(g);
+  db.settings.currentGroupId=g.id;
+  document.getElementById("newGroupName").value="";
+  saveDB(); toast(T("addedGroup")); renderAll();
+};
+
+function setText(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+
+function renderGroupsHome(){
+  const wrap=document.getElementById("groupsList");
+  wrap.innerHTML="";
+  if(!db.groups.length){
+    wrap.innerHTML=`<div class="muted">${escapeHtml(T("noGroups"))}</div>`;
+    return;
+  }
+  db.groups.forEach(g=>{
+    const cur = g.blocks[g.blocks.length-1];
+    const bi = groupBalanceTotals(g);
+    const ss = activeSessions(cur).length;
+    const limit = Number(cur.sessionsLimit || g.sessionsDefault || 8);
+
+    const it=document.createElement("div");
+    it.className="item";
+    it.innerHTML=`
+      <div>
+        <div class="name">👥 ${escapeHtml(g.name)}</div>
+        <div class="meta">
+          ${escapeHtml(T("block"))}: <b>${escapeHtml(cur.label)}</b><br/>
+          🧾 ${escapeHtml(T("sessions"))}: <b>${ss}/${limit}</b> • 💵 <b>${fmtMoney(perSessionPrice(g,cur))}</b><br/>
+          📌 ${escapeHtml(T("totalDebt"))}: <b style="color:var(--red)">${fmtMoney(bi.debt)}</b> •
+          ✅ ${escapeHtml(T("totalCredit"))}: <b style="color:var(--green)">${fmtMoney(bi.credit)}</b>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn small blue" data-a="select">${LANG==="ar"?"اختيار":"Select"}</button>
+        <button class="btn small blue" data-a="settings">⚙️</button>
+        <button class="btn small blue" data-a="manage">🧾</button>
+        <button class="btn small blue" data-a="run">▶️</button>
+      </div>
+    `;
+    it.querySelector('[data-a="select"]').onclick=()=>{ db.settings.currentGroupId=g.id; saveDB(); toast(LANG==="ar"?"تم اختيار المجموعة":"Group selected"); renderAll(); };
+    it.querySelector('[data-a="settings"]').onclick=()=>{ db.settings.currentGroupId=g.id; saveDB(); showPage("settings"); };
+    it.querySelector('[data-a="manage"]').onclick=()=>{ db.settings.currentGroupId=g.id; saveDB(); showPage("manage"); };
+    it.querySelector('[data-a="run"]').onclick=()=>{ db.settings.currentGroupId=g.id; saveDB(); showPage("run"); };
+    wrap.appendChild(it);
+  });
+}
+
+function renderHomeKPIs(){
+  const g=currentGroup();
+  const label=document.getElementById("homeSelectedGroup");
+  if(!g){
+    label.textContent="—";
+    setText("homeDebt","0"); setText("homeCredit","0"); setText("homeSessions","0"); setText("homeLimit","8");
+    return;
+  }
+  const cur=g.blocks[g.blocks.length-1];
+  const bi = groupBalanceTotals(g);
+  const ss=activeSessions(cur).length;
+  const limit = Number(cur.sessionsLimit || g.sessionsDefault || 8);
+
+  label.textContent = `Hedra • 👥 ${g.name} • 🗓️ ${cur.label}`;
+  setText("homeDebt", fmtMoney(bi.debt));
+  setText("homeCredit", fmtMoney(bi.credit));
+  setText("homeSessions", String(ss));
+  setText("homeLimit", String(limit));
+}
+
+/* ---------- SETTINGS: days UI ---------- */
+function buildDaysUI(){
+  const wrap=document.getElementById("daysWrap");
+  const extra=document.getElementById("extraDaySelect");
+  wrap.innerHTML="";
+  extra.innerHTML=`<option value="">—</option>`;
+  DAYS.forEach(d=>{
+    const lab=document.createElement("label");
+    lab.style.display="inline-flex";
+    lab.style.alignItems="center";
+    lab.style.gap="8px";
+    lab.style.margin="0 0 8px 10px";
+    lab.style.padding="8px 12px";
+    lab.style.borderRadius="999px";
+    lab.style.border="1px solid rgba(15,23,42,.10)";
+    lab.style.background="rgba(255,255,255,.90)";
+    lab.innerHTML=`<input type="checkbox" class="dayCB" value="${d.key}"> ${(LANG==="ar")?d.ar:d.en}`;
+    wrap.appendChild(lab);
+
+    const opt=document.createElement("option");
+    opt.value=d.key; opt.textContent=(LANG==="ar")?d.ar:d.en;
+    extra.appendChild(opt);
+  });
+}
+
+/* ---------- Selects ---------- */
+function refreshSelects(){
+  const selS=document.getElementById("settingsGroupSelect");
+  const selR=document.getElementById("runGroupSelect");
+  const selMG=document.getElementById("manageGroupSelect");
+
+  selS.innerHTML=""; selR.innerHTML=""; selMG.innerHTML="";
+  if(!db.groups.length){
+    const o=document.createElement("option");
+    o.value=""; o.textContent=(LANG==="ar")?"لا توجد مجموعات":"No groups";
+    selS.appendChild(o);
+    selR.appendChild(o.cloneNode(true));
+    selMG.appendChild(o.cloneNode(true));
+    return;
+  }
+  db.groups.forEach(g=>{
+    const o1=document.createElement("option"); o1.value=g.id; o1.textContent=g.name; selS.appendChild(o1);
+    const o2=document.createElement("option"); o2.value=g.id; o2.textContent=g.name; selR.appendChild(o2);
+    const o3=document.createElement("option"); o3.value=g.id; o3.textContent=g.name; selMG.appendChild(o3);
+  });
+
+  const cg=currentGroup() || db.groups[0];
+  db.settings.currentGroupId=cg?.id || "";
+  selS.value=db.settings.currentGroupId;
+  selR.value=db.settings.currentGroupId;
+  selMG.value=db.settings.currentGroupId;
+}
+document.getElementById("settingsGroupSelect").addEventListener("change",(e)=>{ db.settings.currentGroupId=e.target.value; saveDB(); renderAll(); });
+document.getElementById("runGroupSelect").addEventListener("change",(e)=>{ db.settings.currentGroupId=e.target.value; saveDB(); renderAll(); });
+document.getElementById("manageGroupSelect").addEventListener("change",(e)=>{ db.settings.currentGroupId=e.target.value; saveDB(); renderAll(); });
+
+/* ---------- Settings load/save ---------- */
+function loadSettings(){
+  const g=currentGroup(); if(!g) return;
+  document.getElementById("price8").value=g.price8||0;
+  document.getElementById("sessionsDefault").value=String(g.sessionsDefault||8);
+  document.getElementById("rounding").value=String(g.rounding||0);
+  document.querySelectorAll(".dayCB").forEach(cb=>{ cb.checked=(g.days||[]).includes(cb.value); });
+  document.getElementById("extraDaySelect").value=g.extraDay||"";
+  // default block start date
+  if(!document.getElementById("blockStart").value) document.getElementById("blockStart").value = todayISODate();
+}
+
+document.getElementById("btnSaveGroupSettings").onclick=()=>{
+  const g=currentGroup(); if(!g) return alert(T("chooseGroupFirst"));
+  g.price8=Number(document.getElementById("price8").value||0);
+  g.sessionsDefault=Number(document.getElementById("sessionsDefault").value||8);
+  g.rounding=Number(document.getElementById("rounding").value||0);
+  g.days=Array.from(document.querySelectorAll(".dayCB")).filter(x=>x.checked).map(x=>x.value);
+  g.extraDay=document.getElementById("extraDaySelect").value||"";
+  saveDB(); toast(T("saved")); renderAll();
+};
+
+document.getElementById("btnDeleteGroup").onclick=()=>{
+  const g=currentGroup(); if(!g) return;
+  if(!safeDelete(T("confirmDeleteGroup"))) return;
+  autoBackup();
+  db.groups=db.groups.filter(x=>x.id!==g.id);
+  db.settings.currentGroupId=db.groups[0]?.id || "";
+  saveDB(); toast(T("deletedGroup")); renderAll();
+};
+
+/* ---------- Students ---------- */
+document.getElementById("btnAddStudent").onclick=()=>{
+  const g=currentGroup(); if(!g) return alert(T("chooseGroupFirst"));
+  const name=(document.getElementById("newStudentName").value||"").trim();
+  if(!name) return alert(T("enterStudentName"));
+  if(g.students.some(s=>s.name.trim().toLowerCase()===name.toLowerCase())) return alert(T("studentExists"));
+
+  g.students.push({ id:uid("s"), name, discountType:"none", discountValue:0, paused:false, balance:0 });
+  document.getElementById("newStudentName").value="";
+  saveDB(); toast(T("addedStudent")); renderAll();
+};
+
+function renderStudentsSettings(){
+  const g=currentGroup();
+  const wrap=document.getElementById("studentsSettingsList");
+  wrap.innerHTML="";
+  if(!g){ wrap.innerHTML=`<div class="muted">${escapeHtml(T("chooseGroupFirst"))}</div>`; return; }
+  if(!g.students.length){ wrap.innerHTML=`<div class="muted">${escapeHtml(T("noStudents"))}</div>`; return; }
+
+  g.students.slice().sort((a,b)=>a.name.localeCompare(b.name, LANG==="ar"?"ar":"en")).forEach(s=>{
+    const bi = studentBalanceInfo(g,s);
+
+    const it=document.createElement("div");
+    it.className="item";
+    it.innerHTML=`
+      <div style="flex:1">
+        <div class="name">
+          👤 ${escapeHtml(s.name)}
+          ${s.paused?` <span class="pill red" style="padding:4px 10px">${escapeHtml(T("paused"))}</span>`:""}
+        </div>
+        <div class="meta">
+          ${escapeHtml(T("balanceLabel"))}:
+          ${bi.balance>=0
+            ? `<b style="color:var(--green)">${escapeHtml(T("credit"))} ${fmtMoney(bi.credit)}</b>`
+            : `<b style="color:var(--red)">${escapeHtml(T("debt"))} ${fmtMoney(bi.debt)}</b>`}
+        </div>
+
+        <div class="subCard">
+          <h4>🧩 ${escapeHtml(T("discountTitle"))}</h4>
+          <div class="row">
+            <div>
+              <label>${escapeHtml(T("discountType"))}</label>
+              <select data-k="dtype">
+                <option value="none">${escapeHtml(T("discountNone"))}</option>
+                <option value="percent">${escapeHtml(T("discountPercent"))}</option>
+                <option value="fixed">${escapeHtml(T("discountFixed"))}</option>
+                <option value="exempt">${escapeHtml(T("discountExempt"))}</option>
+              </select>
+            </div>
+            <div>
+              <label>${escapeHtml(T("discountValue"))}</label>
+              <input data-k="dval" type="number" min="0" step="1" placeholder="0"/>
+            </div>
+          </div>
+          <div class="muted">${LANG==="ar" ? "الخصم يُطبق على قيمة الحصة تلقائيًا." : "Discount is applied per session automatically."}</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn small blue" data-a="pause">${s.paused?escapeHtml(T("resume")):escapeHtml(T("pause"))}</button>
+        <button class="btn small red" data-a="del">${escapeHtml(T("delete"))}</button>
+      </div>
+    `;
+
+    const selType = it.querySelector('[data-k="dtype"]');
+    const inpVal  = it.querySelector('[data-k="dval"]');
+    selType.value = s.discountType || "none";
+    inpVal.value  = Number(s.discountValue||0);
+
+    function syncDiscountUI(){
+      const t = selType.value;
+      inpVal.disabled = (t==="none" || t==="exempt");
+      inpVal.style.opacity = inpVal.disabled ? "0.6" : "1";
+    }
+    syncDiscountUI();
+
+    selType.onchange=()=>{
+      s.discountType = selType.value;
+      if(s.discountType==="none" || s.discountType==="exempt") s.discountValue = 0;
+      saveDB(); syncDiscountUI(); renderAll();
+    };
+    inpVal.oninput=()=>{
+      s.discountValue = Number(inpVal.value||0);
+      saveDB(); // auto save
+    };
+
+    it.querySelector('[data-a="pause"]').onclick=()=>{
+      s.paused=!s.paused;
+      saveDB(); toast(s.paused?(LANG==="ar"?"تم إيقاف الطالب":"Paused"):(LANG==="ar"?"تم تشغيل الطالب":"Resumed")); renderAll();
+    };
+
+    it.querySelector('[data-a="del"]').onclick=()=>{
+      if(!safeDelete(T("confirmDeleteStudent"))) return;
+      autoBackup();
+      // Remove from blocks report maps
+      g.blocks.forEach(b=>{
+        delete b.payments[s.id];
+        delete b.charges[s.id];
+        delete b.notes[s.id];
+      });
+      g.students=g.students.filter(x=>x.id!==s.id);
+      saveDB(); toast(T("deletedStudent")); renderAll();
+    };
+
+    wrap.appendChild(it);
+  });
+}
+
+/* ---------- Blocks ---------- */
+function createNextBlock(group){
+  const cur = group.blocks[group.blocks.length-1];
+  const act = activeSessions(cur).length;
+  const limit = Number(cur.sessionsLimit || group.sessionsDefault || 8);
+
+  if(act > 0 && act < limit){
+    const ok = confirm((LANG==="ar")
+      ? `الدورة الحالية بها ${act}/${limit} حصص. فتح دورة جديدة؟`
+      : `Current block has ${act}/${limit} sessions. Open new block?`);
+    if(!ok) return;
+  }
+
+  autoBackup();
+  cur.closed = true;
+
+  const start = document.getElementById("blockStart")?.value || todayISODate();
+  const end = document.getElementById("blockEnd")?.value || "";
+  const newLimit = Number(group.sessionsDefault || 8);
+  const label = defaultBlockLabel(start, end, newLimit);
+
+  const b = newBlockObject(label, newLimit, start, end);
+
+  // init maps
+  group.students.forEach(s=>{
+    b.payments[s.id]=0;
+    b.charges[s.id]=0;
+  });
+
+  group.blocks.push(b);
+  saveDB(); toast(LANG==="ar" ? "تم فتح دورة جديدة" : "New block opened"); renderAll();
+}
+document.getElementById("btnNewBlock").onclick=()=>{ const g=currentGroup(); if(!g) return; createNextBlock(g); };
+document.getElementById("btnNextBlock").onclick=()=>{ const g=currentGroup(); if(!g) return; createNextBlock(g); };
+
+/* ---------- RUN: block select ---------- */
+function refreshBlockSelect(){
+  const g=currentGroup();
+  const runSel=document.getElementById("monthSelect");
+  const manageSel=document.getElementById("manageMonthSelect");
+  if(!g) return;
+
+  const runPrev = runSel.value;
+  const managePrev = manageSel.value;
+
+  runSel.innerHTML="";
+  manageSel.innerHTML="";
+
+  const blocks=[...g.blocks];
+  blocks.forEach((b,idx)=>{
+    const limit = Number(b.sessionsLimit || g.sessionsDefault || 8);
+    const ss = activeSessions(b).length;
+    const text = `${b.label}${idx===blocks.length-1?(LANG==="ar"?" (الحالي)":" (current)"):""}${b.closed?(LANG==="ar"?" • مغلق":" • closed"):""} • ${ss}/${limit}`;
+
+    const o=document.createElement("option");
+    o.value=b.id; o.textContent=text;
+    runSel.appendChild(o);
+
+    const o2=document.createElement("option");
+    o2.value=b.id; o2.textContent=text;
+    manageSel.appendChild(o2);
+  });
+
+  const newestId = blocks[blocks.length-1]?.id || "";
+  runSel.value = blocks.some(x=>x.id===runPrev) ? runPrev : newestId;
+  manageSel.value = blocks.some(x=>x.id===managePrev) ? managePrev : newestId;
+}
+document.getElementById("monthSelect").addEventListener("change",()=>renderAll());
+
+function currentRunBlock(group){
+  const bid=document.getElementById("monthSelect")?.value;
+  if(bid){
+    const b=groupBlock(group, bid);
+    if(b) return b;
+  }
+  return group.blocks[group.blocks.length-1] || null;
+}
+
+/* ---------- RUN header ---------- */
+function renderRunHeader(){
+  const g=currentGroup();
+  const b = g ? currentRunBlock(g) : null;
+  const el=document.getElementById("runHeader");
+  if(!g||!b){ el.textContent="—"; return; }
+  const ss=activeSessions(b).length;
+  const limit = Number(b.sessionsLimit || g.sessionsDefault || 8);
+  document.getElementById("runLimit").textContent = String(limit);
+  el.innerHTML =
+    `👥 <b>${escapeHtml(g.name)}</b> • 🗓️ <b>${escapeHtml(b.label)}</b> • 🧾 <b>${ss}/${limit}</b> • 💵 <b>${fmtMoney(perSessionPrice(g,b))}</b>`;
+}
+
+/* ---------- sessions: charge all students ---------- */
+document.getElementById("btnAddSession").onclick=()=>{
+  const g=currentGroup(); if(!g) return alert(T("chooseGroupFirst"));
+  const b=currentRunBlock(g); if(!b) return;
+
+  const count = activeSessions(b).length;
+  const limit = Number(b.sessionsLimit || g.sessionsDefault || 8);
+
+  if(count >= limit){
+    const ok = confirm(LANG==="ar" ? `اكتملت ${limit} حصص. فتح دورة جديدة؟` : `${limit} sessions complete. Open new block?`);
+    if(ok) createNextBlock(g);
+    return;
+  }
+
+  const k=todayKey();
+  const isRegular=(g.days||[]).includes(k);
+  if(!isRegular){
+    const msg = (LANG==="ar")
+      ? `اليوم (${dayName(k)}) ليس من أيام المجموعة.\nهل تريد تسجيل الحصة؟`
+      : `Today (${dayName(k)}) is not a group day.\nAdd session anyway?`;
+    if(!confirm(msg)) return;
+  }
+
+  autoBackup();
+
+  b.sessions.push({ id:uid("ss"), ts:nowISO(), dayKey:k, cancelled:false });
+
+  // Charge every student (present/absent)
+  g.students.forEach(s=>{
+    const charge = sessionCharge(g, b, s);
+    s.balance = roundMoney(g, Number(s.balance||0) - charge); // debt increases (more negative)
+    b.charges[s.id] = roundMoney(g, Number(b.charges[s.id]||0) + charge);
+  });
+
+  saveDB(); toast(T("sessionAdded")); renderAll();
+};
+
+document.getElementById("btnCancelSession").onclick=()=>{
+  const g=currentGroup(); if(!g) return;
+  const b=currentRunBlock(g); if(!b) return;
+  const last=[...b.sessions].reverse().find(ss=>!ss.cancelled);
+  if(!last){ toast(T("noSessionsToCancel")); return; }
+  if(!confirm(LANG==="ar"?"إلغاء آخر حصة؟ (سيتم إرجاع التحميل من جميع الطلاب)":"Cancel last session? (refund charges from all students)")) return;
+  autoBackup();
+  last.cancelled=true;
+
+  // Refund: subtract the same session charge from each student and from charges map
+  g.students.forEach(s=>{
+    const refund = sessionCharge(g, b, s);
+    s.balance = roundMoney(g, Number(s.balance||0) + refund);
+    b.charges[s.id] = roundMoney(g, Math.max(0, Number(b.charges[s.id]||0) - refund));
+  });
+
+  saveDB(); toast(T("sessionCancelled")); renderAll();
+};
+
+document.getElementById("searchStudent").addEventListener("input",()=>renderStudentsRun());
+document.getElementById("filterStudents").addEventListener("change",()=>renderStudentsRun());
+
+/* ---------- Pay Modal (balance-based) ---------- */
+let payCtx=null;
+const payOverlay=document.getElementById("payModalOverlay");
+const payTitle=document.getElementById("payModalTitle");
+const payInfo=document.getElementById("payModalInfo");
+
+function openPayModal(group, block, student){
+  const bi = studentBalanceInfo(group, student);
+  const limit = Number(block.sessionsLimit || group.sessionsDefault || 8);
+  const ss = activeSessions(block).length;
+
+  const blockCharge = roundMoney(group, Number(block.charges?.[student.id]||0));
+  const blockPaid = roundMoney(group, Number(block.payments?.[student.id]||0));
+  const blockRemain = roundMoney(group, Math.max(0, blockCharge - blockPaid));
+
+  payCtx={group, block, student};
+
+  payTitle.textContent = `${LANG==="ar"?"دفع":"Payment"} — ${student.name}`;
+  payInfo.innerHTML =
+    `${LANG==="ar"?"الدورة":"Block"}: <b>${escapeHtml(block.label)}</b><br/>` +
+    `${LANG==="ar"?"حصص مسجلة":"Sessions logged"}: <b>${ss}/${limit}</b> • ` +
+    `${LANG==="ar"?"قيمة الحصة":"Per session"}: <b>${fmtMoney(perSessionPrice(group,block))}</b><br/>` +
+    `${LANG==="ar"?"مستحق هذه الدورة":"This block due"}: <b>${fmtMoney(blockCharge)}</b> • ` +
+    `${LANG==="ar"?"مدفوع هذه الدورة":"This block paid"}: <b>${fmtMoney(blockPaid)}</b> • ` +
+    `${LANG==="ar"?"متبقي هذه الدورة":"This block remaining"}: <b style="color:${blockRemain>0?'var(--red)':'var(--green)'}">${fmtMoney(blockRemain)}</b><br/><br/>` +
+    `${LANG==="ar"?"الرصيد الإجمالي":"Overall balance"}: ` +
+    (bi.balance>=0
+      ? `<b style="color:var(--green)">${escapeHtml(T("credit"))} ${fmtMoney(bi.credit)}</b>`
+      : `<b style="color:var(--red)">${escapeHtml(T("debt"))} ${fmtMoney(bi.debt)}</b>`) +
+    `<div class="muted" style="margin-top:8px">${LANG==="ar" ? "الدفع قد يجعل الطالب دائن (مقدم) وهذا طبيعي." : "Payment can create credit (advance) — normal."}</div>`;
+
+  payOverlay.style.display="block";
+}
+function closePayModal(){ payOverlay.style.display="none"; payCtx=null; }
+document.getElementById("btnPayClose").onclick=closePayModal;
+payOverlay.addEventListener("click",(e)=>{ if(e.target===payOverlay) closePayModal(); });
+
+document.getElementById("btnPayAll").onclick=()=>{
+  if(!payCtx) return;
+  const {group, block, student}=payCtx;
+
+  const bi = studentBalanceInfo(group, student);
+  if(bi.debt<=0){ toast(LANG==="ar"?"لا توجد مديونية":"No debt"); closePayModal(); renderAll(); return; }
+
+  autoBackup();
+  const amt = bi.debt;
+  student.balance = roundMoney(group, Number(student.balance||0) + amt);
+  block.payments[student.id] = roundMoney(group, Number(block.payments[student.id]||0) + amt);
+
+  saveDB(); toast(T("payRecorded")); closePayModal(); renderAll();
+};
+
+document.getElementById("btnPayPart").onclick=()=>{
+  if(!payCtx) return;
+  const {group, block, student}=payCtx;
+
+  const v=prompt(LANG==="ar"?"اكتب مبلغ الدفع":"Enter amount", "0");
+  if(v===null) return;
+  const amt=roundMoney(group, Number(v||0));
+  if(!(amt>0)) return alert(T("notValidAmount"));
+
+  autoBackup();
+  student.balance = roundMoney(group, Number(student.balance||0) + amt);
+  block.payments[student.id] = roundMoney(group, Number(block.payments[student.id]||0) + amt);
+
+  saveDB(); toast(T("payRecorded")); closePayModal(); renderAll();
+};
+
+/* ---------- RUN Students (Minimal) ---------- */
+function renderStudentsRun(){
+  const g=currentGroup();
+  const wrap=document.getElementById("studentsRunList");
+  wrap.innerHTML="";
+  if(!g){ wrap.innerHTML=`<div class="muted">${escapeHtml(T("chooseGroupFirst"))}</div>`; return; }
+  const b=currentRunBlock(g);
+  if(!b){ wrap.innerHTML=`<div class="muted">—</div>`; return; }
+
+  const q=(document.getElementById("searchStudent").value||"").trim().toLowerCase();
+  const filter=document.getElementById("filterStudents").value;
+
+  const list=g.students
+    .filter(s=>s.name.toLowerCase().includes(q))
+    .filter(s=>{
+      const bi = studentBalanceInfo(g,s);
+      if(filter==="debt") return bi.debt>0;
+      if(filter==="credit") return bi.credit>0;
+      if(filter==="paused") return !!s.paused;
+      return true;
+    })
+    .sort((a,b)=>a.name.localeCompare(b.name, LANG==="ar"?"ar":"en"));
+
+  if(!list.length){ wrap.innerHTML=`<div class="muted">${LANG==="ar"?"لا يوجد نتائج":"No results"}</div>`; return; }
+
+  const ssCount = activeSessions(b).length;
+  const limit = Number(b.sessionsLimit || g.sessionsDefault || 8);
+
+  list.forEach(s=>{
+    const bi = studentBalanceInfo(g,s);
+    const isClear = bi.debt<=0;
+    const remainingColor = (bi.debt>0) ? "var(--red)" : "var(--green)";
+
+    const it=document.createElement("div");
+    it.className="item";
+    it.innerHTML=`
+      <div>
+        <div class="name">
+          👤 ${escapeHtml(s.name)}
+          ${s.paused?` <span class="pill red" style="padding:4px 10px">${escapeHtml(T("paused"))}</span>`:""}
+          ${bi.credit>0?` <span class="pill green" style="padding:4px 10px">${escapeHtml(T("credit"))} ${fmtMoney(bi.credit)}</span>`:""}
+        </div>
+        <div class="meta">
+          ${(LANG==="ar"?"المتبقي":"Remaining")}: <b style="color:${remainingColor}">${fmtMoney(bi.debt)}</b>
+          <span class="mono"> • ${ssCount}/${limit}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn ${isClear?'green':'red'} payBtn">
+          ${isClear ? (LANG==="ar"?"تم":"Done") : (LANG==="ar"?"دفع":"Pay")}
+        </button>
+      </div>
+    `;
+    it.querySelector(".payBtn").onclick=()=>openPayModal(g,b,s);
+    wrap.appendChild(it);
+  });
+}
+
+/* ---------- MANAGE: adjust balance & notes (safe) ---------- */
+document.getElementById("manageMonthSelect").addEventListener("change", ()=>renderManage());
+document.getElementById("manageSearch").addEventListener("input", ()=>renderManage());
+
+function currentManageBlock(group){
+  const bid=document.getElementById("manageMonthSelect")?.value;
+  if(bid){
+    const b=groupBlock(group, bid);
+    if(b) return b;
+  }
+  return group.blocks[group.blocks.length-1] || null;
+}
+function renderManage(){
+  const g=currentGroup();
+  const wrap=document.getElementById("manageList");
+  wrap.innerHTML="";
+  if(!g){ wrap.innerHTML=`<div class="muted">${escapeHtml(T("chooseGroupFirst"))}</div>`; return; }
+  const b=currentManageBlock(g);
+  if(!b){ wrap.innerHTML=`<div class="muted">—</div>`; return; }
+
+  const q=(document.getElementById("manageSearch").value||"").trim().toLowerCase();
+
+  const list=g.students
+    .filter(s=>s.name.toLowerCase().includes(q))
+    .sort((a,b)=>a.name.localeCompare(b.name, LANG==="ar"?"ar":"en"));
+
+  if(!list.length){ wrap.innerHTML=`<div class="muted">${LANG==="ar"?"لا يوجد نتائج":"No results"}</div>`; return; }
+
+  list.forEach(s=>{
+    const bi = studentBalanceInfo(g,s);
+    const blockCharge = roundMoney(g, Number(b.charges?.[s.id]||0));
+    const blockPaid = roundMoney(g, Number(b.payments?.[s.id]||0));
+
+    const it=document.createElement("div");
+    it.className="item";
+    it.innerHTML=`
+      <div>
+        <div class="name">🧾 ${escapeHtml(s.name)}</div>
+        <div class="meta">
+          ${escapeHtml(T("block"))}: <b>${escapeHtml(b.label)}</b><br/>
+          ${LANG==="ar"?"مستحق هذه الدورة":"This block due"}: <b>${fmtMoney(blockCharge)}</b> •
+          ${LANG==="ar"?"مدفوع هذه الدورة":"This block paid"}: <b>${fmtMoney(blockPaid)}</b><br/>
+          ${escapeHtml(T("balanceLabel"))}:
+          ${bi.balance>=0
+            ? `<b style="color:var(--green)">${escapeHtml(T("credit"))} ${fmtMoney(bi.credit)}</b>`
+            : `<b style="color:var(--red)">${escapeHtml(T("debt"))} ${fmtMoney(bi.debt)}</b>`}
+          <br/>
+          ${LANG==="ar"?"ملاحظة":"Note"}: <span class="mono">${escapeHtml(b.notes?.[s.id] || "")}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn small blue" data-a="bal">${LANG==="ar"?"تعديل الرصيد":"Edit balance"}</button>
+        <button class="btn small blue" data-a="note">${LANG==="ar"?"ملاحظة":"Note"}</button>
+      </div>
+    `;
+
+    it.querySelector('[data-a="bal"]').onclick=()=>{
+      const cur = String(Number(s.balance||0));
+      const v = prompt(LANG==="ar" ? "اكتب الرصيد الجديد (موجب=دائن، سالب=مدين)" : "Enter new balance (positive=credit, negative=debt)", cur);
+      if(v===null) return;
+      const amt = roundMoney(g, Number(v||0));
+      if(!Number.isFinite(amt)) return alert("Invalid");
+      autoBackup();
+      s.balance = amt;
+      saveDB(); toast(T("saved")); renderAll(); showPage("manage");
+    };
+
+    it.querySelector('[data-a="note"]').onclick=()=>{
+      const cur = b.notes?.[s.id] || "";
+      const v = prompt(LANG==="ar"?"ملاحظة لهذا الطالب":"Note for this student", cur);
+      if(v===null) return;
+      autoBackup();
+      b.notes[s.id]=String(v);
+      saveDB(); toast(T("saved")); renderAll(); showPage("manage");
+    };
+
+    wrap.appendChild(it);
+  });
+}
+
+/* ---------- Bottom bar ---------- */
+function renderBottomBar(){
+  const g=currentGroup();
+  if(!g){
+    setText("barGroup","—"); setText("barMonth","—"); setText("barDebt","0"); setText("barCredit","0"); setText("barSessions","0");
+    return;
+  }
+  const b=currentRunBlock(g);
+  const curLabel = b ? b.label : "—";
+  const ss = b ? activeSessions(b).length : 0;
+  const bi = groupBalanceTotals(g);
+
+  setText("barGroup", g.name);
+  setText("barMonth", curLabel);
+  setText("barDebt", fmtMoney(bi.debt));
+  setText("barCredit", fmtMoney(bi.credit));
+  setText("barSessions", String(ss));
+}
+
+/* ---------- Render all ---------- */
+function renderAll(){
+  normalize();
+  refreshSelects();
+  refreshBlockSelect();
+  loadSettings();
+
+  renderGroupsHome();
+  renderHomeKPIs();
+
+  renderStudentsSettings();
+  renderRunHeader();
+  renderStudentsRun();
+  renderManage();
+
+  renderBottomBar();
+}
+
+/* ---------- Init ---------- */
+(function init(){
+  loadDB();
+  normalize();
+  buildDaysUI();
+  applyI18N();
+  renderToday();
+  setInterval(renderToday, 60000);
+  showPage("home");
+})();
+
+/* =========================================================
+   Download Pack (PWA): generates manifest.json + sw.js + icon.png
+========================================================= */
+function iconSvgString(){
+  return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#16a34a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#g)"/>
+  <circle cx="392" cy="120" r="44" fill="rgba(255,255,255,.18)"/>
+  <path d="M160 140h70v88h52v-88h70v232h-70v-92h-52v92h-70z" fill="white" opacity="0.96"/>
+</svg>`.trim();
+}
+
+function downloadFile(filename, content, mime="text/plain"){
+  const blob = new Blob([content], {type:mime});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+
+async function svgToPngBlob(svgText, size=512){
+  const svgBlob = new Blob([svgText], {type:"image/svg+xml"});
+  const url = URL.createObjectURL(svgBlob);
+  try{
+    const img = new Image();
+    img.decoding="async";
+    await new Promise((res,rej)=>{
+      img.onload=()=>res();
+      img.onerror=()=>rej(new Error("icon load failed"));
+      img.src=url;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width=size; canvas.height=size;
+    const ctx=canvas.getContext("2d");
+    ctx.drawImage(img,0,0,size,size);
+
+    const blob = await new Promise(res=>canvas.toBlob(res,"image/png"));
+    return blob;
+  } finally{
+    URL.revokeObjectURL(url);
+  }
+}
+
+function swJsText(){
+  return `const CACHE = "hedra-v3";
+const ASSETS = ["./", "./index.html", "./manifest.json", "./sw.js", "./icon.png"];
+
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (e) => {
+  e.respondWith(
+    caches.match(e.request).then((cached) => cached || fetch(e.request))
+  );
+});`;
+}
+
+function manifestText(){
+  return JSON.stringify({
+    name: "Hedra Attendance",
+    short_name: "Hedra",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#f8fafc",
+    theme_color: "#2563eb",
+    icons: [
+      { src: "icon.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+    ]
+  }, null, 2);
+}
+
+document.getElementById("btnDownloadPack").onclick = async (e)=>{
+  e.preventDefault();
+
+  // 1) index.html (current file) — re-download itself
+  downloadFile("index.html", document.documentElement.outerHTML, "text/html");
+
+  // 2) manifest + sw
+  downloadFile("manifest.json", manifestText(), "application/json");
+  downloadFile("sw.js", swJsText(), "text/javascript");
+
+  // 3) icon.png from SVG
+  const svg = iconSvgString();
+  const pngBlob = await svgToPngBlob(svg, 512);
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(pngBlob);
+  a.download="icon.png";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+
+  toast(T("packDone"));
+};
+</script>
+
+</body>
+</html>
