@@ -659,10 +659,15 @@ const pages={
   settings: document.getElementById("pageSettings")
 };
 function showTab(k){
+  if(k === "manage" || k === "settings"){
+    if(!requirePIN()) return;
+  }
+
   Object.keys(pages).forEach(x=>pages[x].style.display=(x===k)?"":"none");
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===k));
   renderAll();
 }
+
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showTab(t.dataset.tab));
 
 /* ---------- reset (fresh) ---------- */
@@ -1240,3 +1245,4 @@ if ("serviceWorker" in navigator) {
 </script>
 </body>
 </html>
+
