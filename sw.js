@@ -1,4 +1,4 @@
-const CACHE = "hedra-v4-pro-1";
+const CACHE = "hedra-v4-2-pro-1";
 const ASSETS = ["./", "./index.html", "./manifest.json", "./sw.js", "./icon.png"];
 
 self.addEventListener("install", (e) => {
