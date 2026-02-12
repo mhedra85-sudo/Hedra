@@ -14,15 +14,16 @@
     :root{
       --royal:#0A2A66;
       --royal2:#091F4A;
-      --soft:#EAF2FF;
-      --red:#D72638;
       --bg:#061226;
       --paper:#ffffff;
       --ink:#0f172a;
       --muted:#64748b;
+      --soft:#EAF2FF;
       --line:rgba(2,6,23,.10);
       --shadow:0 18px 42px rgba(2,6,23,.22);
+
       --r:22px;
+      --btnR:18px;
     }
 
     *{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
@@ -34,53 +35,45 @@
         linear-gradient(180deg, var(--bg), var(--bg));
     }
 
-    .top{
-      position:sticky; top:0; z-index:20;
-      background: rgba(6,18,38,.76);
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid rgba(255,255,255,.10);
-      padding:14px 14px 12px;
-    }
-    .top .wrap{
-      max-width:1060px; margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
-    }
-    .brand{display:flex; align-items:center; gap:10px}
-    .logo{
-      width:46px; height:46px; border-radius:16px;
-      background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.18);
-      display:grid; place-items:center;
-      font-weight:1000; letter-spacing:.8px;
-    }
-    .ttl{font-weight:1000; font-size:15px}
-    .sub{opacity:.82; font-size:12px; margin-top:2px}
-
+    /* Stronger Buttons (طلبك: أقوى وأوضح) */
     .btn{
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
       color:#fff;
-      border-radius:18px;
-      padding:10px 12px;
-      min-height:44px;
-      font-weight:950;
+      border-radius: var(--btnR);
+      padding:11px 14px;
+      min-height:48px;
+      font-weight:1000;
       cursor:pointer;
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      transition: transform .08s ease, filter .12s ease, border-color .12s ease;
+      transition: transform .08s ease, filter .12s ease, border-color .12s ease, box-shadow .12s ease;
       user-select:none;
+      box-shadow: 0 10px 18px rgba(0,0,0,.14);
     }
-    .btn:hover{transform:translateY(-1px); filter:brightness(1.06); border-color:rgba(255,255,255,.26)}
-    .btn.small{min-height:40px; border-radius:16px; font-size:13px; padding:9px 10px}
-    .btn.royal{background: rgba(10,42,102,.34); border-color: rgba(255,255,255,.24)}
-    .btn.ghost{background: transparent}
+    .btn:hover{transform:translateY(-1px); filter:brightness(1.07); border-color:rgba(255,255,255,.32)}
+    .btn:active{transform:translateY(0px) scale(.99); filter:brightness(1.02)}
+    .btn.small{min-height:44px; border-radius:16px; font-size:13px; padding:10px 12px}
+    .btn.royal{
+      background: linear-gradient(180deg, rgba(10,42,102,.75), rgba(10,42,102,.45));
+      border-color: rgba(255,255,255,.28);
+      box-shadow: 0 12px 22px rgba(10,42,102,.22);
+    }
+    .btn.ghost{
+      background: transparent;
+      border-color: rgba(255,255,255,.20);
+      box-shadow:none;
+    }
     .btn.light{
-      background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.24);
+    }
+    .btn.danger{
+      background: rgba(215,38,56,.18);
+      border-color: rgba(215,38,56,.55);
+      box-shadow: 0 12px 22px rgba(215,38,56,.14);
     }
 
     .page{max-width:1060px; margin:0 auto; padding:14px 14px 104px}
-    .grid2{display:grid; gap:14px; grid-template-columns:1fr}
-    @media(min-width:980px){ .grid2{grid-template-columns: 1.1fr .9fr;} }
 
     .card{
       background: rgba(255,255,255,.96);
@@ -93,23 +86,42 @@
 
     .hr{height:1px; background:rgba(2,6,23,.08); margin:12px 0}
     .hint{color:var(--muted); font-size:12px; line-height:1.75}
-
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      font-weight:1000;
-      font-size:13px;
-      color:#fff;
-    }
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;}
 
-    /* Tabs */
+    /* Top sticky header area in Home (طلبك: الجزء العلوي ثابت) */
+    .homeHeader{
+      position:sticky; top:0; z-index:25;
+      background: rgba(6,18,38,.82);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 22px;
+      padding:14px;
+      box-shadow: 0 18px 42px rgba(0,0,0,.22);
+    }
+    .titleBig{font-weight:1100; font-size:20px; letter-spacing:.4px}
+    .dateBig{margin-top:6px; font-size:16px; font-weight:1000; opacity:.95}
+    .groupNameBig{font-weight:1100; font-size:16px}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(2,6,23,.10);
+      background:rgba(10,42,102,.08);
+      color:var(--royal);
+      font-weight:1000;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .badge.red{
+      background: rgba(215,38,56,.10);
+      border-color: rgba(215,38,56,.22);
+      color:#b91c1c;
+    }
+
+    /* Tabs bottom */
     .bottom{
       position:fixed; left:0; right:0; bottom:0; z-index:30;
-      background: rgba(6,18,38,.76);
+      background: rgba(6,18,38,.80);
       backdrop-filter: blur(10px);
       border-top:1px solid rgba(255,255,255,.10);
       padding:10px 12px;
@@ -120,19 +132,21 @@
     }
     .tab{
       flex:1;
-      min-height:54px;
+      min-height:56px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.18);
       background: rgba(255,255,255,.06);
       color:#fff;
-      font-weight:1000;
+      font-weight:1100;
       cursor:pointer;
       display:flex; align-items:center; justify-content:center; gap:10px;
       user-select:none;
+      transition: transform .08s ease, filter .12s ease, border-color .12s ease;
     }
+    .tab:hover{transform:translateY(-1px); filter:brightness(1.06); border-color:rgba(255,255,255,.26)}
     .tab.active{
-      background: rgba(10,42,102,.34);
-      border-color: rgba(255,255,255,.28);
+      background: rgba(10,42,102,.36);
+      border-color: rgba(255,255,255,.30);
     }
 
     /* List */
@@ -150,57 +164,40 @@
       background: rgba(10,42,102,.08);
       border:1px solid rgba(10,42,102,.20);
       display:grid; place-items:center;
-      font-weight:1000; color:var(--royal);
+      font-weight:1100; color:var(--royal);
       flex:0 0 auto;
     }
-    .name{font-weight:1000; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .name{font-weight:1100; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 
-    /* RUN pay button states */
+    /* Pay button (home) */
     .payBtn{
-      min-width:150px;
+      min-width:120px;
       min-height:48px;
       border-radius:18px;
-      font-weight:1000;
+      font-weight:1100;
       cursor:pointer;
       transition: transform .08s ease, filter .12s ease, background .18s ease, color .18s ease, border-color .18s ease;
       user-select:none;
+      box-shadow: 0 10px 18px rgba(0,0,0,.10);
     }
     .payBtn:hover{transform:translateY(-1px); filter:brightness(1.02)}
-    .pay-unpaid{
-      background:#fff;
-      color:var(--red);
-      border:2px solid var(--red);
-    }
-    .pay-partial{
-      background: var(--soft);
-      color: var(--royal);
-      border:1px solid rgba(10,42,102,.22);
-    }
-    .pay-paid{
-      background: var(--royal);
-      color:#fff;
-      border:1px solid rgba(10,42,102,.35);
-      animation: paidPulse .38s ease;
-    }
-    @keyframes paidPulse{
-      0%{transform:scale(1)}
-      50%{transform:scale(1.05)}
-      100%{transform:scale(1)}
-    }
+    .pay-unpaid{ background:#fff; color:#b91c1c; border:2px solid #ef4444; }
+    .pay-partial{ background: var(--soft); color: var(--royal); border:1px solid rgba(10,42,102,.26); }
+    .pay-paid{ background: var(--royal); color:#fff; border:1px solid rgba(10,42,102,.35); }
 
-    /* Small action button */
     .moreBtn{
-      width:48px; min-height:48px;
+      width:52px; min-height:48px;
       border-radius:18px;
       border:1px solid rgba(2,6,23,.12);
       background:#fff;
       color:var(--ink);
       font-weight:1100;
       cursor:pointer;
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
     }
 
     /* Inputs */
-    label{display:block; font-weight:1000; font-size:13px; margin:10px 0 6px}
+    label{display:block; font-weight:1100; font-size:13px; margin:10px 0 6px}
     input,select,textarea{
       width:100%;
       min-height:48px;
@@ -235,7 +232,7 @@
       padding:14px;
     }
     .modal{
-      max-width:640px;
+      max-width:720px;
       margin:6vh auto;
       background:#fff;
       color:var(--ink);
@@ -256,91 +253,125 @@
       box-shadow: var(--shadow);
       padding:10px 12px;
       border-radius:16px;
-      font-weight:1000;
+      font-weight:1100;
       display:none;
       max-width:92vw;
     }
 
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(2,6,23,.10);
-      background:rgba(10,42,102,.06);
-      color:var(--royal);
-      font-weight:1000;
-      font-size:12px;
+    /* Simple splash (طلبك: واجهة جميلة وعدم فتح آخر مجموعة) */
+    .splash{
+      min-height: calc(100vh - 98px);
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+    .splashCard{
+      max-width:560px; width:100%;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius: 26px;
+      padding:18px;
+      box-shadow: 0 18px 42px rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+    }
+    .splashLogo{
+      width:56px; height:56px; border-radius:18px;
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.20);
+      font-weight:1200;
+      font-size:22px;
+      margin-bottom:10px;
     }
   </style>
 </head>
 
 <body>
-  <div class="top">
-    <div class="wrap">
-      <div class="brand">
-        <div class="logo">H</div>
-        <div>
-          <div class="ttl">Hedra</div>
-          <div class="sub mono" id="topDate">—</div>
-        </div>
-      </div>
-
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end">
-        <button class="btn small light" id="btnInstall" style="display:none">⬇️ تحميل البرنامج</button>
-        <button class="btn small ghost" id="btnExport">تصدير</button>
-        <button class="btn small ghost" id="btnImport">استيراد</button>
-      </div>
-    </div>
-  </div>
 
   <div class="page">
-    <!-- RUN -->
-    <section id="pageRun" class="grid2">
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap">
-          <div>
-            <div style="font-weight:1000">التشغيل</div>
-            <div class="hint" id="runGroupName">—</div>
+
+    <!-- SPLASH / UNLOCK -->
+    <section id="pageSplash" class="splash">
+      <div class="splashCard">
+        <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap">
+          <div style="display:flex; gap:12px; align-items:center">
+            <div class="splashLogo">H</div>
+            <div>
+              <div class="titleBig">Hedra</div>
+              <div class="hint" style="color:rgba(255,255,255,.78)">نسخة v4 Pro • تشغيل + إدارة</div>
+            </div>
           </div>
-
-          <div class="rowWrap" style="justify-content:flex-end">
-            <button class="btn small royal" id="btnAddSession">+ حصة</button>
-            <button class="btn small ghost" id="btnRemoveSession">− حصة</button>
-          </div>
+          <button class="btn light small" id="btnInstall" style="display:none">⬇️ تحميل البرنامج</button>
         </div>
 
-        <div class="hr"></div>
+        <div class="hr" style="background:rgba(255,255,255,.16)"></div>
 
-        <div class="rowWrap">
-          <input id="qRun" placeholder="بحث بالاسم..." />
+        <div class="hint" style="color:rgba(255,255,255,.82)">
+          سيتم طلب الرقم السري مرة واحدة عند فتح البرنامج.  
+          بعد الدخول لن يتم طلبه مرة أخرى (إلا عند حذف حصة للتأكيد).
         </div>
 
-        <div class="hr"></div>
-        <div class="list" id="runList"></div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap">
-          <div style="font-weight:1000">اليوم</div>
-          <div class="pill mono" id="todayOnly">—</div>
-        </div>
-        <div class="hr"></div>
-        <div class="hint">
-          التشغيل لا يعرض أي أرقام أو تفاصيل مالية أمام الناس.<br>
-          التفاصيل كاملة داخل الإدارة (محمية بالرقم السري).
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+          <button class="btn royal" id="btnUnlock">🔓 دخول</button>
+          <button class="btn ghost" id="btnExport">تصدير</button>
+          <button class="btn ghost" id="btnImport">استيراد</button>
         </div>
       </div>
     </section>
 
-    <!-- MANAGE -->
-    <section id="pageManage" style="display:none">
+    <!-- HOME -->
+    <section id="pageHome" style="display:none">
+      <div class="homeHeader">
+        <div class="titleBig">Hedra</div>
+        <div class="dateBig mono" id="bigDate">—</div>
+
+        <div class="hr" style="background:rgba(255,255,255,.14)"></div>
+
+        <div class="rowWrap">
+          <div>
+            <label style="color:#fff; opacity:.92; margin-top:0">اختر المجموعة</label>
+            <select id="homeGroupSelect"></select>
+          </div>
+          <div>
+            <label style="color:#fff; opacity:.92; margin-top:0">الحصة الحالية</label>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+              <div class="badge" id="homeSessionBadge">—</div>
+              <div class="badge" id="homeCycleBadge">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px">
+          <div class="groupNameBig" id="homeGroupName" style="color:#fff">—</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <button class="btn small royal" id="btnAddSession">+ إضافة حصة</button>
+            <button class="btn small danger" id="btnRemoveSession">− حذف حصة</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap">
+          <div style="font-weight:1100">الطلاب</div>
+          <div class="hint">اضغط “دفع” لإضافة/خصم مبلغ أو دفع كامل/مقدم</div>
+        </div>
+        <div class="hr"></div>
+        <div class="list" id="homeStudentsList"></div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="pageAdmin" style="display:none">
       <div class="card">
         <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap">
           <div>
-            <div style="font-weight:1000">الإدارة</div>
-            <div class="hint" id="manageSub">—</div>
+            <div style="font-weight:1100">الإدارة</div>
+            <div class="hint" id="adminSub">—</div>
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
+            <button class="btn small ghost" id="btnChangePin">تغيير الرقم السري</button>
             <button class="btn small ghost" id="btnSessionsLog">سجل الحصص</button>
           </div>
         </div>
@@ -348,11 +379,32 @@
         <div class="hr"></div>
 
         <div class="rowWrap">
-          <input id="qManage" placeholder="بحث بالاسم..." />
+          <div>
+            <label>اختيار المجموعة</label>
+            <select id="adminGroupSelect"></select>
+          </div>
+          <div>
+            <label>بحث (كل المجموعات)</label>
+            <input id="adminSearchAll" placeholder="اكتب اسم الطالب..." />
+            <div class="hint">نتائج البحث تظهر أسفل مباشرة</div>
+          </div>
         </div>
 
         <div class="hr"></div>
-        <div class="list" id="manageList"></div>
+
+        <div id="adminTotals" class="rowWrap"></div>
+
+        <div class="hr"></div>
+
+        <div class="list" id="adminStudentsList"></div>
+
+        <div class="hr"></div>
+        <div id="adminSearchResultsWrap" style="display:none">
+          <div style="font-weight:1100">نتائج البحث</div>
+          <div class="hint">من أي مجموعة</div>
+          <div class="hr"></div>
+          <div class="list" id="adminSearchResults"></div>
+        </div>
       </div>
     </section>
 
@@ -361,94 +413,91 @@
       <div class="card">
         <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap">
           <div>
-            <div style="font-weight:1000">الإعدادات</div>
-            <div class="hint">المجموعة • الدورة • البنود الإضافية • الطلاب</div>
+            <div style="font-weight:1100">الإعدادات</div>
+            <div class="hint">إضافة مجموعة • طلاب • سعر الدورة • طول الدورة</div>
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
-            <button class="btn small royal" id="btnAddGroup">+ مجموعة</button>
+            <button class="btn small royal" id="btnAddGroup">+ إضافة مجموعة</button>
             <button class="btn small ghost" id="btnReset">بدء جديد</button>
           </div>
         </div>
 
         <div class="hr"></div>
 
-        <label>اختر المجموعة</label>
-        <select id="selGroup"></select>
+        <label>المجموعات</label>
+        <div class="list" id="groupsList"></div>
 
         <div class="hr"></div>
 
-        <label>اسم المجموعة (اختياري لواجهة التشغيل)</label>
-        <input id="groupDisplayName" placeholder="مثال: مجموعة الأحد والثلاثاء" />
+        <div id="settingsGroupEditor" style="display:none">
+          <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap">
+            <div style="font-weight:1100" id="editGroupTitle">—</div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap">
+              <button class="btn small ghost" id="btnCloseGroupEditor">إغلاق</button>
+            </div>
+          </div>
 
-        <div class="rowWrap">
-          <div>
-            <label>الاشتراك (سعر الدورة)</label>
-            <input id="priceCycle" type="number" min="0" step="1" placeholder="مثال: 200"/>
+          <div class="hr"></div>
+
+          <div class="rowWrap">
+            <div>
+              <label>اسم المجموعة</label>
+              <input id="editGroupName" placeholder="مثال: مجموعة الأحد والثلاثاء"/>
+            </div>
+            <div>
+              <label>اسم عرض (اختياري)</label>
+              <input id="editGroupDisplayName" placeholder="يظهر في الرئيسية"/>
+            </div>
           </div>
-          <div>
-            <label>طول الدورة</label>
-            <select id="cycleLen">
-              <option value="4">4 حصص</option>
-              <option value="8" selected>8 حصص</option>
-              <option value="12">12 حصة</option>
-            </select>
+
+          <div class="rowWrap">
+            <div>
+              <label>سعر الدورة</label>
+              <input id="editPriceCycle" type="number" min="0" step="1" placeholder="مثال: 200"/>
+            </div>
+            <div>
+              <label>طول الدورة</label>
+              <select id="editCycleLen">
+                <option value="4">4 حصص</option>
+                <option value="8" selected>8 حصص</option>
+                <option value="12">12 حصة</option>
+              </select>
+            </div>
           </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px">
+            <button class="btn small royal" id="btnSaveGroup">حفظ</button>
+            <button class="btn small ghost" id="btnNewCycle">فتح دورة جديدة</button>
+            <button class="btn small danger" id="btnDeleteGroup">حذف المجموعة</button>
+          </div>
+
+          <div class="hr"></div>
+
+          <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-end; flex-wrap:wrap">
+            <div>
+              <div style="font-weight:1100">الطلاب</div>
+              <div class="hint">خصم/إعفاء اختياري — الحالة تظهر في الإدارة</div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap">
+              <input id="newStudentName" placeholder="اسم الطالب..." style="min-width:220px"/>
+              <button class="btn small royal" id="btnAddStudent">إضافة</button>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+          <div class="list" id="studentsList"></div>
         </div>
-
-        <div class="rowWrap">
-          <div>
-            <label>تاريخ الدورة (من)</label>
-            <input id="blkFrom" type="date"/>
-          </div>
-          <div>
-            <label>تاريخ الدورة (إلى)</label>
-            <input id="blkTo" type="date"/>
-          </div>
-        </div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px">
-          <button class="btn small royal" id="btnSaveSettings">حفظ</button>
-          <button class="btn small ghost" id="btnNewBlock">فتح دورة جديدة</button>
-        </div>
-
-        <div class="hr"></div>
-
-        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-end; flex-wrap:wrap">
-          <div>
-            <div style="font-weight:1000">بنود إضافية (للدورة الحالية فقط)</div>
-            <div class="hint">مذكرة / اختبار / ... (مرة أو أكثر حسب الحاجة)</div>
-          </div>
-          <button class="btn small royal" id="btnAddExtra">+ بند</button>
-        </div>
-
-        <div class="hr"></div>
-        <div id="extraItemsWrap"></div>
-
-        <div class="hr"></div>
-
-        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-end; flex-wrap:wrap">
-          <div>
-            <div style="font-weight:1000">الطلاب</div>
-            <div class="hint">خصم/إعفاء اختياري — لا يظهر في التشغيل</div>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap">
-            <input id="newStudentName" placeholder="اسم الطالب..." style="min-width:220px"/>
-            <button class="btn small royal" id="btnAddStudent">إضافة</button>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-        <div class="list" id="studentsList"></div>
       </div>
     </section>
+
   </div>
 
   <!-- Tabs -->
   <div class="bottom">
     <div class="wrap">
-      <button class="tab active" data-tab="run">👥 تشغيل</button>
-      <button class="tab" data-tab="manage">🧾 إدارة</button>
-      <button class="tab" data-tab="settings">⚙️ إعدادات</button>
+      <button class="tab active" data-tab="home">🏠 الرئيسية</button>
+      <button class="tab" data-tab="admin">🧾 الإدارة</button>
+      <button class="tab" data-tab="settings">⚙️ الإعدادات</button>
     </div>
   </div>
 
@@ -456,13 +505,60 @@
 
   <!-- MODALS -->
 
-  <!-- Pay/Details Modal (Admin) -->
+  <!-- Quick Pay Modal (Home) -->
+  <div class="overlay" id="qpOverlay">
+    <div class="modal">
+      <div class="topline">
+        <div>
+          <h3 id="qpTitle">—</h3>
+          <div class="hint mono" id="qpSub">—</div>
+          <div id="qpStateBadges" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap"></div>
+        </div>
+        <div class="actions">
+          <button class="btn small ghost" id="btnQpClose">إغلاق</button>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="rowWrap">
+        <div>
+          <label>المبلغ</label>
+          <input id="qpAmount" type="number" step="1" placeholder="مثال: 50"/>
+          <div class="hint">يمكن الدفع أقل/أكثر (مقدم). الخصم يستخدم للتصحيح.</div>
+        </div>
+        <div>
+          <label>ملاحظة (اختياري)</label>
+          <input id="qpNote" placeholder="مثال: دفع جزء / مقدم / تصحيح"/>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px">
+        <button class="btn small royal" id="btnQpPayPart">دفع بالمبلغ</button>
+        <button class="btn small ghost" id="btnQpMinus">خصم من المدفوع</button>
+        <button class="btn small light" id="btnQpPayFull">دفع كامل المتبقي</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div id="qpMiniSummary" class="hint mono">—</div>
+
+      <div class="hr"></div>
+
+      <div class="hint">
+        <b>معلومة:</b> الدفع الزائد يتحول لرصيد (Credit) يُرحل للدورة التالية تلقائيًا.
+      </div>
+    </div>
+  </div>
+
+  <!-- Details/Pay Modal (Admin full) -->
   <div class="overlay" id="payOverlay">
     <div class="modal">
       <div class="topline">
         <div>
           <h3 id="payTitle">—</h3>
           <div class="hint mono" id="paySub">—</div>
+          <div id="payStateBadges" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap"></div>
         </div>
         <div class="actions">
           <button class="btn small ghost" id="btnPayClose">إغلاق</button>
@@ -470,13 +566,11 @@
       </div>
 
       <div class="hr"></div>
-
       <div id="payTableWrap"></div>
 
       <div class="hr"></div>
-
       <div style="display:flex; gap:10px; flex-wrap:wrap">
-        <button class="btn small royal" id="btnPayFull">تم الدفع (تكملة)</button>
+        <button class="btn small royal" id="btnPayFull">دفع كامل المتبقي</button>
         <button class="btn small ghost" id="btnPayAdd">+ إضافة مبلغ</button>
         <button class="btn small ghost" id="btnPayMinus">− خصم من المدفوع</button>
       </div>
@@ -490,7 +584,7 @@
       <div class="hr"></div>
 
       <label>ملاحظة (اختياري)</label>
-      <input id="payNote" placeholder="مثال: ثمن مذكرة / سداد متأخر / ..." />
+      <input id="payNote" placeholder="مثال: دفع جزء / مقدم / تصحيح" />
 
       <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px">
         <button class="btn small royal" id="btnPaySaveNote">حفظ الملاحظة</button>
@@ -498,43 +592,13 @@
     </div>
   </div>
 
-  <!-- Extra Item Modal -->
-  <div class="overlay" id="exOverlay">
-    <div class="modal">
-      <div class="topline">
-        <div>
-          <h3>بند إضافي</h3>
-          <div class="hint">للدورة الحالية فقط</div>
-        </div>
-        <div class="actions">
-          <button class="btn small ghost" id="btnExClose">إغلاق</button>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <label>اسم البند</label>
-      <input id="exName" placeholder="مثال: مذكرة شهر 10"/>
-
-      <label>المبلغ</label>
-      <input id="exAmount" type="number" step="1" placeholder="مثال: 50"/>
-
-      <label>التاريخ</label>
-      <input id="exDate" type="date"/>
-
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px">
-        <button class="btn small royal" id="btnExSave">حفظ</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Student Modal -->
+  <!-- Student Modal (Settings) -->
   <div class="overlay" id="stOverlay">
     <div class="modal">
       <div class="topline">
         <div>
           <h3 id="stTitle">طالب</h3>
-          <div class="hint">إعدادات لا تظهر في التشغيل</div>
+          <div class="hint">الحالة تظهر في الإدارة أعلى تفاصيل الطالب</div>
         </div>
         <div class="actions">
           <button class="btn small ghost" id="btnStClose">إغلاق</button>
@@ -548,7 +612,7 @@
 
       <div class="rowWrap">
         <div>
-          <label>نوع الخصم (اختياري)</label>
+          <label>نوع الخصم</label>
           <select id="stDiscType">
             <option value="none">بدون</option>
             <option value="fixed">خصم مبلغ</option>
@@ -557,7 +621,7 @@
           </select>
         </div>
         <div>
-          <label>قيمة الخصم (اختياري)</label>
+          <label>قيمة الخصم</label>
           <input id="stDiscVal" type="number" step="1" placeholder="مثال: 50 أو 10%"/>
         </div>
       </div>
@@ -571,7 +635,7 @@
 
       <div style="display:flex; gap:10px; flex-wrap:wrap">
         <button class="btn small royal" id="btnStSave">حفظ</button>
-        <button class="btn small ghost" id="btnStDelete">حذف الطالب</button>
+        <button class="btn small danger" id="btnStDelete">حذف الطالب</button>
       </div>
     </div>
   </div>
@@ -582,7 +646,7 @@
       <div class="topline">
         <div>
           <h3>سجل الحصص</h3>
-          <div class="hint">تواريخ الحصص المسجلة للدورة الحالية</div>
+          <div class="hint">تواريخ الحصص للدورة الحالية</div>
         </div>
         <div class="actions">
           <button class="btn small ghost" id="btnSsClose">إغلاق</button>
@@ -595,27 +659,25 @@
 
 <script>
 /* =========================================================
-   Hedra v3 (Clean, Single File)
-   - Run: no numbers, just status button
-   - Unpaid: red outline, Paid: royal blue, Partial: soft blue
-   - Cycle length: 4/8/12
-   - Cycle dates: From/To
-   - Everyone charged per session count (no attendance per student)
-   - Discounts: distributed from FIRST session
-   - Extra Items: current cycle only
-   - Overpay/underpay carried to next cycle as signed balance
-   - Admin & Settings protected by PIN
-   - No DELETE confirmations for payments: use minus correction
+   Hedra v4 Pro (Rebuild)
+   - PIN asked once per session (on unlock)
+   - Delete session requires PIN confirm (always)
+   - Home: single section (title + big date + group selector + session number + add/remove + students)
+   - Search: Admin only, across ALL groups
+   - Payments: quick pay (amount add), minus correction, pay full remaining, can overpay (credit)
+   - No "remember last group": home group selection not persisted
 ========================================================= */
 
-const DB_KEY = "hedra_v3_clean_singlefile";
-let db = { groups: [], settings: { currentGroupId: "" } };
+const DB_KEY = "hedra_v4_pro_singlefile";
+const SESSION_UNLOCK_KEY = "hedra_v4_unlocked";
+const SESSION_GROUP_KEY  = "hedra_v4_selected_group"; // session only; we will clear at init to avoid remembering
 
-/* ---------- Utilities ---------- */
+let db = { groups: [] };
+
+/* ---------- Utils ---------- */
 function uid(p="id"){ return p+"_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
 function round2(n){ return Math.round((Number(n||0))*100)/100; }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
-
 function toast(msg){
   const t=document.getElementById("toast");
   t.textContent=msg;
@@ -623,7 +685,6 @@ function toast(msg){
   clearTimeout(toast._t);
   toast._t=setTimeout(()=>t.style.display="none",2200);
 }
-
 function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 function loadDB(){
   const raw = localStorage.getItem(DB_KEY);
@@ -633,7 +694,6 @@ function loadDB(){
     if(p && typeof p==="object") db=p;
   }catch{}
 }
-
 function todayText(){
   return new Date().toLocaleDateString("ar-EG",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
 }
@@ -649,14 +709,16 @@ function fmtDMY(iso){
   return `${dd}/${mm}/${yy}`;
 }
 
-/* ---------- PIN Protection (Admin) ---------- */
+/* ---------- PIN / Session Unlock ---------- */
 function getPIN(){ return localStorage.getItem("hedra_pin") || ""; }
-function requirePIN(){
+function setPIN(pin){ localStorage.setItem("hedra_pin", pin); }
+
+function requirePINSetupOrCheck(){
   const existing = getPIN();
   if(!existing){
     const set = prompt("عيّني رقم سري (4 أرقام أو أكثر)");
     if(!set || set.trim().length < 4) return false;
-    localStorage.setItem("hedra_pin", set.trim());
+    setPIN(set.trim());
     return true;
   }
   const entered = prompt("أدخلي الرقم السري");
@@ -665,28 +727,31 @@ function requirePIN(){
   return false;
 }
 
+function isUnlocked(){
+  return sessionStorage.getItem(SESSION_UNLOCK_KEY) === "1";
+}
+function setUnlocked(v){
+  sessionStorage.setItem(SESSION_UNLOCK_KEY, v ? "1" : "0");
+}
+
 /* ---------- Data Model ---------- */
 /*
 group = { id, name, displayName, price, cycleLen, students:[...], blocks:[...] }
 student = { id, name, paused, discountType, discountValue }
 block = {
-  id, fromYMD, toYMD, createdAtISO,
+  id, createdAtISO,
   sessions:[{id,tsISO}],
-  extraItems:[{id,name,amount,dateYMD}],
   payments:{ [sid]: number }, notes:{ [sid]: string },
   carry:{ [sid]: number }, // signed (+due / -credit)
   closed:boolean
 }
 */
 
-function newBlock(fromYMD, toYMD){
-  const nowISO = new Date().toISOString();
+function newBlock(){
   return {
     id: uid("b"),
-    fromYMD, toYMD,
-    createdAtISO: nowISO,
+    createdAtISO: new Date().toISOString(),
     sessions: [],
-    extraItems: [],
     payments: {},
     notes: {},
     carry: {},
@@ -695,8 +760,20 @@ function newBlock(fromYMD, toYMD){
 }
 
 function ensureDefaults(){
-  if(!db.settings) db.settings={ currentGroupId:"" };
   if(!Array.isArray(db.groups)) db.groups=[];
+
+  // create initial data if empty
+  if(db.groups.length===0){
+    db.groups.push({
+      id: uid("g"),
+      name: "مجموعة 1",
+      displayName: "",
+      price: 200,
+      cycleLen: 8,
+      students: [],
+      blocks: [ newBlock() ]
+    });
+  }
 
   db.groups.forEach(g=>{
     if(!g.id) g.id=uid("g");
@@ -705,64 +782,40 @@ function ensureDefaults(){
     if(typeof g.price!=="number") g.price=Number(g.price||0);
     if(!g.cycleLen) g.cycleLen=8;
     if(!Array.isArray(g.students)) g.students=[];
-    if(!Array.isArray(g.blocks)) g.blocks=[];
+    if(!Array.isArray(g.blocks)) g.blocks=[ newBlock() ];
 
     g.students.forEach(s=>{
       if(!s.id) s.id=uid("s");
       if(typeof s.name!=="string") s.name="طالب";
       if(typeof s.paused!=="boolean") s.paused=false;
-      if(!s.discountType) s.discountType="none"; // none/fixed/percent/exempt
+      if(!s.discountType) s.discountType="none";
       if(typeof s.discountValue!=="number") s.discountValue=Number(s.discountValue||0);
     });
 
-    if(g.blocks.length===0){
-      const from=isoYMD(new Date());
-      const to=isoYMD(new Date());
-      g.blocks.push(newBlock(from,to));
-    }
-
     g.blocks.forEach(b=>{
       if(!b.id) b.id=uid("b");
-      if(!b.fromYMD) b.fromYMD=isoYMD(new Date());
-      if(!b.toYMD) b.toYMD=isoYMD(new Date());
       if(!b.createdAtISO) b.createdAtISO=new Date().toISOString();
       if(!Array.isArray(b.sessions)) b.sessions=[];
-      if(!Array.isArray(b.extraItems)) b.extraItems=[];
       if(!b.payments || typeof b.payments!=="object") b.payments={};
       if(!b.notes || typeof b.notes!=="object") b.notes={};
       if(!b.carry || typeof b.carry!=="object") b.carry={};
       if(typeof b.closed!=="boolean") b.closed=false;
     });
+
+    if(g.blocks.length===0) g.blocks=[ newBlock() ];
   });
-
-  if(!db.settings.currentGroupId && db.groups[0]) db.settings.currentGroupId=db.groups[0].id;
-
-  // Create initial group if none
-  if(db.groups.length===0){
-    const g = {
-      id: uid("g"),
-      name: "مجموعة 1",
-      displayName: "",
-      price: 200,
-      cycleLen: 8,
-      students: [],
-      blocks: [ newBlock(isoYMD(new Date()), isoYMD(new Date())) ]
-    };
-    db.groups=[g];
-    db.settings.currentGroupId=g.id;
-  }
 
   saveDB();
 }
 
-function curGroup(){
-  return db.groups.find(g=>g.id===db.settings.currentGroupId) || db.groups[0] || null;
+function getGroupById(id){
+  return db.groups.find(g=>g.id===id) || null;
 }
 function curBlock(g){
   return g?.blocks?.[g.blocks.length-1] || null;
 }
 
-/* ---------- Pricing Logic ---------- */
+/* ---------- Pricing / Totals ---------- */
 function cycleLen(g){ return Math.max(1, Number(g.cycleLen||8)); }
 function cyclePrice(g){ return Math.max(0, Number(g.price||0)); }
 
@@ -780,38 +833,51 @@ function effectiveCyclePrice(g,s){
   }
   return base;
 }
-
 function perSessionForStudent(g,s){
   return round2(effectiveCyclePrice(g,s) / cycleLen(g));
 }
-
 function sessionsCount(b){ return (b.sessions||[]).length; }
-function extraTotal(b){
-  return round2((b.extraItems||[]).reduce((a,x)=>a + Math.max(0,Number(x.amount||0)), 0));
-}
 function carry(b,sid){ return round2(Number(b.carry?.[sid] || 0)); }   // signed
 function paid(b,sid){ return round2(Number(b.payments?.[sid] || 0)); } // can exceed
 
-// ✅ IMPORTANT: everyone charged by session count (no attendance), and discount distributed from first session.
 function subscriptionDueSoFar(g,b,s){
   return round2(sessionsCount(b) * perSessionForStudent(g,s));
 }
 
 function totals(g,b,s){
   const sub = subscriptionDueSoFar(g,b,s);
-  const items = extraTotal(b);
   const prev = carry(b, s.id);
-  const total = round2(sub + items + prev);      // signed allowed
+  const total = round2(sub + prev);
   const p = paid(b, s.id);
-  const remaining = round2(total - p);           // +due / -credit
-  return { sub, items, prev, total, paid:p, remaining };
+  const remaining = round2(total - p); // +due / -credit
+  return { sub, prev, total, paid:p, remaining };
 }
 
 function status(g,b,s){
   const t=totals(g,b,s);
-  if(t.remaining <= 0) return "paid";         // fully paid or credit
+  if(t.remaining <= 0) return "paid";
   if(t.paid > 0) return "partial";
   return "unpaid";
+}
+
+/* ---------- Cycle Date Auto (طلبك: بداية الدورة = أول حصة) ---------- */
+function cycleStartLabel(b){
+  if(!b || !b.sessions?.length) return "—";
+  // start = first session timestamp
+  return fmtDMY(b.sessions[0].tsISO);
+}
+function cycleEndLabel(g,b){
+  if(!b || sessionsCount(b) < cycleLen(g)) return "—";
+  // end = last session date once completed
+  return fmtDMY(b.sessions[b.sessions.length-1].tsISO);
+}
+
+/* ---------- Session Group selection: do not remember last group (طلبك) ---------- */
+function getSessionGroup(){
+  return sessionStorage.getItem(SESSION_GROUP_KEY) || "";
+}
+function setSessionGroup(id){
+  sessionStorage.setItem(SESSION_GROUP_KEY, id || "");
 }
 
 /* ---------- Export / Import ---------- */
@@ -820,12 +886,11 @@ document.getElementById("btnExport").onclick=()=>{
   const blob = new Blob([data], {type:"application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "Hedra_Backup.json";
+  a.download = "Hedra_Backup_v4.json";
   a.click();
   URL.revokeObjectURL(a.href);
   toast("تم التصدير");
 };
-
 document.getElementById("btnImport").onclick=()=>{
   const inp=document.createElement("input");
   inp.type="file"; inp.accept="application/json";
@@ -851,35 +916,80 @@ document.getElementById("btnImport").onclick=()=>{
 
 /* ---------- Tabs ---------- */
 const pages = {
-  run: document.getElementById("pageRun"),
-  manage: document.getElementById("pageManage"),
+  splash: document.getElementById("pageSplash"),
+  home: document.getElementById("pageHome"),
+  admin: document.getElementById("pageAdmin"),
   settings: document.getElementById("pageSettings")
 };
 
 function showTab(k){
-  // PIN protect manage/settings
-  if(k==="manage" || k==="settings"){
-    if(!requirePIN()) return;
+  // enforce unlock for any app page
+  if(k !== "splash" && !isUnlocked()){
+    pages.splash.style.display="";
+    pages.home.style.display="none";
+    pages.admin.style.display="none";
+    pages.settings.style.display="none";
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab==="home"));
+    return;
   }
 
-  Object.keys(pages).forEach(x=>pages[x].style.display=(x===k)?"":"none");
+  pages.splash.style.display = (k==="splash") ? "" : "none";
+  pages.home.style.display   = (k==="home")   ? "" : "none";
+  pages.admin.style.display  = (k==="admin")  ? "" : "none";
+  pages.settings.style.display=(k==="settings")? "" : "none";
+
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===k));
   renderAll();
 }
-
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click", ()=>showTab(t.dataset.tab));
 });
 
-/* ---------- RUN: Sessions + Quick Pay ---------- */
-document.getElementById("qRun").addEventListener("input", ()=>renderRun());
+/* ---------- Unlock Button ---------- */
+document.getElementById("btnUnlock").onclick=()=>{
+  if(requirePINSetupOrCheck()){
+    setUnlocked(true);
+
+    // IMPORTANT: do not remember last group => clear session selected group on each new unlock
+    setSessionGroup("");
+
+    toast("تم الدخول");
+    showTab("home");
+  }
+};
+
+/* ---------- HOME ---------- */
+const homeGroupSelect = document.getElementById("homeGroupSelect");
+
+function refreshHomeGroupSelect(){
+  homeGroupSelect.innerHTML="";
+  const o0=document.createElement("option");
+  o0.value=""; o0.textContent="— اختر مجموعة —";
+  homeGroupSelect.appendChild(o0);
+
+  db.groups.forEach(g=>{
+    const o=document.createElement("option");
+    o.value=g.id;
+    o.textContent=g.name;
+    homeGroupSelect.appendChild(o);
+  });
+
+  homeGroupSelect.value = getSessionGroup();
+}
+
+homeGroupSelect.addEventListener("change",(e)=>{
+  setSessionGroup(e.target.value || "");
+  renderAll();
+});
 
 document.getElementById("btnAddSession").onclick=()=>{
-  const g=curGroup(); if(!g) return;
+  const gid=getSessionGroup();
+  const g=getGroupById(gid);
+  if(!g){ toast("اختاري مجموعة أولاً"); return; }
   const b=curBlock(g); if(!b) return;
 
   if(sessionsCount(b) >= cycleLen(g)){
-    toast("اكتملت حصص الدورة");
+    toast("اكتملت حصص الدورة. افتحي دورة جديدة من الإعدادات.");
     return;
   }
 
@@ -890,296 +1000,288 @@ document.getElementById("btnAddSession").onclick=()=>{
 };
 
 document.getElementById("btnRemoveSession").onclick=()=>{
-  const g=curGroup(); if(!g) return;
+  const gid=getSessionGroup();
+  const g=getGroupById(gid);
+  if(!g){ toast("اختاري مجموعة أولاً"); return; }
   const b=curBlock(g); if(!b) return;
+
   if(!b.sessions.length){
     toast("لا توجد حصص للحذف");
     return;
   }
+
+  // طلبك: حذف الحصة يحتاج باسورد (حتى لو البرنامج مفتوح)
+  const okPin = requirePINSetupOrCheck();
+  if(!okPin) return;
+
   const ok=confirm("حذف آخر حصة؟");
   if(!ok) return;
+
   b.sessions.pop();
   saveDB();
   toast("تم حذف آخر حصة");
   renderAll();
 };
 
-/* ---------- SETTINGS: Groups ---------- */
-const selGroup=document.getElementById("selGroup");
+function renderHomeHeader(){
+  document.getElementById("bigDate").textContent = todayText();
 
-function refreshGroupSelect(){
-  selGroup.innerHTML="";
-  if(!db.groups.length){
-    const o=document.createElement("option");
-    o.value=""; o.textContent="لا توجد مجموعات";
-    selGroup.appendChild(o);
+  const gid=getSessionGroup();
+  const g=getGroupById(gid);
+  const b=g?curBlock(g):null;
+
+  document.getElementById("homeGroupName").textContent = g ? (g.displayName || g.name) : "—";
+
+  if(!g || !b){
+    document.getElementById("homeSessionBadge").textContent = "الحصة: —";
+    document.getElementById("homeCycleBadge").textContent = "الدورة: —";
     return;
   }
-  db.groups.forEach(g=>{
-    const o=document.createElement("option");
-    o.value=g.id; o.textContent=g.name;
-    selGroup.appendChild(o);
-  });
-  const g=curGroup();
-  db.settings.currentGroupId=g?.id || "";
-  selGroup.value=db.settings.currentGroupId;
+
+  const sc = sessionsCount(b);
+  const next = Math.min(sc+1, cycleLen(g));
+  document.getElementById("homeSessionBadge").textContent = `الحصة: ${next} / ${cycleLen(g)}`;
+  const from = cycleStartLabel(b);
+  const to = cycleEndLabel(g,b);
+  document.getElementById("homeCycleBadge").textContent = `الدورة: ${from} → ${to}`;
 }
 
-selGroup.addEventListener("change",(e)=>{
-  db.settings.currentGroupId=e.target.value;
-  saveDB();
-  renderAll();
-});
-
-document.getElementById("btnAddGroup").onclick=()=>{
-  const name=(prompt("اسم المجموعة")||"").trim();
-  if(!name) return;
-  if(db.groups.some(x=>x.name.trim().toLowerCase()===name.toLowerCase())) return alert("المجموعة موجودة");
-  const g = {
-    id: uid("g"),
-    name,
-    displayName:"",
-    price: 200,
-    cycleLen: 8,
-    students: [],
-    blocks: [ newBlock(isoYMD(new Date()), isoYMD(new Date())) ]
-  };
-  db.groups.push(g);
-  db.settings.currentGroupId=g.id;
-  saveDB();
-  toast("تمت إضافة المجموعة");
-  renderAll();
-};
-
-function loadSettingsUI(){
-  const g=curGroup(); if(!g) return;
-  const b=curBlock(g);
-  document.getElementById("groupDisplayName").value = g.displayName || "";
-  document.getElementById("priceCycle").value = g.price || 0;
-  document.getElementById("cycleLen").value = String(g.cycleLen||8);
-
-  // show current cycle dates in settings inputs
-  const from = b?.fromYMD || isoYMD(new Date());
-  const to = b?.toYMD || isoYMD(new Date());
-  document.getElementById("blkFrom").value = from;
-  document.getElementById("blkTo").value = to;
-}
-
-document.getElementById("btnSaveSettings").onclick=()=>{
-  const g=curGroup(); if(!g) return;
-  const b=curBlock(g); if(!b) return;
-
-  g.displayName = String(document.getElementById("groupDisplayName").value||"").trim();
-  g.price = Number(document.getElementById("priceCycle").value||0);
-  g.cycleLen = Number(document.getElementById("cycleLen").value||8);
-
-  // update current cycle date range (for label only)
-  b.fromYMD = document.getElementById("blkFrom").value || b.fromYMD;
-  b.toYMD = document.getElementById("blkTo").value || b.toYMD;
-
-  saveDB();
-  toast("تم الحفظ");
-  renderAll();
-};
-
-document.getElementById("btnNewBlock").onclick=()=>{
-  const g=curGroup(); if(!g) return;
-  const b=curBlock(g); if(!b) return;
-
-  const fromV = document.getElementById("blkFrom").value || isoYMD(new Date());
-  const toV = document.getElementById("blkTo").value || isoYMD(new Date());
-
-  const ok = confirm("فتح دورة جديدة؟ سيتم ترحيل الرصيد/المتأخرات تلقائيًا، والبنود الإضافية ستبدأ من جديد.");
-  if(!ok) return;
-
-  // carry signed remaining
-  const carryMap = {};
-  g.students.forEach(s=>{
-    const t = totals(g,b,s);
-    if(Math.abs(t.remaining) > 0.0001) carryMap[s.id]=t.remaining;
-  });
-
-  b.closed=true;
-
-  const nb = newBlock(fromV, toV);
-  nb.carry = carryMap; // ✅ carry to next cycle
-  nb.extraItems = [];  // ✅ extra items only current cycle
-  nb.sessions = [];
-  nb.payments = {};
-  nb.notes = {};
-
-  g.blocks.push(nb);
-  saveDB();
-  toast("تم فتح دورة جديدة");
-  renderAll();
-};
-
-document.getElementById("btnReset").onclick=()=>{
-  const ok=confirm("سيتم مسح كل البيانات والبدء من جديد. هل تريدين المتابعة؟");
-  if(!ok) return;
-  localStorage.removeItem(DB_KEY);
-  location.reload();
-};
-
-/* ---------- SETTINGS: Extra Items ---------- */
-const exOverlay=document.getElementById("exOverlay");
-document.getElementById("btnAddExtra").onclick=()=>{
-  document.getElementById("exName").value="";
-  document.getElementById("exAmount").value="";
-  document.getElementById("exDate").value=isoYMD(new Date());
-  exOverlay.style.display="block";
-};
-document.getElementById("btnExClose").onclick=()=>exOverlay.style.display="none";
-exOverlay.addEventListener("click",(e)=>{ if(e.target===exOverlay) exOverlay.style.display="none"; });
-
-document.getElementById("btnExSave").onclick=()=>{
-  const g=curGroup(); if(!g) return;
-  const b=curBlock(g); if(!b) return;
-
-  const name=(document.getElementById("exName").value||"").trim();
-  const amt=Number(document.getElementById("exAmount").value||0);
-  const date=document.getElementById("exDate").value || isoYMD(new Date());
-
-  if(!name) return alert("اكتبي اسم البند");
-  if(!(amt>0)) return alert("اكتبي مبلغ صحيح");
-
-  b.extraItems.push({ id:uid("x"), name, amount:round2(amt), dateYMD:date });
-  saveDB();
-  exOverlay.style.display="none";
-  toast("تمت إضافة البند");
-  renderAll();
-};
-
-function renderExtraItems(){
-  const g=curGroup();
-  const wrap=document.getElementById("extraItemsWrap");
+function renderHomeStudents(){
+  const wrap=document.getElementById("homeStudentsList");
   wrap.innerHTML="";
-  if(!g) return;
-  const b=curBlock(g);
-  if(!b) return;
 
-  if(!b.extraItems.length){
-    wrap.innerHTML = `<div class="hint">لا توجد بنود إضافية في الدورة الحالية.</div>`;
+  const gid=getSessionGroup();
+  const g=getGroupById(gid);
+  const b=g?curBlock(g):null;
+
+  if(!g){
+    wrap.innerHTML = `<div class="hint">اختاري مجموعة من الأعلى لعرض الطلاب.</div>`;
+    return;
+  }
+  if(!g.students.length){
+    wrap.innerHTML = `<div class="hint">لا يوجد طلاب في هذه المجموعة. أضيفيهم من الإعدادات.</div>`;
     return;
   }
 
-  const box=document.createElement("div");
-  box.className="list";
-  b.extraItems.forEach(it=>{
+  const list=[...g.students].sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+  list.forEach((s,idx)=>{
+    const st=status(g,b,s);
+
     const row=document.createElement("div");
     row.className="row";
     row.innerHTML=`
-      <div class="left" style="min-width:0">
-        <div class="num">＋</div>
-        <div style="min-width:0">
-          <div class="name">${escapeHtml(it.name)}</div>
-          <div class="hint mono">${escapeHtml(it.dateYMD)} • ${escapeHtml(String(it.amount))}</div>
-        </div>
+      <div class="left">
+        <div class="num">${idx+1}</div>
+        <div class="name">${escapeHtml(s.name)} ${s.paused?` <span class="badge red">موقوف</span>`:""}</div>
       </div>
-      <div style="display:flex; gap:8px">
-        <button class="moreBtn" title="حذف">🗑️</button>
+      <div style="display:flex; gap:8px; align-items:center">
+        <button class="payBtn ${st==="paid"?"pay-paid":st==="partial"?"pay-partial":"pay-unpaid"}">${st==="paid"?"تم/رصيد":"دفع"}</button>
+        <button class="moreBtn" title="تفاصيل (إدارة)">⋯</button>
       </div>
     `;
-    row.querySelector("button").onclick=()=>{
-      const ok=confirm("حذف هذا البند؟");
-      if(!ok) return;
-      b.extraItems=b.extraItems.filter(x=>x.id!==it.id);
-      saveDB();
-      toast("تم حذف البند");
-      renderAll();
+
+    row.querySelector(".payBtn").onclick=()=>{
+      if(s.paused){ toast("الطالب موقوف"); return; }
+      openQuickPay(g,b,s);
     };
-    box.appendChild(row);
+
+    row.querySelector(".moreBtn").onclick=()=>{
+      // Admin details allowed because already unlocked
+      openPayModal(g,b,s);
+    };
+
+    wrap.appendChild(row);
   });
-  wrap.appendChild(box);
 }
 
-/* ---------- SETTINGS: Students ---------- */
-document.getElementById("btnAddStudent").onclick=()=>{
-  const g=curGroup(); if(!g) return;
-  const name=(document.getElementById("newStudentName").value||"").trim();
-  if(!name) return;
-  if(g.students.some(s=>s.name.trim().toLowerCase()===name.toLowerCase())) return alert("الطالب موجود");
-  g.students.push({ id:uid("s"), name, paused:false, discountType:"none", discountValue:0 });
-  document.getElementById("newStudentName").value="";
-  saveDB();
-  toast("تمت إضافة الطالب");
-  renderAll();
-};
+/* ---------- QUICK PAY (Home) ---------- */
+const qpOverlay = document.getElementById("qpOverlay");
+const qpAmount  = document.getElementById("qpAmount");
+let qpCtx=null;
 
-const stOverlay=document.getElementById("stOverlay");
-let stCtx=null;
+document.getElementById("btnQpClose").onclick=()=>{ qpOverlay.style.display="none"; qpCtx=null; };
+qpOverlay.addEventListener("click",(e)=>{ if(e.target===qpOverlay){ qpOverlay.style.display="none"; qpCtx=null; } });
 
-document.getElementById("btnStClose").onclick=()=>{ stOverlay.style.display="none"; stCtx=null; };
-stOverlay.addEventListener("click",(e)=>{ if(e.target===stOverlay){ stOverlay.style.display="none"; stCtx=null; } });
-
-document.getElementById("btnStSave").onclick=()=>{
-  if(!stCtx) return;
-  const { g, s } = stCtx;
-
-  const newName = (document.getElementById("stName").value||"").trim();
-  if(!newName) return alert("اكتبي اسم صحيح");
-  // prevent duplicates (other than self)
-  if(g.students.some(x=>x.id!==s.id && x.name.trim().toLowerCase()===newName.toLowerCase())) return alert("اسم موجود بالفعل");
-
-  s.name = newName;
-  s.discountType = document.getElementById("stDiscType").value || "none";
-  s.discountValue = Number(document.getElementById("stDiscVal").value||0);
-  s.paused = !!document.getElementById("stPaused").checked;
-
-  saveDB();
-  toast("تم حفظ الطالب");
-  renderAll();
-  stOverlay.style.display="none";
-  stCtx=null;
-};
-
-document.getElementById("btnStDelete").onclick=()=>{
-  if(!stCtx) return;
-  const { g, s } = stCtx;
-
-  const ok = confirm("حذف الطالب؟ سيتم حذف مدفوعاته وملاحظاته من كل الدورات.");
-  if(!ok) return;
-
-  // remove student data from all blocks
-  g.blocks.forEach(b=>{
-    delete b.payments?.[s.id];
-    delete b.notes?.[s.id];
-    delete b.carry?.[s.id];
-  });
-
-  g.students = g.students.filter(x=>x.id!==s.id);
-
-  saveDB();
-  toast("تم حذف الطالب");
-  renderAll();
-  stOverlay.style.display="none";
-  stCtx=null;
-};
-
-function openStudentModal(g, s){
-  stCtx={g,s};
-  document.getElementById("stTitle").textContent = s.name;
-  document.getElementById("stName").value = s.name || "";
-  document.getElementById("stDiscType").value = s.discountType || "none";
-  document.getElementById("stDiscVal").value = (s.discountType==="fixed"||s.discountType==="percent") ? String(s.discountValue||0) : "";
-  document.getElementById("stPaused").checked = !!s.paused;
-  stOverlay.style.display="block";
+function studentStateBadges(s){
+  const arr=[];
+  if(s.paused) arr.push(`<span class="badge red">موقوف</span>`);
+  if(s.discountType==="exempt") arr.push(`<span class="badge">معفى</span>`);
+  if(s.discountType==="fixed") arr.push(`<span class="badge">خصم مبلغ: ${escapeHtml(String(s.discountValue||0))}</span>`);
+  if(s.discountType==="percent") arr.push(`<span class="badge">خصم نسبة: ${escapeHtml(String(s.discountValue||0))}%</span>`);
+  return arr.join("");
 }
 
-function renderStudentsSettings(){
-  const g=curGroup();
-  const wrap=document.getElementById("studentsList");
-  wrap.innerHTML="";
-  if(!g){ wrap.innerHTML=`<div class="hint">أضيفي مجموعة أولاً.</div>`; return; }
-  if(!g.students.length){ wrap.innerHTML=`<div class="hint">لا يوجد طلاب.</div>`; return; }
+function openQuickPay(g,b,s){
+  qpCtx={g,b,s};
+  qpAmount.value="";
+  document.getElementById("qpNote").value = String(b.notes?.[s.id] || "");
+
+  const sc = sessionsCount(b);
+  const cycleInfo = `حصص: ${sc}/${cycleLen(g)} • الدورة: ${cycleStartLabel(b)} → ${cycleEndLabel(g,b)}`;
+  document.getElementById("qpTitle").textContent = s.name;
+  document.getElementById("qpSub").textContent = cycleInfo;
+  document.getElementById("qpStateBadges").innerHTML = studentStateBadges(s) || `<span class="badge">—</span>`;
+
+  updateQuickPaySummary(g,b,s);
+
+  qpOverlay.style.display="block";
+  setTimeout(()=>qpAmount.focus(), 40);
+}
+
+function updateQuickPaySummary(g,b,s){
+  const t=totals(g,b,s);
+  const msg = `الإجمالي حتى الآن: ${t.total} • المدفوع: ${t.paid} • المتبقي: ${t.remaining}`;
+  document.getElementById("qpMiniSummary").textContent = msg;
+}
+
+function saveNoteForStudent(b,sid, note){
+  b.notes[sid] = String(note||"").trim();
+}
+
+document.getElementById("btnQpPayPart").onclick=()=>{
+  if(!qpCtx) return;
+  const {g,b,s}=qpCtx;
+  const v=Number(qpAmount.value||0);
+  if(!(v>0)) return alert("اكتب مبلغ صحيح");
+
+  const cur = paid(b,s.id);
+  b.payments[s.id] = round2(cur + v);
+
+  saveNoteForStudent(b, s.id, document.getElementById("qpNote").value);
+  saveDB();
+  toast("تم الدفع");
+  updateQuickPaySummary(g,b,s);
+  renderAll();
+};
+
+document.getElementById("btnQpMinus").onclick=()=>{
+  if(!qpCtx) return;
+  const {g,b,s}=qpCtx;
+  const v=Number(qpAmount.value||0);
+  if(!(v>0)) return alert("اكتب مبلغ صحيح");
+
+  const cur = paid(b,s.id);
+  b.payments[s.id] = round2(Math.max(0, cur - v));
+
+  saveNoteForStudent(b, s.id, document.getElementById("qpNote").value);
+  saveDB();
+  toast("تم الخصم");
+  updateQuickPaySummary(g,b,s);
+  renderAll();
+};
+
+document.getElementById("btnQpPayFull").onclick=()=>{
+  if(!qpCtx) return;
+  const {g,b,s}=qpCtx;
+  const t=totals(g,b,s);
+  if(t.remaining <= 0){ toast("لا يوجد متبقي"); return; }
+
+  b.payments[s.id] = round2(t.total);
+
+  saveNoteForStudent(b, s.id, document.getElementById("qpNote").value);
+  saveDB();
+  toast("تم دفع كامل المتبقي");
+  updateQuickPaySummary(g,b,s);
+  renderAll();
+};
+
+/* ---------- ADMIN: sessions log / change pin ---------- */
+document.getElementById("btnSessionsLog").onclick=()=>{
+  const gid = document.getElementById("adminGroupSelect").value || "";
+  const g = getGroupById(gid);
+  const b = g ? curBlock(g) : null;
+  if(!g || !b){ toast("اختاري مجموعة"); return; }
+
+  const ss = b.sessions.map((x,i)=>`${i+1}) ${fmtDMY(x.tsISO)}`).join("\n");
+  document.getElementById("ssList").textContent = ss || "—";
+  document.getElementById("ssOverlay").style.display="block";
+};
+document.getElementById("btnSsClose").onclick=()=>document.getElementById("ssOverlay").style.display="none";
+document.getElementById("ssOverlay").addEventListener("click",(e)=>{ if(e.target.id==="ssOverlay") document.getElementById("ssOverlay").style.display="none"; });
+
+document.getElementById("btnChangePin").onclick=()=>{
+  const existing=getPIN();
+  if(existing){
+    const entered = prompt("أدخلي الرقم السري الحالي");
+    if(entered !== existing){ alert("غير صحيح"); return; }
+  }
+  const n = prompt("اكتبي الرقم السري الجديد (4 أرقام أو أكثر)");
+  if(!n || n.trim().length < 4) return alert("رقم غير صالح");
+  setPIN(n.trim());
+  toast("تم تغيير الرقم السري");
+};
+
+const adminGroupSelect = document.getElementById("adminGroupSelect");
+const adminSearchAll   = document.getElementById("adminSearchAll");
+
+function refreshAdminGroupSelect(){
+  adminGroupSelect.innerHTML="";
+  db.groups.forEach(g=>{
+    const o=document.createElement("option");
+    o.value=g.id; o.textContent=g.name;
+    adminGroupSelect.appendChild(o);
+  });
+  // default to first group if exists
+  if(db.groups[0]) adminGroupSelect.value = db.groups[0].id;
+}
+
+adminGroupSelect.addEventListener("change", ()=>renderAdmin());
+adminSearchAll.addEventListener("input", ()=>renderAdminSearchAll());
+
+function adminGroupTotals(g,b){
+  let total=0, paidSum=0, remainingSum=0;
+
+  g.students.forEach(s=>{
+    const t=totals(g,b,s);
+    total += t.total;
+    paidSum += t.paid;
+    remainingSum += t.remaining;
+  });
+
+  total=round2(total); paidSum=round2(paidSum); remainingSum=round2(remainingSum);
+
+  const wrap=document.getElementById("adminTotals");
+  wrap.innerHTML=`
+    <div class="row" style="flex:1; min-width:240px">
+      <div class="left"><div class="num">∑</div><div><div class="name">إجمالي المجموعة</div><div class="hint mono">${total}</div></div></div>
+    </div>
+    <div class="row" style="flex:1; min-width:240px">
+      <div class="left"><div class="num">💰</div><div><div class="name">المدفوع</div><div class="hint mono">${paidSum}</div></div></div>
+    </div>
+    <div class="row" style="flex:1; min-width:240px">
+      <div class="left"><div class="num">🧾</div><div><div class="name">المتبقي</div><div class="hint mono">${remainingSum}</div></div></div>
+    </div>
+  `;
+}
+
+function renderAdmin(){
+  const gid = adminGroupSelect.value || "";
+  const g = getGroupById(gid);
+  const b = g ? curBlock(g) : null;
+
+  document.getElementById("adminSub").textContent = (g && b)
+    ? `${g.displayName || g.name} • حصص: ${sessionsCount(b)}/${cycleLen(g)} • الدورة: ${cycleStartLabel(b)} → ${cycleEndLabel(g,b)}`
+    : "—";
+
+  const listWrap=document.getElementById("adminStudentsList");
+  listWrap.innerHTML="";
+
+  if(!g || !b){
+    listWrap.innerHTML=`<div class="hint">—</div>`;
+    return;
+  }
+
+  adminGroupTotals(g,b);
+
+  if(!g.students.length){
+    listWrap.innerHTML=`<div class="hint">لا يوجد طلاب.</div>`;
+    return;
+  }
 
   const list=[...g.students].sort((a,b)=>a.name.localeCompare(b.name,"ar"));
   list.forEach(s=>{
-    const discLabel =
-      s.discountType==="none" ? "بدون خصم" :
-      s.discountType==="fixed" ? `خصم مبلغ: ${s.discountValue||0}` :
-      s.discountType==="percent" ? `خصم نسبة: ${s.discountValue||0}%` :
-      "إعفاء";
+    const t=totals(g,b,s);
+    const st=status(g,b,s);
 
     const it=document.createElement("div");
     it.className="row";
@@ -1187,20 +1289,72 @@ function renderStudentsSettings(){
       <div class="left" style="min-width:0">
         <div class="num">👤</div>
         <div style="min-width:0">
-          <div class="name">${escapeHtml(s.name)} ${s.paused?` <span class="badge">موقوف</span>`:""}</div>
-          <div class="hint">${escapeHtml(discLabel)}</div>
+          <div class="name">${escapeHtml(s.name)} ${s.paused?` <span class="badge red">موقوف</span>`:""}</div>
+          <div class="hint mono">إجمالي: ${t.total} • مدفوع: ${t.paid} • متبقي: ${t.remaining}</div>
         </div>
       </div>
-      <div>
-        <button class="moreBtn" title="تعديل">⋯</button>
+      <div style="display:flex; gap:8px; align-items:center">
+        <div class="badge">${st==="paid"?"مكتمل/رصيد":st==="partial"?"جزئي":"غير مكتمل"}</div>
+        <button class="moreBtn">عرض</button>
       </div>
     `;
-    it.querySelector("button").onclick=()=>openStudentModal(g,s);
-    wrap.appendChild(it);
+    it.querySelector("button").onclick=()=>openPayModal(g,b,s);
+    listWrap.appendChild(it);
   });
+
+  renderAdminSearchAll();
 }
 
-/* ---------- PAY / DETAILS (Admin) ---------- */
+function renderAdminSearchAll(){
+  const q=(adminSearchAll.value||"").trim().toLowerCase();
+  const wrap=document.getElementById("adminSearchResultsWrap");
+  const out=document.getElementById("adminSearchResults");
+  out.innerHTML="";
+
+  if(!q){
+    wrap.style.display="none";
+    return;
+  }
+
+  const hits=[];
+  db.groups.forEach(g=>{
+    const b=curBlock(g);
+    g.students.forEach(s=>{
+      if(s.name.toLowerCase().includes(q)){
+        hits.push({g,b,s});
+      }
+    });
+  });
+
+  wrap.style.display="";
+  if(!hits.length){
+    out.innerHTML=`<div class="hint">لا توجد نتائج.</div>`;
+    return;
+  }
+
+  hits
+    .sort((a,b)=>a.s.name.localeCompare(b.s.name,"ar"))
+    .forEach(({g,b,s})=>{
+      const t=totals(g,b,s);
+      const it=document.createElement("div");
+      it.className="row";
+      it.innerHTML=`
+        <div class="left" style="min-width:0">
+          <div class="num">🔎</div>
+          <div style="min-width:0">
+            <div class="name">${escapeHtml(s.name)}</div>
+            <div class="hint">المجموعة: <b>${escapeHtml(g.name)}</b></div>
+            <div class="hint mono">إجمالي: ${t.total} • مدفوع: ${t.paid} • متبقي: ${t.remaining}</div>
+          </div>
+        </div>
+        <div><button class="moreBtn">عرض</button></div>
+      `;
+      it.querySelector("button").onclick=()=>openPayModal(g,b,s);
+      out.appendChild(it);
+    });
+}
+
+/* ---------- ADMIN Pay/Details Modal ---------- */
 const payOverlay=document.getElementById("payOverlay");
 const payAmountWrap=document.getElementById("payAmountWrap");
 const payAmount=document.getElementById("payAmount");
@@ -1279,21 +1433,24 @@ function openPayModal(g,b,s){
 
   const t=totals(g,b,s);
 
-  const cycleLabel = `${b.fromYMD} → ${b.toYMD} • حصص: ${sessionsCount(b)}/${cycleLen(g)}`;
+  const cycleLabel = `حصص: ${sessionsCount(b)}/${cycleLen(g)} • الدورة: ${cycleStartLabel(b)} → ${cycleEndLabel(g,b)}`;
   document.getElementById("payTitle").textContent = s.name;
   document.getElementById("paySub").textContent = cycleLabel;
 
   document.getElementById("payNote").value = String(b.notes?.[s.id] || "");
 
-  // table (as requested)
+  // state badges (طلبك: يظهر إذا كان معفى/خصم/موقوف)
+  document.getElementById("payStateBadges").innerHTML = studentStateBadges(s) || `<span class="badge">—</span>`;
+
+  const ss = b.sessions.map(x=>fmtDMY(x.tsISO)).join(" • ");
+
   const table = `
     <table>
       <thead>
         <tr><th>البند</th><th>المبلغ</th></tr>
       </thead>
       <tbody>
-        <tr><td>مجموع الاشتراك</td><td class="mono">${t.sub}</td></tr>
-        <tr><td>مجموع البنود</td><td class="mono">${t.items}</td></tr>
+        <tr><td>مجموع الاشتراك حتى الآن</td><td class="mono">${t.sub}</td></tr>
         <tr><td>الرصيد السابق</td><td class="mono">${t.prev}</td></tr>
         <tr><td><b>الإجمالي</b></td><td class="mono"><b>${t.total}</b></td></tr>
         <tr><td>المدفوع</td><td class="mono">${t.paid}</td></tr>
@@ -1302,13 +1459,8 @@ function openPayModal(g,b,s){
     </table>
   `;
 
-  // details lines (sessions + extras) inside admin only
-  const ss = b.sessions.map(x=>fmtDMY(x.tsISO)).join(" • ");
-  const ex = (b.extraItems||[]).map(x=>`${x.name} (${x.amount})`).join(" • ");
-
   document.getElementById("payTableWrap").innerHTML = `
     <div class="hint">تواريخ الحصص: <span class="mono">${escapeHtml(ss||"—")}</span></div>
-    <div class="hint">البنود الإضافية: <span class="mono">${escapeHtml(ex||"—")}</span></div>
     <div class="hr"></div>
     ${table}
   `;
@@ -1316,128 +1468,254 @@ function openPayModal(g,b,s){
   payOverlay.style.display="block";
 }
 
-/* ---------- RUN render ---------- */
-function renderRun(){
-  const g=curGroup();
-  const b=g?curBlock(g):null;
+/* ---------- SETTINGS: Groups & Students ---------- */
+const groupsList = document.getElementById("groupsList");
+const editor = document.getElementById("settingsGroupEditor");
+let editGroupId = null;
 
-  document.getElementById("topDate").textContent = todayText();
-  document.getElementById("todayOnly").textContent = todayText();
+document.getElementById("btnAddGroup").onclick=()=>{
+  const name=(prompt("اسم المجموعة")||"").trim();
+  if(!name) return;
+  if(db.groups.some(x=>x.name.trim().toLowerCase()===name.toLowerCase())) return alert("المجموعة موجودة");
 
-  document.getElementById("runGroupName").textContent = g ? (g.displayName || g.name || "—") : "—";
+  db.groups.push({
+    id: uid("g"),
+    name,
+    displayName:"",
+    price: 200,
+    cycleLen: 8,
+    students: [],
+    blocks: [ newBlock() ]
+  });
+  saveDB();
+  toast("تمت إضافة المجموعة");
+  renderAll();
+};
 
-  const wrap=document.getElementById("runList");
-  wrap.innerHTML="";
+document.getElementById("btnReset").onclick=()=>{
+  const ok=confirm("سيتم مسح كل البيانات والبدء من جديد. هل تريدين المتابعة؟");
+  if(!ok) return;
+  localStorage.removeItem(DB_KEY);
+  location.reload();
+};
 
-  if(!g){
-    wrap.innerHTML=`<div class="hint">اذهبي للإعدادات وأضيفي مجموعة.</div>`;
+document.getElementById("btnCloseGroupEditor").onclick=()=>{
+  editor.style.display="none";
+  editGroupId=null;
+};
+
+document.getElementById("btnSaveGroup").onclick=()=>{
+  const g=getGroupById(editGroupId);
+  if(!g) return;
+
+  const n=(document.getElementById("editGroupName").value||"").trim();
+  if(!n) return alert("اكتبي اسم المجموعة");
+
+  // prevent duplicate names
+  if(db.groups.some(x=>x.id!==g.id && x.name.trim().toLowerCase()===n.toLowerCase())) return alert("اسم المجموعة موجود");
+
+  g.name=n;
+  g.displayName=(document.getElementById("editGroupDisplayName").value||"").trim();
+  g.price=Number(document.getElementById("editPriceCycle").value||0);
+  g.cycleLen=Number(document.getElementById("editCycleLen").value||8);
+
+  saveDB();
+  toast("تم الحفظ");
+  renderAll();
+};
+
+document.getElementById("btnNewCycle").onclick=()=>{
+  const g=getGroupById(editGroupId);
+  if(!g) return;
+  const b=curBlock(g);
+  if(!b) return;
+
+  const ok = confirm("فتح دورة جديدة؟ سيتم ترحيل المتبقي/الرصيد تلقائيًا.");
+  if(!ok) return;
+
+  // carry remaining (signed)
+  const carryMap = {};
+  g.students.forEach(s=>{
+    const t = totals(g,b,s);
+    if(Math.abs(t.remaining) > 0.0001) carryMap[s.id]=t.remaining;
+  });
+
+  b.closed=true;
+
+  const nb = newBlock();
+  nb.carry = carryMap;
+  g.blocks.push(nb);
+
+  saveDB();
+  toast("تم فتح دورة جديدة");
+  renderAll();
+};
+
+document.getElementById("btnDeleteGroup").onclick=()=>{
+  const g=getGroupById(editGroupId);
+  if(!g) return;
+
+  const ok=confirm("حذف المجموعة بكل بياناتها؟");
+  if(!ok) return;
+
+  db.groups = db.groups.filter(x=>x.id!==g.id);
+  saveDB();
+  toast("تم حذف المجموعة");
+  editor.style.display="none";
+  editGroupId=null;
+  renderAll();
+};
+
+document.getElementById("btnAddStudent").onclick=()=>{
+  const g=getGroupById(editGroupId);
+  if(!g) return;
+
+  const name=(document.getElementById("newStudentName").value||"").trim();
+  if(!name) return;
+  if(g.students.some(s=>s.name.trim().toLowerCase()===name.toLowerCase())) return alert("الطالب موجود");
+
+  g.students.push({ id:uid("s"), name, paused:false, discountType:"none", discountValue:0 });
+  document.getElementById("newStudentName").value="";
+  saveDB();
+  toast("تمت إضافة الطالب");
+  renderAll();
+};
+
+/* Student editor modal */
+const stOverlay=document.getElementById("stOverlay");
+let stCtx=null;
+
+document.getElementById("btnStClose").onclick=()=>{ stOverlay.style.display="none"; stCtx=null; };
+stOverlay.addEventListener("click",(e)=>{ if(e.target===stOverlay){ stOverlay.style.display="none"; stCtx=null; } });
+
+document.getElementById("btnStSave").onclick=()=>{
+  if(!stCtx) return;
+  const { g, s } = stCtx;
+
+  const newName=(document.getElementById("stName").value||"").trim();
+  if(!newName) return alert("اكتبي اسم صحيح");
+
+  if(g.students.some(x=>x.id!==s.id && x.name.trim().toLowerCase()===newName.toLowerCase())) return alert("اسم موجود بالفعل");
+
+  s.name=newName;
+  s.discountType=document.getElementById("stDiscType").value || "none";
+  s.discountValue=Number(document.getElementById("stDiscVal").value||0);
+  s.paused=!!document.getElementById("stPaused").checked;
+
+  saveDB();
+  toast("تم حفظ الطالب");
+  renderAll();
+  stOverlay.style.display="none";
+  stCtx=null;
+};
+
+document.getElementById("btnStDelete").onclick=()=>{
+  if(!stCtx) return;
+  const { g, s } = stCtx;
+
+  const ok=confirm("حذف الطالب؟ سيتم حذف مدفوعاته وملاحظاته من كل الدورات.");
+  if(!ok) return;
+
+  g.blocks.forEach(b=>{
+    delete b.payments?.[s.id];
+    delete b.notes?.[s.id];
+    delete b.carry?.[s.id];
+  });
+
+  g.students = g.students.filter(x=>x.id!==s.id);
+
+  saveDB();
+  toast("تم حذف الطالب");
+  renderAll();
+  stOverlay.style.display="none";
+  stCtx=null;
+};
+
+function openStudentModal(g,s){
+  stCtx={g,s};
+  document.getElementById("stTitle").textContent = s.name;
+  document.getElementById("stName").value = s.name || "";
+  document.getElementById("stDiscType").value = s.discountType || "none";
+  document.getElementById("stDiscVal").value = (s.discountType==="fixed"||s.discountType==="percent") ? String(s.discountValue||0) : "";
+  document.getElementById("stPaused").checked = !!s.paused;
+  stOverlay.style.display="block";
+}
+
+function openGroupEditor(gid){
+  const g=getGroupById(gid);
+  if(!g) return;
+  editGroupId=gid;
+
+  document.getElementById("editGroupTitle").textContent = `تعديل: ${g.name}`;
+  document.getElementById("editGroupName").value = g.name || "";
+  document.getElementById("editGroupDisplayName").value = g.displayName || "";
+  document.getElementById("editPriceCycle").value = g.price || 0;
+  document.getElementById("editCycleLen").value = String(g.cycleLen||8);
+
+  editor.style.display="";
+  renderStudentsSettings();
+}
+
+function renderGroupsList(){
+  groupsList.innerHTML="";
+  if(!db.groups.length){
+    groupsList.innerHTML = `<div class="hint">لا توجد مجموعات.</div>`;
     return;
   }
-  if(!g.students.length){
-    wrap.innerHTML=`<div class="hint">أضيفي طلاب من الإعدادات.</div>`;
-    return;
-  }
 
-  const q=(document.getElementById("qRun").value||"").trim().toLowerCase();
-  const list=[...g.students]
-    .filter(s=>s.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name,"ar"));
-
-  list.forEach((s,idx)=>{
-    const st=status(g,b,s);
-
-    const row=document.createElement("div");
-    row.className="row";
-    row.innerHTML=`
-      <div class="left">
-        <div class="num">${idx+1}</div>
-        <div class="name">${escapeHtml(s.name)}</div>
+  db.groups.forEach(g=>{
+    const b=curBlock(g);
+    const sc = b ? sessionsCount(b) : 0;
+    const it=document.createElement("div");
+    it.className="row";
+    it.innerHTML=`
+      <div class="left" style="min-width:0">
+        <div class="num">👥</div>
+        <div style="min-width:0">
+          <div class="name">${escapeHtml(g.name)}</div>
+          <div class="hint mono">طلاب: ${g.students.length} • حصص: ${sc}/${cycleLen(g)} • سعر: ${g.price||0}</div>
+        </div>
       </div>
-      <div style="display:flex; gap:8px; align-items:center">
-        <button class="payBtn ${st==="paid"?"pay-paid":st==="partial"?"pay-partial":"pay-unpaid"}">تم الدفع</button>
-        <button class="moreBtn" title="تفاصيل (إدارة)">⋯</button>
+      <div style="display:flex; gap:8px">
+        <button class="moreBtn">تعديل</button>
       </div>
     `;
-
-    // Quick pay: pay to total due (admin-friendly), but NO numbers shown.
-    row.querySelector(".payBtn").onclick=()=>{
-      if(s.paused){ toast("الطالب موقوف"); return; }
-      const t=totals(g,b,s);
-      if(t.remaining <= 0){ toast("تم"); renderAll(); return; }
-      b.payments[s.id] = round2(t.total);
-      saveDB();
-      toast("تم الدفع");
-      renderAll();
-    };
-
-    // Details button: require PIN (so even in run it’s protected)
-    row.querySelector(".moreBtn").onclick=()=>{
-      if(!requirePIN()) return;
-      openPayModal(g,b,s);
-    };
-
-    wrap.appendChild(row);
+    it.querySelector("button").onclick=()=>openGroupEditor(g.id);
+    groupsList.appendChild(it);
   });
 }
 
-/* ---------- MANAGE render ---------- */
-document.getElementById("qManage").addEventListener("input", ()=>renderManage());
-document.getElementById("btnSessionsLog").onclick=()=>{
-  const g=curGroup(); if(!g) return;
-  const b=curBlock(g); if(!b) return;
-
-  const ss = b.sessions.map((x,i)=>`${i+1}) ${fmtDMY(x.tsISO)}`).join("\n");
-  document.getElementById("ssList").textContent = ss || "—";
-  document.getElementById("ssOverlay").style.display="block";
-};
-document.getElementById("btnSsClose").onclick=()=>document.getElementById("ssOverlay").style.display="none";
-document.getElementById("ssOverlay").addEventListener("click",(e)=>{ if(e.target.id==="ssOverlay") document.getElementById("ssOverlay").style.display="none"; });
-
-function renderManage(){
-  const g=curGroup();
-  const b=g?curBlock(g):null;
-
-  document.getElementById("manageSub").textContent = g && b
-    ? `${g.displayName || g.name} • ${b.fromYMD} → ${b.toYMD}`
-    : "—";
-
-  const wrap=document.getElementById("manageList");
+function renderStudentsSettings(){
+  const wrap=document.getElementById("studentsList");
   wrap.innerHTML="";
 
-  if(!g || !b){
-    wrap.innerHTML=`<div class="hint">—</div>`;
-    return;
-  }
-  if(!g.students.length){
-    wrap.innerHTML=`<div class="hint">لا يوجد طلاب.</div>`;
-    return;
-  }
+  const g=getGroupById(editGroupId);
+  if(!g){ wrap.innerHTML=`<div class="hint">—</div>`; return; }
+  if(!g.students.length){ wrap.innerHTML=`<div class="hint">لا يوجد طلاب.</div>`; return; }
 
-  const q=(document.getElementById("qManage").value||"").trim().toLowerCase();
-  const list=[...g.students]
-    .filter(s=>s.name.toLowerCase().includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name,"ar"));
-
+  const list=[...g.students].sort((a,b)=>a.name.localeCompare(b.name,"ar"));
   list.forEach(s=>{
-    const t=totals(g,b,s);
-    const st=status(g,b,s);
+    const discLabel =
+      s.discountType==="none" ? "بدون خصم" :
+      s.discountType==="fixed" ? `خصم مبلغ: ${s.discountValue||0}` :
+      s.discountType==="percent" ? `خصم نسبة: ${s.discountValue||0}%` :
+      "إعفاء";
 
     const it=document.createElement("div");
     it.className="row";
     it.innerHTML=`
       <div class="left" style="min-width:0">
-        <div class="num">🧾</div>
+        <div class="num">👤</div>
         <div style="min-width:0">
-          <div class="name">${escapeHtml(s.name)} ${s.paused?` <span class="badge">موقوف</span>`:""}</div>
-          <div class="hint">اضغطي لعرض جدول الحساب والتفاصيل</div>
+          <div class="name">${escapeHtml(s.name)} ${s.paused?` <span class="badge red">موقوف</span>`:""}</div>
+          <div class="hint">${escapeHtml(discLabel)}</div>
         </div>
       </div>
-      <div style="display:flex; gap:8px; align-items:center">
-        <div class="badge">${st==="paid"?"مكتمل":st==="partial"?"جزئي":"غير مكتمل"}</div>
-        <button class="moreBtn">عرض</button>
+      <div>
+        <button class="moreBtn">⋯</button>
       </div>
     `;
-    it.querySelector("button").onclick=()=>openPayModal(g,b,s);
+    it.querySelector("button").onclick=()=>openStudentModal(g,s);
     wrap.appendChild(it);
   });
 }
@@ -1445,18 +1723,51 @@ function renderManage(){
 /* ---------- Render All ---------- */
 function renderAll(){
   ensureDefaults();
-  refreshGroupSelect();
-  loadSettingsUI();
-  renderExtraItems();
-  renderStudentsSettings();
-  renderRun();
-  renderManage();
+
+  // show correct page (splash if not unlocked)
+  if(!isUnlocked()){
+    pages.splash.style.display="";
+    pages.home.style.display="none";
+    pages.admin.style.display="none";
+    pages.settings.style.display="none";
+    return;
+  }
+
+  // refresh home header & lists
+  refreshHomeGroupSelect();
+  renderHomeHeader();
+  renderHomeStudents();
+
+  // admin
+  refreshAdminGroupSelect();
+  renderAdmin();
+
+  // settings
+  renderGroupsList();
+
+  // if group editor open, keep it updated
+  if(editor.style.display !== "none"){
+    renderStudentsSettings();
+  }
 }
 
 /* ---------- Init ---------- */
 (function init(){
   loadDB();
   ensureDefaults();
+
+  // do not remember last group even داخل نفس الجلسة عند فتح البرنامج لأول مرة في الصفحة
+  // (هيتحدد بعد unlock فقط)
+  if(!isUnlocked()){
+    setSessionGroup("");
+  }
+
+  // initial date
+  document.getElementById("bigDate").textContent = todayText();
+
+  // show splash by default
+  showTab(isUnlocked() ? "home" : "splash");
+
   renderAll();
 })();
 
