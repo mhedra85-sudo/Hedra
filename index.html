@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Hedra v4.2</title>
+  <title>Hedra v5.0</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -18,7 +18,7 @@
       --soft:#EAF2FF;
       --paper:#ffffff;
       --ink:#0b1220;
-      --muted:#64748b;
+      --muted:#334155;
       --line:rgba(2,6,23,.12);
       --shadow:0 20px 50px rgba(2,6,23,.28);
       --shadow2:0 12px 28px rgba(2,6,23,.18);
@@ -291,6 +291,64 @@
       max-width:92vw;
     }
 
+
+    /* ---------- Splash / Lock ---------- */
+    .splashIcon{
+      width:120px; height:120px; border-radius:36px;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.28), rgba(255,255,255,.06) 60%),
+                  linear-gradient(180deg, rgba(10,42,102,.85), rgba(10,42,102,.28));
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      display:grid; place-items:center;
+      position:relative;
+      transform-style:preserve-3d;
+      animation: spinH 1.6s ease-in-out infinite;
+      overflow:hidden;
+    }
+    .splashIcon::after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.35), transparent 55%);
+      transform: rotate(18deg);
+      pointer-events:none;
+    }
+    .splashH{
+      font-weight:1100; font-size:62px; color:#fff;
+      text-shadow: 0 12px 30px rgba(0,0,0,.35);
+      transform: translateZ(18px);
+    }
+    @keyframes spinH{
+      0%{transform: rotateY(0deg) rotateX(0deg)}
+      45%{transform: rotateY(180deg) rotateX(8deg)}
+      100%{transform: rotateY(360deg) rotateX(0deg)}
+    }
+    .pinDots{display:flex; justify-content:center; gap:10px; margin:8px 0 14px}
+    .dot{
+      width:12px;height:12px;border-radius:999px;
+      background: rgba(2,6,23,.14);
+      border:1px solid rgba(2,6,23,.20);
+      box-shadow: 0 6px 0 rgba(0,0,0,.10);
+    }
+    .dot.filled{background: rgba(10,42,102,.85); border-color: rgba(10,42,102,.30)}
+    .pinPad{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+    }
+    .pinKey{
+      min-height:54px;
+      border-radius:18px;
+      border:1px solid rgba(2,6,23,.12);
+      background:#fff;
+      box-shadow: 0 10px 0 rgba(0,0,0,.10);
+      font-weight:1100;
+      cursor:pointer;
+      transition: transform .08s ease, filter .12s ease;
+    }
+    .pinKey:hover{transform:translateY(-1px); filter:brightness(1.02)}
+    .pinKey:active{transform:translateY(2px); box-shadow: 0 6px 0 rgba(0,0,0,.08)}
+
+
     /* ---------- Print ---------- */
     @media print{
       body{background:#fff;color:#000}
@@ -334,7 +392,7 @@
         <div class="titleRow">
           <div style="min-width:260px;flex:1">
             <div style="font-weight:1000;font-size:16px">الرئيسية</div>
-            <div class="hint">لا تظهر أرقام في القائمة — الأرقام تظهر فقط داخل نافذة الدفع.</div>
+            <div class="hint"></div>
           </div>
 
           <div class="rowWrap" style="justify-content:flex-end; flex:1">
@@ -387,6 +445,40 @@
         <div class="list" id="manageList"></div>
       </div>
     </section>
+
+
+    <!-- DASHBOARD (لوحة التحكم) -->
+    <section id="pageDashboard" style="display:none">
+      <div class="card">
+        <div class="titleRow">
+          <div>
+            <div style="font-weight:1000;font-size:16px">لوحة التحكم</div>
+            <div class="hint">ملخص سريع للأداء + التحصيل + الدخل الشهري.</div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
+            <button class="btn small ghost noPrint" id="btnDashPrint"><span class="ico">🖨</span> طباعة</button>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="rowWrap" id="dashCards"></div>
+
+        <div class="hr"></div>
+
+        <div style="font-weight:1000">الدخل الشهري (من عمليات الدفع)</div>
+        <div class="hint">يمكنك فتح “تقارير شهرية” من الإدارة أيضًا.</div>
+        <div class="hr"></div>
+        <div id="dashMonthWrap"></div>
+
+        <div class="hr"></div>
+        <div style="font-weight:1000">تنبيهات سريعة</div>
+        <div class="hint">طلاب متأخرين في السداد (أعلى المتبقي).</div>
+        <div class="hr"></div>
+        <div class="list" id="dashAlerts"></div>
+      </div>
+    </section>
+
 
     <!-- SETTINGS (الإعدادات) -->
     <section id="pageSettings" style="display:none">
@@ -468,9 +560,53 @@
     <div class="wrap">
       <button class="tab active" data-tab="run">🏠 الرئيسية</button>
       <button class="tab" data-tab="manage">🧾 الإدارة</button>
+      <button class="tab" data-tab="dashboard">📊 لوحة التحكم</button>
       <button class="tab" data-tab="settings">⚙️ الإعدادات</button>
     </div>
   </div>
+
+
+  <!-- SPLASH / LOCK -->
+  <div class="overlay" id="lockOverlay" style="display:block">
+    <div class="modal" style="max-width:520px">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:8px 6px 2px">
+        <div class="splashIcon" aria-hidden="true">
+          <div class="splashH">H</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-weight:1000; font-size:20px; letter-spacing:.4px">Hedra</div>
+          <div class="hint" id="lockHint">أدخلي الرقم السري لفتح البرنامج</div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="pinDots" id="pinDots"></div>
+
+      <div class="pinPad" id="pinPad"></div>
+
+      <div class="hr"></div>
+
+      <div class="rowWrap noPrint">
+        <button class="btn small ghost" id="btnLockRoleAdmin">مدير</button>
+        <button class="btn small ghost" id="btnLockRoleAssistant">مساعدة</button>
+        <button class="btn small ghost" id="btnLockRoleView">عرض فقط</button>
+      </div>
+
+      <div class="rowWrap noPrint" style="margin-top:10px">
+        <button class="btn small royal" id="btnUnlock"><span class="ico">🔓</span> فتح</button>
+        <button class="btn small ghost" id="btnLockClear">مسح</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="hint">
+        • في وضع <b>المساعدة</b>: لا تظهر مبالغ/إجماليات ولا يمكن تعديل البيانات الحساسة.<br>
+        • في وضع <b>عرض فقط</b>: لا يوجد تعديل (قراءة فقط).<br>
+        • لو نسيتِ الرقم: من النسخة الاحتياطية (تصدير) — لذلك احرصي على حفظ ملف النسخ.
+      </div>
+    </div>
+  </div>
+
 
   <div class="toast" id="toast"></div>
 
@@ -678,7 +814,101 @@
    - طباعة تقرير (متصفح → Save as PDF)
 ========================================================= */
 
-const DB_KEY = "hedra_v42_pro_fresh";
+const DB_KEY = "hedra_v50_pro_secure";
+
+/* ---------- Security / Roles (Product-grade) ---------- */
+const ROLE = { ADMIN:"admin", ASSISTANT:"assistant", VIEW:"view" };
+let currentRole = ROLE.ADMIN;
+
+// PIN is still stored locally (device-level). For a sellable product, next step is optional
+// encrypted backup + multi-device cloud sync. (We keep export/import as device backup.)
+function canEditSensitive(){
+  return currentRole === ROLE.ADMIN;
+}
+function canEditAnything(){
+  return currentRole !== ROLE.VIEW;
+}
+
+/* Lock screen keypad (no typing) */
+let pinBuf = "";
+function renderPinDots(){
+  const dots = document.getElementById("pinDots");
+  if(!dots) return;
+  const needed = Math.max(4, (getPIN()||"").length || 4);
+  dots.innerHTML = "";
+  for(let i=0;i<needed;i++){
+    const d=document.createElement("div");
+    d.className = "dot" + (i < pinBuf.length ? " filled":"");
+    dots.appendChild(d);
+  }
+}
+function openLockScreen(msg){
+  const o = document.getElementById("lockOverlay");
+  if(!o) return;
+  document.getElementById("lockHint").textContent = msg || "أدخلي الرقم السري لفتح البرنامج";
+  pinBuf="";
+  renderPinDots();
+  o.style.display="block";
+}
+function closeLockScreen(){
+  const o = document.getElementById("lockOverlay");
+  if(o) o.style.display="none";
+}
+function buildPinPad(){
+  const pad = document.getElementById("pinPad");
+  if(!pad) return;
+  const keys = ["1","2","3","4","5","6","7","8","9","⌫","0","↵"];
+  pad.innerHTML="";
+  keys.forEach(k=>{
+    const b=document.createElement("button");
+    b.className="pinKey noPrint";
+    b.type="button";
+    b.textContent=k;
+    b.onclick=()=>{
+      if(k==="⌫"){ pinBuf = pinBuf.slice(0,-1); renderPinDots(); return; }
+      if(k==="↵"){ tryUnlock(); return; }
+      if(pinBuf.length>=12) return;
+      pinBuf += k;
+      renderPinDots();
+    };
+    pad.appendChild(b);
+  });
+}
+function tryUnlock(){
+  const existing = getPIN();
+  if(!existing){
+    // first run: set PIN with keypad (confirm once)
+    if(pinBuf.length < 4){ toast("الرقم السري لازم 4 أرقام أو أكثر"); return; }
+    setPIN(pinBuf);
+    setUnlocked(true);
+    closeLockScreen();
+    toast("تم تعيين الرقم السري");
+    renderAll();
+    return;
+  }
+  if(pinBuf === existing){
+    setUnlocked(true);
+    closeLockScreen();
+    toast("تم الفتح");
+    renderAll();
+    return;
+  }
+  pinBuf="";
+  renderPinDots();
+  toast("رقم غير صحيح");
+}
+
+// role buttons
+function setRole(r){
+  currentRole = r;
+  const h = document.getElementById("lockHint");
+  if(h){
+    h.textContent = r===ROLE.ADMIN ? "مدير: كل الصلاحيات" :
+                    r===ROLE.ASSISTANT ? "مساعدة: حضور فقط + بدون مبالغ" :
+                    "عرض فقط: قراءة بدون تعديل";
+  }
+}
+
 
 /* ---------- State ---------- */
 let db = {
@@ -750,21 +980,9 @@ function setUnlocked(on){
   sessionStorage.setItem("hedra_last_active", String(Date.now()));
 }
 function requirePINOnce(){
-  const existing = getPIN();
-  if(!existing){
-    const set = prompt("عيّني رقم سري (4 أرقام أو أكثر)");
-    if(!set || set.trim().length < 4) return false;
-    setPIN(set.trim());
-    setUnlocked(true);
-    return true;
-  }
+  // Legacy prompt replaced by lock screen keypad.
   if(isUnlocked()) return true;
-  const entered = prompt("أدخلي الرقم السري");
-  if(entered === existing){
-    setUnlocked(true);
-    return true;
-  }
-  alert("رقم غير صحيح");
+  openLockScreen("أدخلي الرقم السري");
   return false;
 }
 function touchActivity(){
@@ -780,8 +998,7 @@ function autoLockTick(){
   if(last && now - last > 10*60*1000){
     setUnlocked(false);
     toast("تم القفل تلقائيًا");
-    // لو كانت الإدارة/الإعدادات مفتوحة نرجع للرئيسية
-    showTab("run", {skipPIN:true});
+    openLockScreen("تم القفل — أدخلي الرقم السري");
   }
 }
 setInterval(autoLockTick, 4000);
@@ -989,6 +1206,7 @@ document.getElementById("btnImport").onclick=()=>{
 const pages = {
   run: document.getElementById("pageRun"),
   manage: document.getElementById("pageManage"),
+  dashboard: document.getElementById("pageDashboard"),
   settings: document.getElementById("pageSettings")
 };
 
@@ -1033,6 +1251,12 @@ selGroupSettings.addEventListener("change", onGroupChange);
 
 /* ---------- Top header info ---------- */
 function renderTopBar(){
+  // Top actions by role
+  const bx=document.getElementById("btnExport");
+  const bi=document.getElementById("btnImport");
+  if(bx) bx.style.display = (currentRole===ROLE.ADMIN) ? "inline-flex" : "none";
+  if(bi) bi.style.display = (currentRole===ROLE.ADMIN) ? "inline-flex" : "none";
+
   const g=curGroup();
   const c=g?curCycle(g):null;
   document.getElementById("topDateBig").textContent = todayText();
@@ -1069,6 +1293,7 @@ function addSessionWithDate(g,c, ymd){
 }
 
 document.getElementById("btnAddSession").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   const g=curGroup(); if(!g) return;
   const c=curCycle(g); if(!c) return;
 
@@ -1085,6 +1310,7 @@ document.getElementById("btnAddSession").onclick=()=>{
 };
 
 document.getElementById("btnRemoveSession").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   const g=curGroup(); if(!g) return;
   const c=curCycle(g); if(!c) return;
   if(!c.sessions.length){ toast("لا توجد حصص للحذف"); return; }
@@ -1106,6 +1332,7 @@ document.getElementById("btnRemoveSession").onclick=()=>{
 /* ---------- Bulk sessions ---------- */
 const bulkOverlay = document.getElementById("bulkOverlay");
 document.getElementById("btnBulkSessions").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!requirePINOnce()) return;
   document.getElementById("bulkFrom").value = isoYMD(new Date(Date.now()-30*86400000));
   document.getElementById("bulkTo").value = isoYMD(new Date());
@@ -1150,6 +1377,7 @@ document.getElementById("btnBulkApply").onclick=()=>{
 
 /* ---------- Settings (group) ---------- */
 document.getElementById("btnAddGroup").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!requirePINOnce()) return;
   const name=(prompt("اسم المجموعة")||"").trim();
   if(!name) return;
@@ -1197,6 +1425,7 @@ document.getElementById("autoLock").onchange=(e)=>{
 
 /* ---------- New cycle (carry remaining) ---------- */
 document.getElementById("btnNewCycle").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!requirePINOnce()) return;
   const g=curGroup(); if(!g) return;
   const c=curCycle(g); if(!c) return;
@@ -1222,6 +1451,7 @@ document.getElementById("btnNewCycle").onclick=()=>{
 
 /* ---------- Change PIN ---------- */
 document.getElementById("btnChangePIN").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!requirePINOnce()) return;
   const cur = getPIN();
   const old = prompt("أدخلي الرقم السري الحالي");
@@ -1234,6 +1464,7 @@ document.getElementById("btnChangePIN").onclick=()=>{
 
 /* ---------- Reset (requires PIN) ---------- */
 document.getElementById("btnReset").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!requirePINOnce()) return;
   const ok=confirm("سيتم مسح كل البيانات والبدء من جديد. هل تريدين المتابعة؟");
   if(!ok) return;
@@ -1244,6 +1475,7 @@ document.getElementById("btnReset").onclick=()=>{
 
 /* ---------- Students add/edit ---------- */
 document.getElementById("btnAddStudent").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!requirePINOnce()) return;
   const g=curGroup(); if(!g) return;
   const name=(document.getElementById("newStudentName").value||"").trim();
@@ -1276,6 +1508,7 @@ function openStudentSettings(g,s){
 }
 
 document.getElementById("btnStSave").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!stCtx) return;
   const { g, s } = stCtx;
 
@@ -1298,6 +1531,7 @@ document.getElementById("btnStSave").onclick=()=>{
 };
 
 document.getElementById("btnStDelete").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!stCtx) return;
   const { g, s } = stCtx;
   const ok = confirm("حذف الطالب؟ سيتم حذف تعاملاته في كل الدورات.");
@@ -1386,6 +1620,7 @@ document.getElementById("btnPayPrint").onclick=()=>{
 };
 
 document.getElementById("btnPayAdd").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   payMode="add";
   payAmountWrap.style.display="";
   payAmountLabel.textContent="إضافة مبلغ";
@@ -1394,6 +1629,7 @@ document.getElementById("btnPayAdd").onclick=()=>{
 };
 
 document.getElementById("btnPayMinus").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   payMode="minus";
   payAmountWrap.style.display="";
   payAmountLabel.textContent="خصم من المدفوع (تصحيح)";
@@ -1402,6 +1638,7 @@ document.getElementById("btnPayMinus").onclick=()=>{
 };
 
 document.getElementById("btnPaySet").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   payMode="set";
   payAmountWrap.style.display="";
   payAmountLabel.textContent="تعديل المدفوع (قيمة دقيقة) — مثال: 100 بدل 1000";
@@ -1416,6 +1653,7 @@ document.getElementById("btnPaySet").onclick=()=>{
 };
 
 document.getElementById("btnPayApply").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!payCtx || !payMode) return;
   const {g,c,s}=payCtx;
   const v=Number(payAmount.value||0);
@@ -1451,6 +1689,7 @@ document.getElementById("btnPayApply").onclick=()=>{
 };
 
 document.getElementById("btnPaySaveNote").onclick=()=>{
+  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
   if(!payCtx) return;
   const {g,c,s}=payCtx;
   c.notes[s.id] = String(document.getElementById("payNote").value||"").trim();
@@ -1475,7 +1714,30 @@ function openPayModal(g,c,s){
   document.getElementById("payNote").value = String(c.notes?.[s.id] || "");
 
   const t=totals(g,c,s);
-  const table = `
+  const t=totals(g,c,s);
+
+  const table = (currentRole===ROLE.ASSISTANT)
+    ? `
+    <table>
+      <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
+      <tbody>
+        <tr><td>الحصص حتى الآن</td><td class="mono">${sessionsCount(c)} / ${cycleLen(g)}</td></tr>
+        <tr><td>الحضور</td><td class="mono">${attendanceCountForStudent(c, s.id)}</td></tr>
+        <tr><td>ملاحظة</td><td class="mono">${escapeHtml(String(c.notes?.[s.id]||"—"))}</td></tr>
+      </tbody>
+    </table>
+    `
+    : (currentRole===ROLE.VIEW)
+    ? `
+    <table>
+      <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
+      <tbody>
+        <tr><td>الحصص حتى الآن</td><td class="mono">${sessionsCount(c)} / ${cycleLen(g)}</td></tr>
+        <tr><td>الحضور</td><td class="mono">${attendanceCountForStudent(c, s.id)}</td></tr>
+      </tbody>
+    </table>
+    `
+    : `
     <table>
       <thead><tr><th>البند</th><th>المبلغ</th></tr></thead>
       <tbody>
@@ -1488,15 +1750,22 @@ function openPayModal(g,c,s){
     </table>
   `;
 
-  // عمليات الدفع (آخر 8)
+  // عمليات الدفع (آخر 8) — للمدير فقط
   const txs = (c.txs||[]).filter(x=>x.sid===s.id).slice(-8).reverse();
-  const txHtml = txs.length ? `
+  const txHtml = (currentRole===ROLE.ADMIN && txs.length) ? `
     <div class="hr"></div>
     <div style="font-weight:1000">آخر العمليات</div>
     <div class="hint">${txs.map(x=>`${fmtDateAR(x.tsISO)}: ${x.amount} ${x.note?("• "+escapeHtml(x.note)):""}`).join("<br>")}</div>
   ` : "";
 
   document.getElementById("payTableWrap").innerHTML = table + txHtml;
+
+  // Actions visibility by role
+  document.querySelectorAll("#payOverlay .rowWrap.noPrint").forEach(w=>{
+    // the first rowWrap is pay action buttons
+  });
+  const actionRow = document.querySelector("#payOverlay .rowWrap.noPrint");
+  if(actionRow) actionRow.style.display = (currentRole===ROLE.ADMIN) ? "" : "none";
 
   renderAttendanceUI(g,c,s);
   payOverlay.style.display="block";
@@ -1513,6 +1782,7 @@ function setAtt(c, sessionId, sid, v){
 }
 
 function toggleAttendance(g,c,s,sessionId){
+  if(!canEditAnything()){ toast("وضع العرض فقط"); return; }
   const cur = getAtt(c,sessionId,s.id);
   const next = cur==="P" ? "A" : cur==="A" ? "" : "P";
   setAtt(c,sessionId,s.id,next);
@@ -1802,6 +2072,114 @@ function renderMonthly(){
   `;
 }
 
+
+/* ---------- Dashboard ---------- */
+document.getElementById("btnDashPrint").onclick=()=>window.print();
+
+function renderDashboard(){
+  renderTopBar();
+  const g=curGroup();
+  const c=g?curCycle(g):null;
+
+  const cards=document.getElementById("dashCards");
+  const monthWrap=document.getElementById("dashMonthWrap");
+  const alerts=document.getElementById("dashAlerts");
+  if(!cards || !monthWrap || !alerts) return;
+
+  cards.innerHTML=""; monthWrap.innerHTML=""; alerts.innerHTML="";
+
+  if(!g || !c){
+    cards.innerHTML = `<div class="hint">—</div>`;
+    return;
+  }
+
+  const students = g.students.length;
+  const sessions = sessionsCount(c);
+  const len = cycleLen(g);
+
+  // money only for admin
+  const gt = groupTotals(g,c);
+
+  const items = [
+    { ico:"👥", title:"عدد الطلاب", val: String(students) },
+    { ico:"🗓", title:"حصص الدورة", val: `${sessions} / ${len}` },
+    { ico:"✅", title:"إجمالي الحضور (هذه الدورة)", val: String(g.students.reduce((a,s)=>a+attendanceCountForStudent(c,s.id),0)) }
+  ];
+
+  if(currentRole===ROLE.ADMIN){
+    items.push({ ico:"💰", title:"المدفوع (الدورة الحالية)", val: String(gt.paid) });
+    items.push({ ico:"📌", title:"المتبقي (الدورة الحالية)", val: String(gt.remaining) });
+  }else{
+    items.push({ ico:"🔒", title:"التحصيل", val: "مخفي في هذا الوضع" });
+  }
+
+  items.forEach(x=>{
+    const el=document.createElement("div");
+    el.className="row";
+    el.style.flex="1";
+    el.innerHTML = `
+      <div class="left"><div class="num">${x.ico}</div>
+        <div><div class="name">${escapeHtml(x.title)}</div>
+        <div class="mini mono">${escapeHtml(String(x.val))}</div></div>
+      </div>
+    `;
+    cards.appendChild(el);
+  });
+
+  // monthly income (admin only shows amounts)
+  const map = {};
+  g.cycles.forEach(cc=>{
+    (cc.txs||[]).forEach(t=>{
+      const k=monthKey(t.tsISO);
+      map[k]=(map[k]||0)+Number(t.amount||0);
+    });
+  });
+  const months = Object.keys(map).sort().reverse();
+
+  if(!months.length){
+    monthWrap.innerHTML = `<div class="hint">لا توجد عمليات دفع بعد.</div>`;
+  }else if(currentRole!==ROLE.ADMIN){
+    monthWrap.innerHTML = `<div class="hint">الدخل الشهري مخفي في هذا الوضع.</div>`;
+  }else{
+    const rows = months.map(k=>`<tr><td>${escapeHtml(k)}</td><td class="mono">${round2(map[k])}</td></tr>`).join("");
+    monthWrap.innerHTML = `
+      <table>
+        <thead><tr><th>الشهر</th><th>الدخل</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  // alerts: top remaining students (admin only shows amounts; others show names only)
+  const list=[...g.students].map(s=>({s, t: totals(g,c,s)})).sort((a,b)=>b.t.remaining-a.t.remaining);
+  const top=list.filter(x=>x.t.remaining>0.0001).slice(0,8);
+
+  if(!top.length){
+    alerts.innerHTML = `<div class="hint">لا توجد متأخرات واضحة.</div>`;
+    return;
+  }
+  top.forEach((x,i)=>{
+    const it=document.createElement("div");
+    it.className="row";
+    it.innerHTML = `
+      <div class="left" style="min-width:0">
+        <div class="num">${i+1}</div>
+        <div style="min-width:0">
+          <div class="name">${escapeHtml(x.s.name)}</div>
+          <div class="mini">${currentRole===ROLE.ADMIN ? `المتبقي: <span class="mono">${x.t.remaining}</span>` : "متأخر (القيمة مخفية)"}</div>
+        </div>
+      </div>
+      <button class="moreBtn noPrint">عرض</button>
+    `;
+    it.querySelector("button").onclick=()=>{
+      if(!isUnlocked()){ openLockScreen("أدخلي الرقم السري"); return; }
+      openPayModal(g,c,x.s);
+    };
+    alerts.appendChild(it);
+  });
+}
+
+
 /* ---------- Render All ---------- */
 function renderAll(){
   ensureDefaults();
@@ -1810,13 +2188,27 @@ function renderAll(){
   renderStudentsSettings();
   renderRun();
   renderManage();
+  renderDashboard();
 }
 
 /* ---------- Init ---------- */
 (function init(){
+  buildPinPad();
+  // role handlers
+  document.getElementById("btnLockRoleAdmin").onclick=()=>setRole(ROLE.ADMIN);
+  document.getElementById("btnLockRoleAssistant").onclick=()=>setRole(ROLE.ASSISTANT);
+  document.getElementById("btnLockRoleView").onclick=()=>setRole(ROLE.VIEW);
+  document.getElementById("btnUnlock").onclick=()=>tryUnlock();
+  document.getElementById("btnLockClear").onclick=()=>{ pinBuf=""; renderPinDots(); };
+  setRole(ROLE.ADMIN);
+  renderPinDots();
+  // if already unlocked in this session, hide lock
+  if(isUnlocked()) closeLockScreen();
   loadDB();
   ensureDefaults();
   renderAll();
+  // إذا لم تكن الجلسة مفتوحة: نظهر شاشة القفل
+  if(!isUnlocked()) openLockScreen("أدخلي الرقم السري");
 })();
 
 /* ---------- PWA Install ---------- */
