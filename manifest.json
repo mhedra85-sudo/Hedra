@@ -1,9 +1,9 @@
 {
-  "name": "Hedra",
-  "short_name": "Hedra",
-  "start_url": ".",
+  "name": "Hedra V6 Teacher Edition",
+  "short_name": "Hedra TE",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#061226",
+  "background_color": "#07152D",
   "theme_color": "#0A2A66",
   "icons": [
     {
