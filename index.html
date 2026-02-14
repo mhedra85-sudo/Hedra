@@ -3,2236 +3,1047 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Hedra v5.0</title>
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+  <title>Hedra V6 – Teacher Edition</title>
   <meta name="theme-color" content="#0A2A66">
+  <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.png">
-
   <style>
-    :root{
-      --royal:#0A2A66;
-      --royal2:#091F4A;
-      --bg:#061226;
-      --soft:#EAF2FF;
-      --paper:#ffffff;
-      --ink:#0b1220;
-      --muted:#334155;
-      --line:rgba(2,6,23,.12);
-      --shadow:0 20px 50px rgba(2,6,23,.28);
-      --shadow2:0 12px 28px rgba(2,6,23,.18);
-      --r:22px;
-
-      --btnGrad: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-      --btnGrad2: linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.10));
-      --btn3d: 0 10px 0 rgba(0,0,0,.22), 0 18px 40px rgba(0,0,0,.24);
-    }
-
+    :root{--bg:#07152D;--bg2:#050E1F;--ink:#071223;--muted:#334155;--line:rgba(2,6,23,.14);--r:22px;--shadow:0 20px 50px rgba(2,6,23,.25);--shadow2:0 12px 28px rgba(2,6,23,.16)}
     *{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
-    body{
-      margin:0; color:#fff;
-      background:
-        radial-gradient(1000px 620px at 85% -10%, rgba(10,42,102,.45), transparent 65%),
-        radial-gradient(1000px 620px at -10% 10%, rgba(10,42,102,.28), transparent 65%),
-        linear-gradient(180deg, var(--bg), var(--bg));
-      min-height:100vh;
-    }
-
-    /* ---------- Top Sticky ---------- */
-    .top{
-      position:sticky; top:0; z-index:50;
-      background: rgba(6,18,38,.84);
-      backdrop-filter: blur(12px);
-      border-bottom:1px solid rgba(255,255,255,.12);
-      padding:14px 14px 12px;
-    }
-    .top .wrap{
-      max-width:1060px; margin:0 auto;
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;
-    }
-    .brand{display:flex; align-items:center; gap:12px}
-    .logo{
-      width:50px; height:50px; border-radius:18px;
-      background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.22);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      display:grid; place-items:center;
-      font-weight:1000; letter-spacing:.8px;
-      position:relative;
-      overflow:hidden;
-    }
-    .logo::after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.25), transparent 55%);
-      transform: rotate(20deg);
-    }
-    .ttl{font-weight:1000; font-size:18px; line-height:1.1}
-    .dateBig{font-weight:1000; font-size:15px; opacity:.95; margin-top:4px}
-    .subline{opacity:.92; font-size:13px; margin-top:6px; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;}
-
-    /* ---------- Buttons (3D) ---------- */
-    .btn{
-      border:1px solid rgba(255,255,255,.20);
-      background: var(--btnGrad);
-      color:#fff;
-      border-radius:18px;
-      padding:12px 14px;
-      min-height:46px;
-      font-weight:1000;
-      cursor:pointer;
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      transition: transform .08s ease, filter .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
-      user-select:none;
-      box-shadow: 0 10px 0 rgba(0,0,0,.18);
-    }
-    .btn:hover{transform:translateY(-1px); filter:brightness(1.06); border-color:rgba(255,255,255,.30)}
-    .btn:active{transform:translateY(2px); box-shadow: 0 6px 0 rgba(0,0,0,.16)}
-    .btn.small{min-height:42px; border-radius:16px; font-size:13px; padding:10px 12px}
-    .btn.royal{background: linear-gradient(180deg, rgba(10,42,102,.70), rgba(10,42,102,.32)); border-color:rgba(255,255,255,.26)}
-    .btn.ghost{background: transparent; box-shadow:none}
-    .btn.light{background: var(--btnGrad2); border-color: rgba(255,255,255,.26)}
-    .btn.danger{background: linear-gradient(180deg, rgba(215,38,56,.65), rgba(215,38,56,.28)); border-color:rgba(255,255,255,.22)}
-
-    .ico{
-      width:22px; height:22px;
-      display:inline-grid; place-items:center;
-      border-radius:10px;
-      background: rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.20);
-      box-shadow: 0 6px 0 rgba(0,0,0,.14);
-      font-size:14px;
-    }
-
-    /* ---------- Page ---------- */
-    .page{max-width:1060px; margin:0 auto; padding:14px 14px 112px}
-    .card{
-      background: rgba(255,255,255,.96);
-      color:var(--ink);
-      border:1px solid var(--line);
-      border-radius: var(--r);
-      box-shadow: var(--shadow);
-      padding:14px;
-    }
-    .hr{height:1px; background:rgba(2,6,23,.10); margin:12px 0}
-    .hint{color:var(--muted); font-size:12px; line-height:1.8}
-    .titleRow{display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap}
-
-    /* ---------- Tabs ---------- */
-    .bottom{
-      position:fixed; left:0; right:0; bottom:0; z-index:60;
-      background: rgba(6,18,38,.84);
-      backdrop-filter: blur(12px);
-      border-top:1px solid rgba(255,255,255,.12);
-      padding:10px 12px;
-    }
-    .bottom .wrap{max-width:1060px; margin:0 auto; display:flex; gap:10px}
-    .tab{
-      flex:1; min-height:56px; border-radius:18px;
-      border:1px solid rgba(255,255,255,.20);
-      background: var(--btnGrad);
-      color:#fff; font-weight:1000; cursor:pointer;
-      display:flex; align-items:center; justify-content:center; gap:10px;
-      user-select:none;
-      box-shadow: 0 10px 0 rgba(0,0,0,.18);
-      transition: transform .08s ease, filter .12s ease, border-color .12s ease;
-    }
-    .tab:hover{transform:translateY(-1px); filter:brightness(1.05); border-color:rgba(255,255,255,.28)}
-    .tab:active{transform:translateY(2px); box-shadow: 0 6px 0 rgba(0,0,0,.16)}
-    .tab.active{
-      background: linear-gradient(180deg, rgba(10,42,102,.70), rgba(10,42,102,.30));
-      border-color: rgba(255,255,255,.30);
-    }
-
-    /* ---------- Inputs (always dark text on light bg) ---------- */
-    label{display:block; font-weight:1000; font-size:13px; margin:10px 0 6px}
-    input,select,textarea{
-      width:100%;
-      min-height:48px;
-      padding:10px 12px;
-      border-radius:16px;
-      border:1px solid rgba(2,6,23,.14);
-      outline:none;
-      font-size:15px;
-      background:#fff;
-      color:var(--ink);
-      box-shadow: var(--shadow2);
-    }
-    textarea{min-height:92px; resize:vertical}
-    input:focus,select:focus,textarea:focus{border-color: rgba(10,42,102,.55)}
-    .rowWrap{display:flex; gap:10px; flex-wrap:wrap}
-    .rowWrap > *{flex:1; min-width:220px}
-
-    /* ---------- List ---------- */
-    .list{display:flex; flex-direction:column; gap:10px}
-    .row{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      padding:12px;
-      border-radius:20px;
-      border:1px solid rgba(2,6,23,.12);
-      background:#fff;
-      box-shadow: var(--shadow2);
-    }
-    .left{display:flex; align-items:center; gap:12px; min-width:0}
-    .num{
-      width:40px; height:40px; border-radius:16px;
-      background: rgba(10,42,102,.10);
-      border:1px solid rgba(10,42,102,.22);
-      display:grid; place-items:center;
-      font-weight:1000; color:var(--royal);
-      flex:0 0 auto;
-      box-shadow: 0 8px 0 rgba(0,0,0,.10);
-    }
-    .name{font-weight:1000; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    .mini{font-size:12px; color:var(--muted); margin-top:4px}
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(2,6,23,.12);
-      background:rgba(10,42,102,.06);
-      color:var(--royal);
-      font-weight:1000;
-      font-size:12px;
-      white-space:nowrap;
-    }
-    .badge.warn{
-      background: rgba(215,38,56,.08);
-      color: #b91c1c;
-      border-color: rgba(215,38,56,.22);
-    }
-
-    /* ---------- Action Buttons ---------- */
-    .moreBtn{
-      width:52px; min-height:48px;
-      border-radius:18px;
-      border:1px solid rgba(2,6,23,.12);
-      background:#fff;
-      color:var(--ink);
-      font-weight:1100;
-      cursor:pointer;
-      box-shadow: 0 10px 0 rgba(0,0,0,.12);
-      transition: transform .08s ease, filter .12s ease;
-    }
-    .moreBtn:hover{transform:translateY(-1px); filter:brightness(1.03)}
-    .moreBtn:active{transform:translateY(2px); box-shadow: 0 6px 0 rgba(0,0,0,.10)}
-
-    /* ---------- Modal ---------- */
-    .overlay{
-      position:fixed; inset:0; z-index:90;
-      background: rgba(2,6,23,.62);
-      display:none;
-      padding:14px;
-    }
-    .modal{
-      max-width:720px;
-      margin:5vh auto;
-      background:#fff;
-      color:var(--ink);
-      border:1px solid rgba(2,6,23,.12);
-      border-radius:24px;
-      box-shadow: var(--shadow);
-      padding:14px;
-    }
-    .modal h3{margin:0 0 6px; font-size:16px}
-    .modal .topline{display:flex; justify-content:space-between; gap:10px; align-items:flex-start; flex-wrap:wrap}
-    .modal .actions{display:flex; gap:10px; flex-wrap:wrap}
-
-    /* ---------- Attendance ---------- */
-    .attGrid{display:grid; gap:8px}
-    .attItem{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      border:1px solid rgba(2,6,23,.12);
-      border-radius:16px;
-      padding:10px 12px;
-      box-shadow: var(--shadow2);
-      background:#fff;
-    }
-    .attBtn{
-      min-width:120px;
-      border-radius:14px;
-      border:1px solid rgba(2,6,23,.14);
-      background:#fff;
-      font-weight:1000;
-      cursor:pointer;
-      padding:10px 12px;
-      box-shadow: 0 10px 0 rgba(0,0,0,.10);
-      transition: transform .08s ease, filter .12s ease;
-    }
-    .attBtn:hover{transform:translateY(-1px); filter:brightness(1.02)}
-    .attBtn:active{transform:translateY(2px); box-shadow: 0 6px 0 rgba(0,0,0,.08)}
-    .attP{background: rgba(34,197,94,.10); border-color: rgba(34,197,94,.25); color:#166534}
-    .attA{background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.25); color:#991b1b}
-
-    /* ---------- Tables ---------- */
-    table{width:100%; border-collapse:separate; border-spacing:0 10px}
-    th{font-size:12px; color:var(--muted); text-align:right; padding:0 8px}
-    td{
-      background:#fff;
-      border:1px solid rgba(2,6,23,.12);
-      padding:10px 10px;
-      border-radius:14px;
-      color:var(--ink);
-    }
-
-    /* ---------- Toast ---------- */
-    .toast{
-      position:fixed; left:12px; bottom:88px; z-index:110;
-      background: rgba(255,255,255,.96);
-      color:var(--ink);
-      border:1px solid rgba(2,6,23,.12);
-      box-shadow: var(--shadow);
-      padding:10px 12px;
-      border-radius:16px;
-      font-weight:1000;
-      display:none;
-      max-width:92vw;
-    }
-
-
-    /* ---------- Splash / Lock ---------- */
-    .splashIcon{
-      width:120px; height:120px; border-radius:36px;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.28), rgba(255,255,255,.06) 60%),
-                  linear-gradient(180deg, rgba(10,42,102,.85), rgba(10,42,102,.28));
-      border:1px solid rgba(255,255,255,.22);
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
-      display:grid; place-items:center;
-      position:relative;
-      transform-style:preserve-3d;
-      animation: spinH 1.6s ease-in-out infinite;
-      overflow:hidden;
-    }
-    .splashIcon::after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.35), transparent 55%);
-      transform: rotate(18deg);
-      pointer-events:none;
-    }
-    .splashH{
-      font-weight:1100; font-size:62px; color:#fff;
-      text-shadow: 0 12px 30px rgba(0,0,0,.35);
-      transform: translateZ(18px);
-    }
-    @keyframes spinH{
-      0%{transform: rotateY(0deg) rotateX(0deg)}
-      45%{transform: rotateY(180deg) rotateX(8deg)}
-      100%{transform: rotateY(360deg) rotateX(0deg)}
-    }
-    .pinDots{display:flex; justify-content:center; gap:10px; margin:8px 0 14px}
-    .dot{
-      width:12px;height:12px;border-radius:999px;
-      background: rgba(2,6,23,.14);
-      border:1px solid rgba(2,6,23,.20);
-      box-shadow: 0 6px 0 rgba(0,0,0,.10);
-    }
-    .dot.filled{background: rgba(10,42,102,.85); border-color: rgba(10,42,102,.30)}
-    .pinPad{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:10px;
-    }
-    .pinKey{
-      min-height:54px;
-      border-radius:18px;
-      border:1px solid rgba(2,6,23,.12);
-      background:#fff;
-      box-shadow: 0 10px 0 rgba(0,0,0,.10);
-      font-weight:1100;
-      cursor:pointer;
-      transition: transform .08s ease, filter .12s ease;
-    }
-    .pinKey:hover{transform:translateY(-1px); filter:brightness(1.02)}
-    .pinKey:active{transform:translateY(2px); box-shadow: 0 6px 0 rgba(0,0,0,.08)}
-
-
-    /* ---------- Print ---------- */
-    @media print{
-      body{background:#fff;color:#000}
-      .top,.bottom,.noPrint{display:none !important}
-      .page{padding:0}
-      .card{box-shadow:none;border:1px solid #ddd}
-    }
+    html,body{height:100%}
+    body{margin:0;color:#F5F8FF;background:radial-gradient(1000px 620px at 85% -10%, rgba(10,42,102,.42), transparent 65%),radial-gradient(1000px 620px at -10% 10%, rgba(10,42,102,.26), transparent 65%),linear-gradient(180deg,var(--bg),var(--bg2));min-height:100vh}
+    .top{position:sticky;top:0;z-index:50;background:rgba(7,21,45,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.16);padding:14px}
+    .top .wrap{max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:50px;height:50px;border-radius:18px;background:linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.28);display:grid;place-items:center;font-weight:1000}
+    .badge{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.09);font-weight:1000;font-size:12px;white-space:nowrap}
+    .page{max-width:1060px;margin:0 auto;padding:14px 14px 112px}
+    .card{background:rgba(255,255,255,.97);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px}
+    .hr{height:1px;background:rgba(2,6,23,.10);margin:12px 0}
+    .hint{color:var(--muted);font-size:12px;line-height:1.8}
+    .btn{border:1px solid rgba(255,255,255,.22);background:linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.07));color:#fff;border-radius:18px;padding:12px 14px;min-height:46px;font-weight:1000;cursor:pointer;display:inline-flex;gap:10px;align-items:center;justify-content:center;box-shadow:0 10px 0 rgba(0,0,0,.18)}
+    .btn.small{min-height:42px;border-radius:16px;font-size:13px;padding:10px 12px}
+    .btn.royal{background:linear-gradient(180deg, rgba(10,42,102,.76), rgba(10,42,102,.34));border-color:rgba(255,255,255,.30)}
+    .btn.ghost{background:transparent;box-shadow:none}
+    .btn.danger{background:linear-gradient(180deg, rgba(215,38,56,.70), rgba(215,38,56,.30))}
+    input,select{width:100%;min-height:48px;padding:10px 12px;border-radius:16px;border:1px solid rgba(2,6,23,.14);outline:none;font-size:15px;background:#fff;color:var(--ink);box-shadow:var(--shadow2)}
+    label{display:block;font-weight:1000;font-size:13px;margin:10px 0 6px}
+    .rowWrap{display:flex;gap:10px;flex-wrap:wrap}
+    .rowWrap>*{flex:1;min-width:220px}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border-radius:20px;border:1px solid rgba(2,6,23,.12);background:#fff;box-shadow:var(--shadow2)}
+    .left{display:flex;align-items:center;gap:12px;min-width:0}
+    .num{width:40px;height:40px;border-radius:16px;background:rgba(10,42,102,.10);border:1px solid rgba(10,42,102,.24);display:grid;place-items:center;font-weight:1000;color:#0A2A66;flex:0 0 auto}
+    .name{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mini{font-size:12px;color:var(--muted);margin-top:4px}
+    .moreBtn{width:52px;min-height:48px;border-radius:18px;border:1px solid rgba(2,6,23,.12);background:#fff;color:var(--ink);font-weight:1100;cursor:pointer;box-shadow:0 10px 0 rgba(0,0,0,.12)}
+    .bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(7,21,45,.88);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.16);padding:10px 12px}
+    .bottom .wrap{max-width:1060px;margin:0 auto;display:flex;gap:10px}
+    .tab{flex:1;min-height:56px;border-radius:18px;border:1px solid rgba(255,255,255,.22);background:linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.07));color:#fff;font-weight:1000;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 0 rgba(0,0,0,.18)}
+    .tab.active{background:linear-gradient(180deg, rgba(10,42,102,.76), rgba(10,42,102,.32));border-color:rgba(255,255,255,.34)}
+    .overlay{position:fixed;inset:0;z-index:90;background:rgba(2,6,23,.62);display:none;padding:14px}
+    .modal{max-width:760px;margin:5vh auto;background:#fff;color:var(--ink);border:1px solid rgba(2,6,23,.12);border-radius:24px;box-shadow:var(--shadow);padding:14px}
+    .toast{position:fixed;left:12px;bottom:88px;z-index:110;background:rgba(255,255,255,.96);color:var(--ink);border:1px solid rgba(2,6,23,.12);box-shadow:var(--shadow);padding:10px 12px;border-radius:16px;font-weight:1000;display:none;max-width:92vw}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{border-bottom:1px solid rgba(2,6,23,.10);padding:8px;text-align:right}
+    .mono{font-variant-numeric:tabular-nums}
+    @media print{.top,.bottom,.noPrint{display:none!important} body{background:#fff;color:#000} .page{padding:0} .card{box-shadow:none;border:1px solid #ddd}}
   </style>
 </head>
-
 <body>
-  <!-- TOP -->
-  <div class="top">
-    <div class="wrap">
-      <div class="brand">
-        <div class="logo">H</div>
-        <div>
-          <div class="ttl">Hedra</div>
-          <div class="dateBig" id="topDateBig">—</div>
-          <div class="subline">
-            <span class="badge mono" id="topSessionInfo">الحصة: — / —</span>
-            <span class="badge mono" id="topCycleInfo">الدورة: — → —</span>
-          </div>
-        </div>
-      </div>
-
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end">
-        <button class="btn small light noPrint" id="btnInstall" style="display:none"><span class="ico">⬇</span> تحميل</button>
-        <button class="btn small ghost noPrint" id="btnExport"><span class="ico">⬆</span> تصدير</button>
-        <button class="btn small ghost noPrint" id="btnImport"><span class="ico">⬇</span> استيراد</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="page">
-
-    <!-- RUN (الرئيسية) -->
-    <section id="pageRun">
-      <div class="card">
-
-        <div class="titleRow">
-          <div style="min-width:260px;flex:1">
-            <div style="font-weight:1000;font-size:16px">الرئيسية</div>
-            <div class="hint"></div>
-          </div>
-
-          <div class="rowWrap" style="justify-content:flex-end; flex:1">
-            <button class="btn small royal noPrint" id="btnAddSession"><span class="ico">＋</span> إضافة حصة</button>
-            <button class="btn small danger noPrint" id="btnRemoveSession"><span class="ico">−</span> حذف حصة</button>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <label>اختر المجموعة</label>
-        <select id="selGroupRun"></select>
-
-        <div class="hr"></div>
-
-        <div class="list" id="runList"></div>
-      </div>
-    </section>
-
-    <!-- MANAGE (الإدارة) -->
-    <section id="pageManage" style="display:none">
-      <div class="card">
-        <div class="titleRow">
-          <div>
-            <div style="font-weight:1000;font-size:16px">الإدارة</div>
-            <div class="hint" id="manageSub">—</div>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
-            <button class="btn small royal noPrint" id="btnBulkSessions"><span class="ico">📥</span> إدخال بيانات سابقة</button>
-            <button class="btn small ghost noPrint" id="btnSessionsLog"><span class="ico">🗓</span> سجل الحصص</button>
-            <button class="btn small ghost noPrint" id="btnMonthly"><span class="ico">📊</span> تقارير شهرية</button>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <label>بحث بالاسم (كل الطلاب في كل المجموعات)</label>
-        <input id="qManage" placeholder="اكتب اسم الطالب..." />
-
-        <div class="hr"></div>
-
-        <label>اختر المجموعة (للإدارة التفصيلية)</label>
-        <select id="selGroupManage"></select>
-
-        <div class="hr"></div>
-
-        <div id="groupSummary" class="rowWrap"></div>
-
-        <div class="hr"></div>
-        <div class="list" id="manageList"></div>
-      </div>
-    </section>
-
-
-    <!-- DASHBOARD (لوحة التحكم) -->
-    <section id="pageDashboard" style="display:none">
-      <div class="card">
-        <div class="titleRow">
-          <div>
-            <div style="font-weight:1000;font-size:16px">لوحة التحكم</div>
-            <div class="hint">ملخص سريع للأداء + التحصيل + الدخل الشهري.</div>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
-            <button class="btn small ghost noPrint" id="btnDashPrint"><span class="ico">🖨</span> طباعة</button>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="rowWrap" id="dashCards"></div>
-
-        <div class="hr"></div>
-
-        <div style="font-weight:1000">الدخل الشهري (من عمليات الدفع)</div>
-        <div class="hint">يمكنك فتح “تقارير شهرية” من الإدارة أيضًا.</div>
-        <div class="hr"></div>
-        <div id="dashMonthWrap"></div>
-
-        <div class="hr"></div>
-        <div style="font-weight:1000">تنبيهات سريعة</div>
-        <div class="hint">طلاب متأخرين في السداد (أعلى المتبقي).</div>
-        <div class="hr"></div>
-        <div class="list" id="dashAlerts"></div>
-      </div>
-    </section>
-
-
-    <!-- SETTINGS (الإعدادات) -->
-    <section id="pageSettings" style="display:none">
-      <div class="card">
-        <div class="titleRow">
-          <div>
-            <div style="font-weight:1000;font-size:16px">الإعدادات</div>
-            <div class="hint">إضافة مجموعات + طلاب + أسعار للطلاب + خيارات الأمان</div>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end">
-            <button class="btn small royal noPrint" id="btnAddGroup"><span class="ico">＋</span> إضافة مجموعة</button>
-            <button class="btn small ghost noPrint" id="btnChangePIN"><span class="ico">🔒</span> تغيير الرقم السري</button>
-            <button class="btn small danger noPrint" id="btnReset"><span class="ico">🗑</span> بدء جديد</button>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <label>اختر المجموعة</label>
-        <select id="selGroupSettings"></select>
-
-        <div class="hr"></div>
-
-        <div class="rowWrap">
-          <div>
-            <label>مدة الدورة (عدد الحصص)</label>
-            <select id="cycleLen">
-              <option value="4">4 حصص</option>
-              <option value="8" selected>8 حصص</option>
-              <option value="12">12 حصة</option>
-            </select>
-          </div>
-          <div>
-            <label>نظام الحساب</label>
-            <select id="chargeMode">
-              <option value="perSessions" selected>حسب عدد الحصص</option>
-              <option value="byAttendance">حسب الحضور/الغياب (اختياري)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="rowWrap">
-          <div>
-            <label>قفل تلقائي بعد 10 دقائق (اختياري)</label>
-            <select id="autoLock">
-              <option value="off" selected>إيقاف</option>
-              <option value="on">تشغيل</option>
-            </select>
-          </div>
-          <div>
-            <label>تجديد دورة جديدة</label>
-            <button class="btn small royal noPrint" id="btnNewCycle"><span class="ico">🔁</span> فتح دورة جديدة</button>
-            <div class="hint">يُرحّل المتبقي/الزيادة تلقائيًا للدورة الجديدة.</div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-end; flex-wrap:wrap">
-          <div>
-            <div style="font-weight:1000">الطلاب</div>
-            <div class="hint">سعر الدورة للطالب يبدأ بـ 0 (حدديه لكل طالب)</div>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap">
-            <input id="newStudentName" placeholder="اسم الطالب..." style="min-width:220px"/>
-            <button class="btn small royal noPrint" id="btnAddStudent"><span class="ico">＋</span> إضافة</button>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-        <div class="list" id="studentsList"></div>
-      </div>
-    </section>
-
-  </div>
-
-  <!-- Tabs -->
-  <div class="bottom noPrint">
-    <div class="wrap">
-      <button class="tab active" data-tab="run">🏠 الرئيسية</button>
-      <button class="tab" data-tab="manage">🧾 الإدارة</button>
-      <button class="tab" data-tab="dashboard">📊 لوحة التحكم</button>
-      <button class="tab" data-tab="settings">⚙️ الإعدادات</button>
-    </div>
-  </div>
-
-
-  <!-- SPLASH / LOCK -->
-  <div class="overlay" id="lockOverlay" style="display:block">
-    <div class="modal" style="max-width:520px">
-      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:8px 6px 2px">
-        <div class="splashIcon" aria-hidden="true">
-          <div class="splashH">H</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-weight:1000; font-size:20px; letter-spacing:.4px">Hedra</div>
-          <div class="hint" id="lockHint">أدخلي الرقم السري لفتح البرنامج</div>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="pinDots" id="pinDots"></div>
-
-      <div class="pinPad" id="pinPad"></div>
-
-      <div class="hr"></div>
-
-      <div class="rowWrap noPrint">
-        <button class="btn small ghost" id="btnLockRoleAdmin">مدير</button>
-        <button class="btn small ghost" id="btnLockRoleAssistant">مساعدة</button>
-        <button class="btn small ghost" id="btnLockRoleView">عرض فقط</button>
-      </div>
-
-      <div class="rowWrap noPrint" style="margin-top:10px">
-        <button class="btn small royal" id="btnUnlock"><span class="ico">🔓</span> فتح</button>
-        <button class="btn small ghost" id="btnLockClear">مسح</button>
-      </div>
-
-      <div class="hr"></div>
-      <div class="hint">
-        • في وضع <b>المساعدة</b>: لا تظهر مبالغ/إجماليات ولا يمكن تعديل البيانات الحساسة.<br>
-        • في وضع <b>عرض فقط</b>: لا يوجد تعديل (قراءة فقط).<br>
-        • لو نسيتِ الرقم: من النسخة الاحتياطية (تصدير) — لذلك احرصي على حفظ ملف النسخ.
-      </div>
-    </div>
-  </div>
-
-
-  <div class="toast" id="toast"></div>
-
-  <!-- MODALS -->
-
-  <!-- Pay Modal -->
-  <div class="overlay" id="payOverlay">
-    <div class="modal">
-      <div class="topline">
-        <div>
-          <h3 id="payTitle">—</h3>
-          <div class="hint mono" id="paySub">—</div>
-        </div>
-        <div class="actions">
-          <button class="btn small ghost noPrint" id="btnPayPrint"><span class="ico">🖨</span> طباعة PDF</button>
-          <button class="btn small ghost noPrint" id="btnPayClose">إغلاق</button>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div id="payTableWrap"></div>
-
-      <div class="hr"></div>
-
-      <div class="rowWrap noPrint">
-        <button class="btn small royal" id="btnPaySet"><span class="ico">✏</span> تعديل المدفوع (قيمة دقيقة)</button>
-        <button class="btn small ghost" id="btnPayAdd"><span class="ico">＋</span> إضافة مبلغ</button>
-        <button class="btn small ghost" id="btnPayMinus"><span class="ico">−</span> خصم من المدفوع</button>
-      </div>
-
-      <div id="payAmountWrap" class="noPrint" style="display:none; margin-top:10px">
-        <label id="payAmountLabel">المبلغ</label>
-        <input id="payAmount" type="number" step="1" placeholder="مثال: 50"/>
-        <button class="btn small royal" id="btnPayApply" style="margin-top:10px"><span class="ico">✅</span> تطبيق</button>
-      </div>
-
-      <div class="hr"></div>
-
-      <label>ملاحظة (اختياري)</label>
-      <input id="payNote" placeholder="مثال: سداد متأخر / ..."/>
-
-      <div class="rowWrap noPrint" style="margin-top:12px">
-        <button class="btn small royal" id="btnPaySaveNote"><span class="ico">💾</span> حفظ الملاحظة</button>
-      </div>
-
-      <div class="hr"></div>
-
-      <div style="font-weight:1000">الحضور / الغياب</div>
-      <div class="hint">تسجيل حضور/غياب لكل حصة (وتقدر تضيف حصص بتاريخ قديم من “إدخال بيانات سابقة”).</div>
-      <div class="hr"></div>
-      <div id="attWrap" class="attGrid"></div>
-    </div>
-  </div>
-
-  <!-- Student Settings Modal -->
-  <div class="overlay" id="stOverlay">
-    <div class="modal">
-      <div class="topline">
-        <div>
-          <h3 id="stTitle">طالب</h3>
-          <div class="hint">الحالة تظهر في الإدارة فقط — لا تظهر في الرئيسية.</div>
-        </div>
-        <div class="actions">
-          <button class="btn small ghost noPrint" id="btnStClose">إغلاق</button>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <label>اسم الطالب</label>
-      <input id="stName"/>
-
-      <div class="rowWrap">
-        <div>
-          <label>سعر الدورة للطالب</label>
-          <input id="stPrice" type="number" step="1" placeholder="مثال: 0 / 200"/>
-        </div>
-        <div>
-          <label>إيقاف الطالب</label>
-          <select id="stPaused">
-            <option value="no" selected>لا</option>
-            <option value="yes">نعم (لا يتحاسب)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="rowWrap">
-        <div>
-          <label>نوع الخصم</label>
-          <select id="stDiscType">
-            <option value="none">بدون</option>
-            <option value="fixed">خصم مبلغ</option>
-            <option value="percent">خصم نسبة</option>
-            <option value="exempt">معفى</option>
-          </select>
-        </div>
-        <div>
-          <label>قيمة الخصم</label>
-          <input id="stDiscVal" type="number" step="1" placeholder="مثال: 50 أو 10%"/>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-      <div class="rowWrap noPrint">
-        <button class="btn small royal" id="btnStSave"><span class="ico">💾</span> حفظ</button>
-        <button class="btn small danger" id="btnStDelete"><span class="ico">🗑</span> حذف</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sessions Log Modal -->
-  <div class="overlay" id="ssOverlay">
-    <div class="modal">
-      <div class="topline">
-        <div>
-          <h3>سجل الحصص</h3>
-          <div class="hint">تواريخ الحصص للدورة الحالية (مرتبة).</div>
-        </div>
-        <div class="actions">
-          <button class="btn small ghost noPrint" id="btnSsClose">إغلاق</button>
-        </div>
-      </div>
-      <div class="hr"></div>
-      <div id="ssList" class="hint mono">—</div>
-    </div>
-  </div>
-
-  <!-- Bulk Sessions Modal -->
-  <div class="overlay" id="bulkOverlay">
-    <div class="modal">
-      <div class="topline">
-        <div>
-          <h3>📥 إدخال بيانات سابقة</h3>
-          <div class="hint">يولّد حصص بتواريخ قديمة تلقائيًا + يمنع التكرار.</div>
-        </div>
-        <div class="actions">
-          <button class="btn small ghost noPrint" id="btnBulkClose">إغلاق</button>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="rowWrap">
-        <div>
-          <label>من تاريخ</label>
-          <input id="bulkFrom" type="date"/>
-        </div>
-        <div>
-          <label>إلى تاريخ</label>
-          <input id="bulkTo" type="date"/>
-        </div>
-      </div>
-
-      <label>أيام الأسبوع</label>
-      <div class="rowWrap" style="gap:8px">
-        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="dow" value="0"> الأحد</label>
-        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="dow" value="1"> الإثنين</label>
-        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="dow" value="2"> الثلاثاء</label>
-        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="dow" value="3"> الأربعاء</label>
-        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="dow" value="4"> الخميس</label>
-        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="dow" value="5"> الجمعة</label>
-        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="dow" value="6"> السبت</label>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="rowWrap noPrint">
-        <button class="btn small royal" id="btnBulkApply"><span class="ico">✅</span> إنشاء الحصص</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Monthly Report Modal -->
-  <div class="overlay" id="monthOverlay">
-    <div class="modal">
-      <div class="topline">
-        <div>
-          <h3>📊 تقارير شهرية للمجموعة</h3>
-          <div class="hint">دخل/متبقي حسب الشهر (من عمليات الدفع).</div>
-        </div>
-        <div class="actions">
-          <button class="btn small ghost noPrint" id="btnMonthClose">إغلاق</button>
-        </div>
-      </div>
-      <div class="hr"></div>
-      <div id="monthWrap"></div>
-    </div>
-  </div>
-
-  <script>
-/* =========================================================
-   Hedra v4.2 Pro (Fresh Start)
-   - الرئيسية: قائمة الطلاب فقط + نافذة دفع تعرض الأرقام
-   - اختيار المجموعة في الرئيسية + نفس المجموعة بكل الصفحات
-   - البحث بالاسم في الإدارة فقط ويبحث في كل المجموعات
-   - مدة الدورة = 4/8/12 (عدد حصص)
-   - تاريخ الدورة يبدأ تلقائيًا من أول حصة، والنهاية تظهر عند اكتمال المدة
-   - إضافة حصة بتاريخ يدوي + إدخال بيانات سابقة
-   - حضور/غياب لكل طالب لكل حصة (اختياري: الحساب حسب الحضور)
-   - تعديل المدفوع: Set/Add/Minus (تصحيح 1000 بدل 100 بسهولة)
-   - ترحيل المتبقي/الزيادة عند فتح دورة جديدة
-   - قفل تلقائي 10 دقائق (اختياري) + طلب PIN مرة واحدة لكل جلسة
-   - بدء جديد يطلب PIN
-   - طباعة تقرير (متصفح → Save as PDF)
-========================================================= */
-
-const DB_KEY = "hedra_v50_pro_secure";
-
-/* ---------- Security / Roles (Product-grade) ---------- */
-const ROLE = { ADMIN:"admin", ASSISTANT:"assistant", VIEW:"view" };
-let currentRole = ROLE.ADMIN;
-
-// PIN is still stored locally (device-level). For a sellable product, next step is optional
-// encrypted backup + multi-device cloud sync. (We keep export/import as device backup.)
-function canEditSensitive(){
-  return currentRole === ROLE.ADMIN;
-}
-function canEditAnything(){
-  return currentRole !== ROLE.VIEW;
-}
-
-/* Lock screen keypad (no typing) */
-let pinBuf = "";
-function renderPinDots(){
-  const dots = document.getElementById("pinDots");
-  if(!dots) return;
-  const needed = Math.max(4, (getPIN()||"").length || 4);
-  dots.innerHTML = "";
-  for(let i=0;i<needed;i++){
-    const d=document.createElement("div");
-    d.className = "dot" + (i < pinBuf.length ? " filled":"");
-    dots.appendChild(d);
-  }
-}
-function openLockScreen(msg){
-  const o = document.getElementById("lockOverlay");
-  if(!o) return;
-  document.getElementById("lockHint").textContent = msg || "أدخلي الرقم السري لفتح البرنامج";
-  pinBuf="";
-  renderPinDots();
-  o.style.display="block";
-}
-function closeLockScreen(){
-  const o = document.getElementById("lockOverlay");
-  if(o) o.style.display="none";
-}
-function buildPinPad(){
-  const pad = document.getElementById("pinPad");
-  if(!pad) return;
-  const keys = ["1","2","3","4","5","6","7","8","9","⌫","0","↵"];
-  pad.innerHTML="";
-  keys.forEach(k=>{
-    const b=document.createElement("button");
-    b.className="pinKey noPrint";
-    b.type="button";
-    b.textContent=k;
-    b.onclick=()=>{
-      if(k==="⌫"){ pinBuf = pinBuf.slice(0,-1); renderPinDots(); return; }
-      if(k==="↵"){ tryUnlock(); return; }
-      if(pinBuf.length>=12) return;
-      pinBuf += k;
-      renderPinDots();
-    };
-    pad.appendChild(b);
-  });
-}
-function tryUnlock(){
-  const existing = getPIN();
-  if(!existing){
-    // first run: set PIN with keypad (confirm once)
-    if(pinBuf.length < 4){ toast("الرقم السري لازم 4 أرقام أو أكثر"); return; }
-    setPIN(pinBuf);
-    setUnlocked(true);
-    closeLockScreen();
-    toast("تم تعيين الرقم السري");
-    renderAll();
-    return;
-  }
-  if(pinBuf === existing){
-    setUnlocked(true);
-    closeLockScreen();
-    toast("تم الفتح");
-    renderAll();
-    return;
-  }
-  pinBuf="";
-  renderPinDots();
-  toast("رقم غير صحيح");
-}
-
-// role buttons
-function setRole(r){
-  currentRole = r;
-  const h = document.getElementById("lockHint");
-  if(h){
-    h.textContent = r===ROLE.ADMIN ? "مدير: كل الصلاحيات" :
-                    r===ROLE.ASSISTANT ? "مساعدة: حضور فقط + بدون مبالغ" :
-                    "عرض فقط: قراءة بدون تعديل";
-  }
-}
-
-
-/* ---------- State ---------- */
-let db = {
-  settings: {
-    currentGroupId: "",
-    chargeMode: "perSessions", // perSessions | byAttendance
-    autoLock: "off"
-  },
-  groups: []
-};
-
-function uid(p="id"){ return p+"_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
-function round2(n){ return Math.round((Number(n||0))*100)/100; }
-function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
-
-function toast(msg){
-  const t=document.getElementById("toast");
-  t.textContent=msg;
-  t.style.display="block";
-  clearTimeout(toast._t);
-  toast._t=setTimeout(()=>t.style.display="none",2200);
-}
-
-function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
-function loadDB(){
-  const raw = localStorage.getItem(DB_KEY);
-  if(!raw) return;
-  try{
-    const p=JSON.parse(raw);
-    if(p && typeof p==="object") db=p;
-  }catch{}
-}
-
-/* ---------- Date helpers ---------- */
-function todayText(){
-  return new Date().toLocaleDateString("ar-EG",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
-}
-function isoYMD(d=new Date()){
-  const x=new Date(d); x.setHours(0,0,0,0);
-  return x.toISOString().slice(0,10);
-}
-function fmtDMY(isoOrYmd){
-  const d=new Date(isoOrYmd);
-  const dd=String(d.getDate()).padStart(2,"0");
-  const mm=String(d.getMonth()+1).padStart(2,"0");
-  const yy=d.getFullYear();
-  return `${dd}/${mm}/${yy}`;
-}
-function fmtDateAR(tsISO){
-  try{
-    return new Date(tsISO).toLocaleDateString("ar-EG",{year:"numeric",month:"2-digit",day:"2-digit"});
-  }catch{ return "—"; }
-}
-function ymdFromTs(tsISO){
-  const d=new Date(tsISO);
-  d.setHours(0,0,0,0);
-  return d.toISOString().slice(0,10);
-}
-
-/* ---------- PIN (once per session) ---------- */
-function getPIN(){ return localStorage.getItem("hedra_pin") || ""; }
-function setPIN(v){ localStorage.setItem("hedra_pin", String(v||"").trim()); }
-function isUnlocked(){
-  const flag = sessionStorage.getItem("hedra_unlocked")==="1";
-  return flag;
-}
-function setUnlocked(on){
-  sessionStorage.setItem("hedra_unlocked", on?"1":"0");
-  sessionStorage.setItem("hedra_last_active", String(Date.now()));
-}
-function requirePINOnce(){
-  // Legacy prompt replaced by lock screen keypad.
-  if(isUnlocked()) return true;
-  openLockScreen("أدخلي الرقم السري");
-  return false;
-}
-function touchActivity(){
-  sessionStorage.setItem("hedra_last_active", String(Date.now()));
-}
-
-/* ---------- Auto Lock (10 minutes) ---------- */
-function autoLockTick(){
-  if(db.settings.autoLock !== "on") return;
-  if(!isUnlocked()) return;
-  const last = Number(sessionStorage.getItem("hedra_last_active")||0);
-  const now = Date.now();
-  if(last && now - last > 10*60*1000){
-    setUnlocked(false);
-    toast("تم القفل تلقائيًا");
-    openLockScreen("تم القفل — أدخلي الرقم السري");
-  }
-}
-setInterval(autoLockTick, 4000);
-["click","keydown","touchstart","mousemove"].forEach(ev=>{
-  window.addEventListener(ev, ()=>touchActivity(), {passive:true});
-});
-
-/* ---------- Data model ---------- */
-/*
-group = {
-  id, name,
-  cycleLen:number,
-  cycles:[ cycle ],
-  students:[ student ]
-}
-cycle = {
-  id,
-  createdAtISO,
-  sessions:[ {id, tsISO} ],
-  attendance: { [sessionId]: { [sid]: "P"|"A"|"" } },
-  txs:[ {id, sid, amount, tsISO, note} ],
-  notes:{ [sid]: string },
-  carry:{ [sid]: number }, // signed carry from previous cycle (+due/-credit)
-  closed:boolean
-}
-student = { id, name, price:number, paused:boolean, discountType, discountValue }
-*/
-
-/* ---------- Logs (simple) ---------- */
-function addLog(g, msg){
-  if(!g.logs) g.logs=[];
-  g.logs.push({ id:uid("log"), tsISO:new Date().toISOString(), msg });
-  if(g.logs.length>500) g.logs.shift();
-}
-
-/* ---------- Ensure defaults ---------- */
-function newCycle(){
-  return {
-    id: uid("c"),
-    createdAtISO: new Date().toISOString(),
-    sessions: [],
-    attendance: {},
-    txs: [],
-    notes: {},
-    carry: {},
-    closed: false
-  };
-}
-
-function ensureDefaults(){
-  if(!db.settings) db.settings={ currentGroupId:"", chargeMode:"perSessions", autoLock:"off" };
-  if(!Array.isArray(db.groups)) db.groups=[];
-  db.groups.forEach(g=>{
-    if(!g.id) g.id=uid("g");
-    if(typeof g.name!=="string") g.name="مجموعة";
-    if(!g.cycleLen) g.cycleLen=8;
-    if(!Array.isArray(g.students)) g.students=[];
-    if(!Array.isArray(g.cycles) || g.cycles.length===0) g.cycles=[ newCycle() ];
-
-    g.students.forEach(s=>{
-      if(!s.id) s.id=uid("s");
-      if(typeof s.name!=="string") s.name="طالب";
-      if(typeof s.price!=="number") s.price=Number(s.price||0);
-      if(typeof s.paused!=="boolean") s.paused=false;
-      if(!s.discountType) s.discountType="none";
-      if(typeof s.discountValue!=="number") s.discountValue=Number(s.discountValue||0);
-    });
-
-    g.cycles.forEach(c=>{
-      if(!c.id) c.id=uid("c");
-      if(!c.createdAtISO) c.createdAtISO=new Date().toISOString();
-      if(!Array.isArray(c.sessions)) c.sessions=[];
-      if(!c.attendance || typeof c.attendance!=="object") c.attendance={};
-      if(!Array.isArray(c.txs)) c.txs=[];
-      if(!c.notes || typeof c.notes!=="object") c.notes={};
-      if(!c.carry || typeof c.carry!=="object") c.carry={};
-      if(typeof c.closed!=="boolean") c.closed=false;
-    });
-  });
-
-  if(!db.settings.currentGroupId && db.groups[0]) db.settings.currentGroupId=db.groups[0].id;
-
-  if(db.groups.length===0){
-    const g = {
-      id: uid("g"),
-      name: "مجموعة 1",
-      cycleLen: 8,
-      students: [],
-      cycles: [ newCycle() ],
-      logs: []
-    };
-    db.groups=[g];
-    db.settings.currentGroupId=g.id;
-  }
-
-  saveDB();
-}
-
-/* ---------- Current pointers ---------- */
-function curGroup(){
-  return db.groups.find(g=>g.id===db.settings.currentGroupId) || db.groups[0] || null;
-}
-function curCycle(g){
-  if(!g) return null;
-  return g.cycles[g.cycles.length-1] || null;
-}
-function cycleLen(g){ return Math.max(1, Number(g?.cycleLen||8)); }
-function sessionsCount(c){ return (c?.sessions||[]).length; }
-
-/* ---------- Cycle date range ---------- */
-function cycleStartYMD(c){
-  if(!c || !c.sessions.length) return "—";
-  const min = c.sessions.map(s=>ymdFromTs(s.tsISO)).sort()[0];
-  return fmtDMY(min);
-}
-function cycleEndYMD(g,c){
-  if(!c || !c.sessions.length) return "—";
-  if(sessionsCount(c) < cycleLen(g)) return "—";
-  const max = c.sessions.map(s=>ymdFromTs(s.tsISO)).sort().slice(-1)[0];
-  return fmtDMY(max);
-}
-
-/* ---------- Pricing / Due ---------- */
-function effectiveCyclePrice(s){
-  if(s.paused) return 0;
-  const base = Math.max(0, Number(s.price||0));
-  const t = s.discountType || "none";
-  const v = Math.max(0, Number(s.discountValue||0));
-  if(t==="exempt") return 0;
-  if(t==="fixed") return Math.max(0, base - v);
-  if(t==="percent"){
-    const p=Math.max(0, Math.min(100, v));
-    return Math.max(0, base*(1-p/100));
-  }
-  return base;
-}
-function perSessionForStudent(g,s){
-  return round2(effectiveCyclePrice(s) / cycleLen(g));
-}
-function attendanceCountForStudent(c,sid){
-  let cnt=0;
-  for(const ss of (c.sessions||[])){
-    const map = c.attendance?.[ss.id] || {};
-    if(map[sid]==="P") cnt++;
-  }
-  return cnt;
-}
-function subscriptionDueSoFar(g,c,s){
-  const mode = db.settings.chargeMode || "perSessions";
-  if(mode==="byAttendance"){
-    const pres = attendanceCountForStudent(c, s.id);
-    return round2(pres * perSessionForStudent(g,s));
-  }
-  return round2(sessionsCount(c) * perSessionForStudent(g,s));
-}
-function carry(c,sid){ return round2(Number(c.carry?.[sid]||0)); }
-function paidTotal(c,sid){
-  return round2((c.txs||[]).filter(t=>t.sid===sid).reduce((a,t)=>a+Number(t.amount||0),0));
-}
-function totals(g,c,s){
-  const sub = subscriptionDueSoFar(g,c,s);
-  const prev = carry(c, s.id);
-  const total = round2(sub + prev);
-  const paid = paidTotal(c, s.id);
-  const remaining = round2(total - paid);
-  return { sub, prev, total, paid, remaining };
-}
-
-/* ---------- Import / Export ---------- */
-document.getElementById("btnExport").onclick=()=>{
-  const data = JSON.stringify(db, null, 2);
-  const blob = new Blob([data], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "Hedra_v4.2_Backup.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-  toast("تم التصدير");
-};
-
-document.getElementById("btnImport").onclick=()=>{
-  const inp=document.createElement("input");
-  inp.type="file"; inp.accept="application/json";
-  inp.onchange=()=>{
-    const f=inp.files?.[0]; if(!f) return;
-    const r=new FileReader();
-    r.onload=()=>{
-      try{
-        const parsed=JSON.parse(r.result);
-        if(!parsed || typeof parsed!=="object") throw new Error();
-        db=parsed;
-        ensureDefaults();
-        toast("تم الاستيراد");
-        renderAll();
-      }catch{
-        alert("ملف غير صالح");
-      }
-    };
-    r.readAsText(f);
-  };
-  inp.click();
-};
-
-/* ---------- Tabs ---------- */
-const pages = {
-  run: document.getElementById("pageRun"),
-  manage: document.getElementById("pageManage"),
-  dashboard: document.getElementById("pageDashboard"),
-  settings: document.getElementById("pageSettings")
-};
-
-function showTab(k, opt={}){
-  const needsPIN = (k==="manage" || k==="settings");
-  if(needsPIN && !opt.skipPIN){
-    if(!requirePINOnce()) return;
-  }
-  Object.keys(pages).forEach(x=>pages[x].style.display=(x===k)?"":"none");
-  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===k));
-  renderAll();
-}
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click", ()=>showTab(t.dataset.tab)));
-
-/* ---------- Group selects sync ---------- */
-const selGroupRun = document.getElementById("selGroupRun");
-const selGroupManage = document.getElementById("selGroupManage");
-const selGroupSettings = document.getElementById("selGroupSettings");
-
-function fillGroupSelect(sel){
-  sel.innerHTML="";
-  db.groups.forEach(g=>{
-    const o=document.createElement("option");
-    o.value=g.id; o.textContent=g.name;
-    sel.appendChild(o);
-  });
-  sel.value = db.settings.currentGroupId || (db.groups[0]?.id||"");
-}
-function refreshGroupSelects(){
-  fillGroupSelect(selGroupRun);
-  fillGroupSelect(selGroupManage);
-  fillGroupSelect(selGroupSettings);
-}
-function onGroupChange(e){
-  db.settings.currentGroupId = e.target.value;
-  saveDB();
-  renderAll();
-}
-selGroupRun.addEventListener("change", onGroupChange);
-selGroupManage.addEventListener("change", onGroupChange);
-selGroupSettings.addEventListener("change", onGroupChange);
-
-/* ---------- Top header info ---------- */
-function renderTopBar(){
-  // Top actions by role
-  const bx=document.getElementById("btnExport");
-  const bi=document.getElementById("btnImport");
-  if(bx) bx.style.display = (currentRole===ROLE.ADMIN) ? "inline-flex" : "none";
-  if(bi) bi.style.display = (currentRole===ROLE.ADMIN) ? "inline-flex" : "none";
-
-  const g=curGroup();
-  const c=g?curCycle(g):null;
-  document.getElementById("topDateBig").textContent = todayText();
-
-  const cur = sessionsCount(c);
-  const len = cycleLen(g);
-  document.getElementById("topSessionInfo").textContent = `الحصة: ${Math.min(cur+1, len)} / ${len}`;
-
-  // cycle label: start from first session, end when completed
-  const from = (c && c.sessions.length) ? cycleStartYMD(c) : fmtDMY(isoYMD(new Date()));
-  const to = (c && c.sessions.length && sessionsCount(c)>=len) ? cycleEndYMD(g,c) : "—";
-  document.getElementById("topCycleInfo").textContent = `الدورة: ${from} → ${to}`;
-}
-
-/* ---------- Sessions (manual date) ---------- */
-function addSessionWithDate(g,c, ymd){
-  if(sessionsCount(c) >= cycleLen(g)){
-    toast("اكتملت حصص الدورة");
-    return false;
-  }
-  const iso = new Date(ymd+"T12:00:00").toISOString();
-  // منع تكرار نفس اليوم
-  const exists = c.sessions.some(s=>ymdFromTs(s.tsISO)===ymd);
-  if(exists){
-    toast("هذه الحصة موجودة بالفعل بنفس التاريخ");
-    return false;
-  }
-  const ss = { id:uid("ss"), tsISO: iso };
-  c.sessions.push(ss);
-  // ترتيب
-  c.sessions.sort((a,b)=> new Date(a.tsISO)-new Date(b.tsISO));
-  addLog(g, `إضافة حصة: ${fmtDMY(ymd)}`);
-  return true;
-}
-
-document.getElementById("btnAddSession").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  const g=curGroup(); if(!g) return;
-  const c=curCycle(g); if(!c) return;
-
-  const ymd = prompt("اكتبي تاريخ الحصة (YYYY-MM-DD)\nمثال: 2026-02-12", isoYMD(new Date()));
-  if(!ymd) return;
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return alert("صيغة التاريخ غير صحيحة");
-
-  const ok = addSessionWithDate(g,c, ymd);
-  if(!ok) return;
-
-  saveDB();
-  toast("تم تسجيل حصة");
-  renderAll();
-};
-
-document.getElementById("btnRemoveSession").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  const g=curGroup(); if(!g) return;
-  const c=curCycle(g); if(!c) return;
-  if(!c.sessions.length){ toast("لا توجد حصص للحذف"); return; }
-
-  // حذف حصة = لازم PIN
-  if(!requirePINOnce()) return;
-
-  const last = c.sessions[c.sessions.length-1];
-  const ok=confirm(`حذف آخر حصة؟ (${fmtDMY(ymdFromTs(last.tsISO))})`);
-  if(!ok) return;
-
-  c.sessions.pop();
-  addLog(g, "حذف آخر حصة");
-  saveDB();
-  toast("تم حذف آخر حصة");
-  renderAll();
-};
-
-/* ---------- Bulk sessions ---------- */
-const bulkOverlay = document.getElementById("bulkOverlay");
-document.getElementById("btnBulkSessions").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!requirePINOnce()) return;
-  document.getElementById("bulkFrom").value = isoYMD(new Date(Date.now()-30*86400000));
-  document.getElementById("bulkTo").value = isoYMD(new Date());
-  document.querySelectorAll(".dow").forEach(x=>x.checked=false);
-  bulkOverlay.style.display="block";
-};
-document.getElementById("btnBulkClose").onclick=()=>bulkOverlay.style.display="none";
-bulkOverlay.addEventListener("click",(e)=>{ if(e.target===bulkOverlay) bulkOverlay.style.display="none"; });
-
-document.getElementById("btnBulkApply").onclick=()=>{
-  const g=curGroup(); if(!g) return;
-  const c=curCycle(g); if(!c) return;
-
-  const from = document.getElementById("bulkFrom").value;
-  const to = document.getElementById("bulkTo").value;
-  const dows = [...document.querySelectorAll(".dow")].filter(x=>x.checked).map(x=>Number(x.value));
-
-  if(!from || !to) return alert("اختاري من/إلى");
-  if(new Date(from) > new Date(to)) return alert("تاريخ من أكبر من إلى");
-  if(dows.length===0) return alert("اختاري يوم واحد على الأقل");
-
-  let added=0;
-  let d = new Date(from+"T12:00:00");
-  const end = new Date(to+"T12:00:00");
-  while(d <= end){
-    const dow = (d.getDay()+6)%7; // تحويل: JS الأحد=0 -> نعتبر الأحد=0 كما وضعنا
-    // نحن وضعنا الأحد=0 بالفعل في الاختيار، إذن نستخدم getDay كما هو
-    const jsDow = d.getDay(); // 0..6
-    if(dows.includes(jsDow)){
-      const ymd = d.toISOString().slice(0,10);
-      if(addSessionWithDate(g,c, ymd)) added++;
-      if(sessionsCount(c) >= cycleLen(g)) break;
-    }
-    d.setDate(d.getDate()+1);
-  }
-
-  saveDB();
-  bulkOverlay.style.display="none";
-  toast(`تم إنشاء ${added} حصص`);
-  renderAll();
-};
-
-/* ---------- Settings (group) ---------- */
-document.getElementById("btnAddGroup").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!requirePINOnce()) return;
-  const name=(prompt("اسم المجموعة")||"").trim();
-  if(!name) return;
-  if(db.groups.some(x=>x.name.trim().toLowerCase()===name.toLowerCase())) return alert("المجموعة موجودة");
-  const g = {
-    id: uid("g"),
-    name,
-    cycleLen: 8,
-    students: [],
-    cycles: [ newCycle() ],
-    logs: []
-  };
-  db.groups.push(g);
-  db.settings.currentGroupId=g.id;
-  addLog(g, "إنشاء مجموعة");
-  saveDB();
-  toast("تمت إضافة المجموعة");
-  renderAll();
-};
-
-function loadSettingsUI(){
-  const g=curGroup(); if(!g) return;
-  document.getElementById("cycleLen").value = String(g.cycleLen||8);
-  document.getElementById("chargeMode").value = db.settings.chargeMode || "perSessions";
-  document.getElementById("autoLock").value = db.settings.autoLock || "off";
-}
-document.getElementById("cycleLen").onchange=(e)=>{
-  const g=curGroup(); if(!g) return;
-  g.cycleLen = Number(e.target.value||8);
-  addLog(g, `تغيير مدة الدورة إلى ${g.cycleLen}`);
-  saveDB();
-  renderAll();
-};
-document.getElementById("chargeMode").onchange=(e)=>{
-  db.settings.chargeMode = e.target.value || "perSessions";
-  saveDB();
-  toast("تم حفظ نظام الحساب");
-  renderAll();
-};
-document.getElementById("autoLock").onchange=(e)=>{
-  db.settings.autoLock = e.target.value || "off";
-  saveDB();
-  toast("تم حفظ خيار القفل");
-};
-
-/* ---------- New cycle (carry remaining) ---------- */
-document.getElementById("btnNewCycle").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!requirePINOnce()) return;
-  const g=curGroup(); if(!g) return;
-  const c=curCycle(g); if(!c) return;
-
-  const ok = confirm("فتح دورة جديدة؟ سيتم ترحيل المتبقي/الزيادة تلقائيًا.");
-  if(!ok) return;
-
-  const carryMap = {};
-  g.students.forEach(s=>{
-    const t = totals(g,c,s);
-    if(Math.abs(t.remaining) > 0.0001) carryMap[s.id]=t.remaining;
-  });
-
-  c.closed=true;
-  const nc = newCycle();
-  nc.carry = carryMap;
-  g.cycles.push(nc);
-  addLog(g, "فتح دورة جديدة");
-  saveDB();
-  toast("تم فتح دورة جديدة");
-  renderAll();
-};
-
-/* ---------- Change PIN ---------- */
-document.getElementById("btnChangePIN").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!requirePINOnce()) return;
-  const cur = getPIN();
-  const old = prompt("أدخلي الرقم السري الحالي");
-  if(old !== cur) return alert("رقم غير صحيح");
-  const nw = prompt("أدخلي الرقم السري الجديد (4 أرقام أو أكثر)");
-  if(!nw || nw.trim().length<4) return alert("قصير جدًا");
-  setPIN(nw.trim());
-  toast("تم تغيير الرقم السري");
-};
-
-/* ---------- Reset (requires PIN) ---------- */
-document.getElementById("btnReset").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!requirePINOnce()) return;
-  const ok=confirm("سيتم مسح كل البيانات والبدء من جديد. هل تريدين المتابعة؟");
-  if(!ok) return;
-  localStorage.removeItem(DB_KEY);
-  toast("تم المسح");
-  location.reload();
-};
-
-/* ---------- Students add/edit ---------- */
-document.getElementById("btnAddStudent").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!requirePINOnce()) return;
-  const g=curGroup(); if(!g) return;
-  const name=(document.getElementById("newStudentName").value||"").trim();
-  if(!name) return;
-  if(g.students.some(s=>s.name.trim().toLowerCase()===name.toLowerCase())) return alert("الطالب موجود");
-  g.students.push({ id:uid("s"), name, price:0, paused:false, discountType:"none", discountValue:0 });
-  document.getElementById("newStudentName").value="";
-  addLog(g, `إضافة طالب: ${name}`);
-  saveDB();
-  toast("تمت إضافة الطالب");
-  renderAll();
-};
-
-const stOverlay=document.getElementById("stOverlay");
-let stCtx=null;
-
-document.getElementById("btnStClose").onclick=()=>{ stOverlay.style.display="none"; stCtx=null; };
-stOverlay.addEventListener("click",(e)=>{ if(e.target===stOverlay){ stOverlay.style.display="none"; stCtx=null; } });
-
-function openStudentSettings(g,s){
-  stCtx={g,s};
-  document.getElementById("stTitle").textContent = s.name;
-  document.getElementById("stName").value = s.name || "";
-  document.getElementById("stPrice").value = Number(s.price||0);
-  document.getElementById("stPaused").value = s.paused ? "yes" : "no";
-  document.getElementById("stDiscType").value = s.discountType || "none";
-  document.getElementById("stDiscVal").value =
-    (s.discountType==="fixed"||s.discountType==="percent") ? String(s.discountValue||0) : "";
-  stOverlay.style.display="block";
-}
-
-document.getElementById("btnStSave").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!stCtx) return;
-  const { g, s } = stCtx;
-
-  const newName = (document.getElementById("stName").value||"").trim();
-  if(!newName) return alert("اكتبي اسم صحيح");
-  if(g.students.some(x=>x.id!==s.id && x.name.trim().toLowerCase()===newName.toLowerCase())) return alert("اسم موجود بالفعل");
-
-  s.name = newName;
-  s.price = Number(document.getElementById("stPrice").value||0);
-  s.paused = (document.getElementById("stPaused").value==="yes");
-  s.discountType = document.getElementById("stDiscType").value || "none";
-  s.discountValue = Number(document.getElementById("stDiscVal").value||0);
-
-  addLog(g, `تعديل طالب: ${s.name}`);
-  saveDB();
-  toast("تم الحفظ");
-  stOverlay.style.display="none";
-  stCtx=null;
-  renderAll();
-};
-
-document.getElementById("btnStDelete").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!stCtx) return;
-  const { g, s } = stCtx;
-  const ok = confirm("حذف الطالب؟ سيتم حذف تعاملاته في كل الدورات.");
-  if(!ok) return;
-
-  // delete txs/notes/carry/attendance entries across cycles
-  g.cycles.forEach(c=>{
-    c.txs = (c.txs||[]).filter(t=>t.sid!==s.id);
-    delete c.notes?.[s.id];
-    delete c.carry?.[s.id];
-    for(const ss of (c.sessions||[])){
-      if(c.attendance?.[ss.id]) delete c.attendance[ss.id][s.id];
-    }
-  });
-
-  g.students = g.students.filter(x=>x.id!==s.id);
-  addLog(g, `حذف طالب: ${s.name}`);
-  saveDB();
-  toast("تم حذف الطالب");
-  stOverlay.style.display="none";
-  stCtx=null;
-  renderAll();
-};
-
-function studentSpecialLabel(s){
-  if(s.discountType==="exempt") return "معفى";
-  if(s.discountType==="fixed" && (s.discountValue||0)>0) return "خصم";
-  if(s.discountType==="percent" && (s.discountValue||0)>0) return "خصم";
-  return "";
-}
-
-function renderStudentsSettings(){
-  const g=curGroup();
-  const wrap=document.getElementById("studentsList");
-  wrap.innerHTML="";
-  if(!g){ wrap.innerHTML=`<div class="hint">—</div>`; return; }
-  if(!g.students.length){ wrap.innerHTML=`<div class="hint">لا يوجد طلاب.</div>`; return; }
-
-  const list=[...g.students].sort((a,b)=>a.name.localeCompare(b.name,"ar"));
-  list.forEach(s=>{
-    const tag = studentSpecialLabel(s);
-    const it=document.createElement("div");
-    it.className="row";
-    it.innerHTML=`
-      <div class="left" style="min-width:0">
-        <div class="num">👤</div>
-        <div style="min-width:0">
-          <div class="name">${escapeHtml(s.name)}
-            ${s.paused?` <span class="badge warn">موقوف</span>`:""}
-            ${tag?` <span class="badge">${escapeHtml(tag)}</span>`:""}
-          </div>
-          <div class="mini">سعر الدورة للطالب: <span class="mono">${escapeHtml(String(s.price||0))}</span></div>
-        </div>
-      </div>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">TE</div>
       <div>
-        <button class="moreBtn noPrint" title="تعديل">⋯</button>
-      </div>
-    `;
-    it.querySelector("button").onclick=()=>{ if(!requirePINOnce()) return; openStudentSettings(g,s); };
-    wrap.appendChild(it);
-  });
-}
-
-/* ---------- Pay Modal (numbers visible) ---------- */
-const payOverlay=document.getElementById("payOverlay");
-const payAmountWrap=document.getElementById("payAmountWrap");
-const payAmount=document.getElementById("payAmount");
-const payAmountLabel=document.getElementById("payAmountLabel");
-let payCtx=null;
-let payMode=null; // add | minus | set
-
-document.getElementById("btnPayClose").onclick=()=>closePay();
-payOverlay.addEventListener("click",(e)=>{ if(e.target===payOverlay) closePay(); });
-
-function closePay(){
-  payOverlay.style.display="none";
-  payCtx=null;
-  payMode=null;
-  payAmountWrap.style.display="none";
-  payAmount.value="";
-}
-
-document.getElementById("btnPayPrint").onclick=()=>{
-  // اطبع نافذة الطالب الحالية (Save as PDF)
-  window.print();
-};
-
-document.getElementById("btnPayAdd").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  payMode="add";
-  payAmountWrap.style.display="";
-  payAmountLabel.textContent="إضافة مبلغ";
-  payAmount.value="";
-  payAmount.focus();
-};
-
-document.getElementById("btnPayMinus").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  payMode="minus";
-  payAmountWrap.style.display="";
-  payAmountLabel.textContent="خصم من المدفوع (تصحيح)";
-  payAmount.value="";
-  payAmount.focus();
-};
-
-document.getElementById("btnPaySet").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  payMode="set";
-  payAmountWrap.style.display="";
-  payAmountLabel.textContent="تعديل المدفوع (قيمة دقيقة) — مثال: 100 بدل 1000";
-  // نعرض الحالي كقيمة
-  if(payCtx){
-    const {c,s}=payCtx;
-    payAmount.value = String(paidTotal(c,s.id));
-  }else{
-    payAmount.value="";
-  }
-  payAmount.focus();
-};
-
-document.getElementById("btnPayApply").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!payCtx || !payMode) return;
-  const {g,c,s}=payCtx;
-  const v=Number(payAmount.value||0);
-  if(!(v>=0)) return alert("اكتب رقم صحيح");
-
-  if(payMode==="set"){
-    // نمسح txs القديمة ونضع tx واحدة بالقيمة النهائية
-    c.txs = (c.txs||[]).filter(t=>t.sid!==s.id);
-    if(v>0){
-      c.txs.push({ id:uid("tx"), sid:s.id, amount:round2(v), tsISO:new Date().toISOString(), note:"(تعديل)" });
-    }
-    addLog(g, `تعديل مدفوع ${s.name} = ${v}`);
-    toast("تم التعديل");
-  }else if(payMode==="add"){
-    if(!(v>0)) return alert("اكتب مبلغ أكبر من صفر");
-    c.txs.push({ id:uid("tx"), sid:s.id, amount:round2(v), tsISO:new Date().toISOString(), note:"(إضافة)" });
-    addLog(g, `إضافة دفع ${s.name} +${v}`);
-    toast("تمت الإضافة");
-  }else{
-    if(!(v>0)) return alert("اكتب مبلغ أكبر من صفر");
-    // الخصم كتسجيل سالب (تصحيح) — يسهّل تعديل 1000 بدل 100
-    c.txs.push({ id:uid("tx"), sid:s.id, amount:round2(-v), tsISO:new Date().toISOString(), note:"(خصم/تصحيح)" });
-    addLog(g, `خصم/تصحيح ${s.name} -${v}`);
-    toast("تم الخصم");
-  }
-
-  payMode=null;
-  payAmountWrap.style.display="none";
-  payAmount.value="";
-  saveDB();
-  renderAll();
-  openPayModal(g,c,s);
-};
-
-document.getElementById("btnPaySaveNote").onclick=()=>{
-  if(!canEditSensitive()){ toast("غير مسموح في هذا الوضع"); return; }
-  if(!payCtx) return;
-  const {g,c,s}=payCtx;
-  c.notes[s.id] = String(document.getElementById("payNote").value||"").trim();
-  addLog(g, `ملاحظة للطالب ${s.name}`);
-  saveDB();
-  toast("تم حفظ الملاحظة");
-};
-
-function openPayModal(g,c,s){
-  payCtx={g,c,s};
-  payMode=null;
-  payAmountWrap.style.display="none";
-  payAmount.value="";
-
-  const len = cycleLen(g);
-  const from = (c.sessions.length) ? cycleStartYMD(c) : fmtDMY(isoYMD(new Date()));
-  const to = (c.sessions.length && sessionsCount(c)>=len) ? cycleEndYMD(g,c) : "—";
-
-  document.getElementById("payTitle").textContent = s.name;
-  document.getElementById("paySub").textContent = `${g.name} • الحصص: ${sessionsCount(c)}/${len} • الدورة: ${from} → ${to}`;
-
-  document.getElementById("payNote").value = String(c.notes?.[s.id] || "");
-
-  const t=totals(g,c,s);
-  const t=totals(g,c,s);
-
-  const table = (currentRole===ROLE.ASSISTANT)
-    ? `
-    <table>
-      <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
-      <tbody>
-        <tr><td>الحصص حتى الآن</td><td class="mono">${sessionsCount(c)} / ${cycleLen(g)}</td></tr>
-        <tr><td>الحضور</td><td class="mono">${attendanceCountForStudent(c, s.id)}</td></tr>
-        <tr><td>ملاحظة</td><td class="mono">${escapeHtml(String(c.notes?.[s.id]||"—"))}</td></tr>
-      </tbody>
-    </table>
-    `
-    : (currentRole===ROLE.VIEW)
-    ? `
-    <table>
-      <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
-      <tbody>
-        <tr><td>الحصص حتى الآن</td><td class="mono">${sessionsCount(c)} / ${cycleLen(g)}</td></tr>
-        <tr><td>الحضور</td><td class="mono">${attendanceCountForStudent(c, s.id)}</td></tr>
-      </tbody>
-    </table>
-    `
-    : `
-    <table>
-      <thead><tr><th>البند</th><th>المبلغ</th></tr></thead>
-      <tbody>
-        <tr><td>مجموع الاشتراك حتى الآن</td><td class="mono">${t.sub}</td></tr>
-        <tr><td>الرصيد السابق (مرحّل)</td><td class="mono">${t.prev}</td></tr>
-        <tr><td><b>الإجمالي</b></td><td class="mono"><b>${t.total}</b></td></tr>
-        <tr><td>المدفوع</td><td class="mono">${t.paid}</td></tr>
-        <tr><td><b>المتبقي</b></td><td class="mono"><b>${t.remaining}</b></td></tr>
-      </tbody>
-    </table>
-  `;
-
-  // عمليات الدفع (آخر 8) — للمدير فقط
-  const txs = (c.txs||[]).filter(x=>x.sid===s.id).slice(-8).reverse();
-  const txHtml = (currentRole===ROLE.ADMIN && txs.length) ? `
-    <div class="hr"></div>
-    <div style="font-weight:1000">آخر العمليات</div>
-    <div class="hint">${txs.map(x=>`${fmtDateAR(x.tsISO)}: ${x.amount} ${x.note?("• "+escapeHtml(x.note)):""}`).join("<br>")}</div>
-  ` : "";
-
-  document.getElementById("payTableWrap").innerHTML = table + txHtml;
-
-  // Actions visibility by role
-  document.querySelectorAll("#payOverlay .rowWrap.noPrint").forEach(w=>{
-    // the first rowWrap is pay action buttons
-  });
-  const actionRow = document.querySelector("#payOverlay .rowWrap.noPrint");
-  if(actionRow) actionRow.style.display = (currentRole===ROLE.ADMIN) ? "" : "none";
-
-  renderAttendanceUI(g,c,s);
-  payOverlay.style.display="block";
-}
-
-/* ---------- Attendance UI (toggle: — -> حضور -> غياب -> —) ---------- */
-function getAtt(c, sessionId, sid){
-  return (c.attendance?.[sessionId]?.[sid]) || "";
-}
-function setAtt(c, sessionId, sid, v){
-  if(!c.attendance[sessionId]) c.attendance[sessionId]={};
-  if(!v) delete c.attendance[sessionId][sid];
-  else c.attendance[sessionId][sid]=v;
-}
-
-function toggleAttendance(g,c,s,sessionId){
-  if(!canEditAnything()){ toast("وضع العرض فقط"); return; }
-  const cur = getAtt(c,sessionId,s.id);
-  const next = cur==="P" ? "A" : cur==="A" ? "" : "P";
-  setAtt(c,sessionId,s.id,next);
-  addLog(g, `حضور ${s.name}: ${fmtDMY(ymdFromTs(c.sessions.find(x=>x.id===sessionId)?.tsISO||new Date().toISOString()))} = ${next||"—"}`);
-  saveDB();
-  openPayModal(g,c,s);
-  renderAll();
-}
-
-function renderAttendanceUI(g,c,s){
-  const wrap = document.getElementById("attWrap");
-  wrap.innerHTML="";
-
-  if(!c.sessions.length){
-    wrap.innerHTML = `<div class="hint">لا توجد حصص بعد. أضيفي حصص بتاريخ قديم من “إدخال بيانات سابقة”.</div>`;
-    return;
-  }
-
-  c.sessions.forEach(ss=>{
-    const ymd = ymdFromTs(ss.tsISO);
-    const val = getAtt(c, ss.id, s.id);
-    const label = val==="P" ? "حضور ✅" : val==="A" ? "غياب ❌" : "—";
-
-    const btnClass = val==="P" ? "attBtn attP" : val==="A" ? "attBtn attA" : "attBtn";
-    const item=document.createElement("div");
-    item.className="attItem";
-    item.innerHTML = `
-      <div style="min-width:0">
-        <div style="font-weight:1000">${fmtDMY(ymd)}</div>
-        <div class="hint mono">${ymd}</div>
-      </div>
-      <button class="${btnClass} noPrint">${label}</button>
-    `;
-    item.querySelector("button").onclick=()=>toggleAttendance(g,c,s,ss.id);
-    wrap.appendChild(item);
-  });
-}
-
-/* ---------- MAIN list (no status text) ---------- */
-function renderRun(){
-  renderTopBar();
-
-  const g=curGroup();
-  const c=g?curCycle(g):null;
-
-  const wrap=document.getElementById("runList");
-  wrap.innerHTML="";
-
-  if(!g){ wrap.innerHTML=`<div class="hint">أضيفي مجموعة.</div>`; return; }
-  if(!g.students.length){ wrap.innerHTML=`<div class="hint">أضيفي طلاب من الإعدادات.</div>`; return; }
-
-  const list=[...g.students].sort((a,b)=>a.name.localeCompare(b.name,"ar"));
-  list.forEach((s,idx)=>{
-    const row=document.createElement("div");
-    row.className="row";
-    row.innerHTML=`
-      <div class="left">
-        <div class="num">${idx+1}</div>
-        <div class="name">${escapeHtml(s.name)}</div>
-      </div>
-      <div style="display:flex; gap:8px; align-items:center">
-        <button class="btn small royal noPrint" style="min-width:170px"><span class="ico">💳</span> دفع</button>
-        <button class="moreBtn noPrint" title="تفاصيل">⋯</button>
-      </div>
-    `;
-
-    // دفع: يفتح نافذة الدفع (تظهر الأرقام داخلها)
-    row.querySelector(".btn").onclick=()=>{
-      if(!requirePINOnce()) return;
-      openPayModal(g,c,s);
-    };
-    row.querySelector(".moreBtn").onclick=()=>{
-      if(!requirePINOnce()) return;
-      openPayModal(g,c,s);
-    };
-
-    wrap.appendChild(row);
-  });
-}
-
-/* ---------- MANAGE: search all groups + group detail ---------- */
-document.getElementById("qManage").addEventListener("input", ()=>renderManage());
-
-document.getElementById("btnSessionsLog").onclick=()=>{
-  if(!requirePINOnce()) return;
-  const g=curGroup(); if(!g) return;
-  const c=curCycle(g); if(!c) return;
-
-  const ss = c.sessions.map((x,i)=>`${i+1}) ${fmtDMY(ymdFromTs(x.tsISO))}  (${ymdFromTs(x.tsISO)})`).join("\n");
-  document.getElementById("ssList").textContent = ss || "—";
-  document.getElementById("ssOverlay").style.display="block";
-};
-document.getElementById("btnSsClose").onclick=()=>document.getElementById("ssOverlay").style.display="none";
-document.getElementById("ssOverlay").addEventListener("click",(e)=>{ if(e.target.id==="ssOverlay") document.getElementById("ssOverlay").style.display="none"; });
-
-function groupTotals(g,c){
-  let total=0, paid=0, remaining=0;
-  g.students.forEach(s=>{
-    const t=totals(g,c,s);
-    total += t.total;
-    paid += t.paid;
-    remaining += t.remaining;
-  });
-  return { total: round2(total), paid: round2(paid), remaining: round2(remaining) };
-}
-
-function renderGroupSummary(){
-  const g=curGroup();
-  const c=g?curCycle(g):null;
-  const box=document.getElementById("groupSummary");
-  box.innerHTML="";
-  if(!g || !c) return;
-
-  const gt = groupTotals(g,c);
-  box.innerHTML = `
-    <div class="row" style="flex:1">
-      <div class="left"><div class="num">📌</div>
-        <div>
-          <div class="name">حساب المجموعة (الدورة الحالية)</div>
-          <div class="mini">الإجمالي: <span class="mono">${gt.total}</span> • المدفوع: <span class="mono">${gt.paid}</span> • المتبقي: <span class="mono">${gt.remaining}</span></div>
+        <div style="font-weight:1000;font-size:18px">Hedra – Teacher Edition</div>
+        <div class="hint" id="topDate">—</div>
+        <div class="rowWrap" style="gap:8px">
+          <span class="badge" id="topSession">الحصة: —</span>
+          <span class="badge" id="topCycle">الدورة: —</span>
+          <span class="badge" id="topRole">الدور: مدير</span>
+          <span class="badge">v6.0.0-teacher</span>
         </div>
       </div>
-      <button class="moreBtn noPrint" id="btnPrintGroup">🖨</button>
     </div>
-  `;
-  box.querySelector("#btnPrintGroup").onclick=()=>window.print();
-}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+      <button class="btn small noPrint" id="btnInstall" style="display:none">⬇ تثبيت</button>
+      <button class="btn small ghost noPrint" id="btnExport">⬆ تصدير مشفّر</button>
+      <button class="btn small ghost noPrint" id="btnImport">⬇ استيراد</button>
+    </div>
+  </div>
+</header>
 
-function renderManage(){
-  renderTopBar();
-  renderGroupSummary();
+<main class="page">
+  <section id="pageRun">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div style="font-weight:1000;font-size:16px">الحصة</div>
+          <div class="hint">قائمة الطلاب + الدفع + الحضور.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn small royal noPrint" id="btnAddSession">＋ إضافة حصة</button>
+          <button class="btn small danger noPrint" id="btnRemoveSession">− حذف آخر حصة</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <label for="selGroupRun">اختر المجموعة</label>
+      <select id="selGroupRun"></select>
+      <div class="hr"></div>
+      <div class="list" id="runList"></div>
+    </div>
+  </section>
 
-  const q=(document.getElementById("qManage").value||"").trim().toLowerCase();
-  const g=curGroup();
-  const c=g?curCycle(g):null;
+  <section id="pageManage" style="display:none">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div style="font-weight:1000;font-size:16px">الإدارة</div>
+          <div class="hint">بحث + ملخص + تدقيق + إيصالات.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn small ghost noPrint" id="btnBulk">📥 إنشاء حصص قديمة</button>
+          <button class="btn small ghost noPrint" id="btnAudit">🧾 تدقيق</button>
+          <button class="btn small ghost noPrint" id="btnReceipts">🧾 إيصالات</button>
+        </div>
+      </div>
 
-  document.getElementById("manageSub").textContent = g && c
-    ? `${g.name} • حصص: ${sessionsCount(c)}/${cycleLen(g)} • الدورة: ${cycleStartYMD(c)} → ${cycleEndYMD(g,c)}`
-    : "—";
+      <div class="hr"></div>
+      <label for="qManage">بحث بالاسم (كل المجموعات)</label>
+      <input id="qManage" placeholder="اكتب اسم الطالب..." />
+      <div class="hr"></div>
+      <label for="selGroupManage">اختر المجموعة</label>
+      <select id="selGroupManage"></select>
+      <div class="hr"></div>
+      <div class="list" id="manageList"></div>
+    </div>
+  </section>
 
-  const wrap=document.getElementById("manageList");
-  wrap.innerHTML="";
+  <section id="pageDashboard" style="display:none">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div style="font-weight:1000;font-size:16px">لوحة التحكم</div>
+          <div class="hint">ملخص + دخل شهري + أعلى المتأخرين.</div>
+        </div>
+        <button class="btn small ghost noPrint" id="btnDashPrint">🖨 طباعة</button>
+      </div>
+      <div class="hr"></div>
+      <div class="rowWrap" id="dashCards"></div>
+      <div class="hr"></div>
+      <div id="dashMonth"></div>
+      <div class="hr"></div>
+      <div class="list" id="dashLate"></div>
+    </div>
+  </section>
 
-  // بحث شامل: كل المجموعات
-  if(q){
-    const hits=[];
-    db.groups.forEach(gr=>{
-      const cy = curCycle(gr);
-      gr.students.forEach(s=>{
-        if(s.name.toLowerCase().includes(q)){
-          const t=totals(gr,cy,s);
-          hits.push({gr,cy,s,t});
-        }
+  <section id="pageSettings" style="display:none">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div style="font-weight:1000;font-size:16px">الإعدادات</div>
+          <div class="hint">مجموعات + طلاب + أسعار + خصومات + أمان.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn small royal noPrint" id="btnAddGroup">＋ مجموعة</button>
+          <button class="btn small ghost noPrint" id="btnNewCycle">🔁 دورة جديدة</button>
+          <button class="btn small ghost noPrint" id="btnChangePIN">🔒 تغيير PIN</button>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <label for="selGroupSettings">اختر المجموعة</label>
+      <select id="selGroupSettings"></select>
+
+      <div class="rowWrap">
+        <div>
+          <label for="cycleLen">مدة الدورة (عدد الحصص)</label>
+          <select id="cycleLen">
+            <option value="4">4</option><option value="8" selected>8</option><option value="12">12</option>
+          </select>
+        </div>
+        <div>
+          <label for="chargeMode">نظام الحساب</label>
+          <select id="chargeMode">
+            <option value="perSessions" selected>حسب الحصص</option>
+            <option value="byAttendance">حسب الحضور</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="rowWrap">
+        <div>
+          <label for="brandName">اسم المعلم/المركز في الإيصالات</label>
+          <input id="brandName" placeholder="مثال: أ/ أحمد" />
+        </div>
+        <div>
+          <label for="brandPhone">هاتف/واتساب</label>
+          <input id="brandPhone" placeholder="01xxxxxxxxx" />
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-end">
+        <div>
+          <div style="font-weight:1000">الطلاب</div>
+          <div class="hint">الحذف = أرشفة (لا ضياع بيانات).</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <input id="newStudentName" placeholder="اسم الطالب..." style="min-width:220px"/>
+          <button class="btn small royal noPrint" id="btnAddStudent">＋ إضافة</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div class="list" id="studentsList"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom noPrint">
+  <div class="wrap">
+    <button class="tab active" data-tab="run">🏠</button>
+    <button class="tab" data-tab="manage">🧾</button>
+    <button class="tab" data-tab="dashboard">📊</button>
+    <button class="tab" data-tab="settings">⚙️</button>
+  </div>
+</nav>
+
+<div class="overlay" id="lockOverlay" style="display:block">
+  <div class="modal" style="max-width:520px">
+    <div style="text-align:center">
+      <img src="icon.png" alt="" style="width:92px;height:92px;border-radius:28px;box-shadow:var(--shadow2)"/>
+      <div style="font-weight:1000;font-size:20px;margin-top:10px">Hedra Teacher Edition</div>
+      <div class="hint" id="lockHint">أدخل PIN (4 أرقام أو أكثر)</div>
+    </div>
+    <div class="hr"></div>
+    <label for="pinInput">PIN</label>
+    <input id="pinInput" inputmode="numeric" autocomplete="off" placeholder="••••" />
+    <div class="rowWrap noPrint" style="margin-top:10px">
+      <button class="btn small ghost" id="roleAdmin">مدير</button>
+      <button class="btn small ghost" id="roleAssistant">مساعد</button>
+      <button class="btn small ghost" id="roleView">عرض فقط</button>
+    </div>
+    <div class="rowWrap noPrint" style="margin-top:10px">
+      <button class="btn small royal" id="btnUnlock">فتح</button>
+      <button class="btn small ghost" id="btnLockClear">مسح</button>
+    </div>
+    <div class="hr"></div>
+    <div class="hint">نسخة تجارية: إيصالات + تدقيق + أرشفة + تصدير مشفّر + منع الخصم أكبر من المدفوع.</div>
+  </div>
+</div>
+
+<div class="overlay" id="payOverlay">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <div>
+        <div style="font-weight:1000" id="payTitle">—</div>
+        <div class="hint" id="paySub">—</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap" class="noPrint">
+        <button class="btn small ghost" id="btnPayReceipt">🧾 إيصال</button>
+        <button class="btn small ghost" id="btnPayPrint">🖨</button>
+        <button class="btn small ghost" id="btnPayClose">إغلاق</button>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <div id="payBody"></div>
+    <div class="hr"></div>
+    <div class="rowWrap noPrint" id="payBtns">
+      <button class="btn small royal" id="btnPaySet">✏ تعديل</button>
+      <button class="btn small ghost" id="btnPayAdd">＋ إضافة</button>
+      <button class="btn small ghost" id="btnPayMinus">− خصم</button>
+    </div>
+    <div class="rowWrap noPrint" id="payAmountWrap" style="display:none;margin-top:10px">
+      <div style="flex:2;min-width:220px">
+        <label id="payAmountLabel">المبلغ</label>
+        <input id="payAmount" type="number" step="1" />
+      </div>
+      <div style="flex:1;min-width:160px;align-self:flex-end">
+        <button class="btn small royal" id="btnPayApply">✅ تطبيق</button>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <label for="payNote">ملاحظة</label>
+    <input id="payNote" />
+    <div class="rowWrap noPrint" style="margin-top:10px">
+      <button class="btn small royal" id="btnPaySaveNote">💾 حفظ</button>
+    </div>
+    <div class="hr"></div>
+    <div class="hint">الحضور/الغياب:</div>
+    <div class="list" id="attList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="bulkOverlay"><div class="modal">
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    <div><div style="font-weight:1000">📥 إنشاء حصص قديمة</div><div class="hint">اختيار نطاق + أيام الأسبوع (0=الأحد … 6=السبت).</div></div>
+    <button class="btn small ghost noPrint" id="btnBulkClose">إغلاق</button>
+  </div>
+  <div class="hr"></div>
+  <div class="rowWrap">
+    <div><label>من</label><input id="bulkFrom" type="date"></div>
+    <div><label>إلى</label><input id="bulkTo" type="date"></div>
+  </div>
+  <div class="hr"></div>
+  <div class="rowWrap" style="gap:8px">
+    <label style="display:flex;gap:8px;align-items:center"><input class="dow" type="checkbox" value="0">الأحد</label>
+    <label style="display:flex;gap:8px;align-items:center"><input class="dow" type="checkbox" value="1">الإثنين</label>
+    <label style="display:flex;gap:8px;align-items:center"><input class="dow" type="checkbox" value="2">الثلاثاء</label>
+    <label style="display:flex;gap:8px;align-items:center"><input class="dow" type="checkbox" value="3">الأربعاء</label>
+    <label style="display:flex;gap:8px;align-items:center"><input class="dow" type="checkbox" value="4">الخميس</label>
+    <label style="display:flex;gap:8px;align-items:center"><input class="dow" type="checkbox" value="5">الجمعة</label>
+    <label style="display:flex;gap:8px;align-items:center"><input class="dow" type="checkbox" value="6">السبت</label>
+  </div>
+  <div class="hr"></div>
+  <button class="btn small royal noPrint" id="btnBulkApply">✅ إنشاء</button>
+</div></div>
+
+<div class="overlay" id="auditOverlay"><div class="modal">
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    <div><div style="font-weight:1000">🧾 سجل التدقيق</div><div class="hint">العمليات الحساسة (للمدير فقط).</div></div>
+    <div class="noPrint" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn small ghost" id="btnAuditCSV">⬆ CSV</button>
+      <button class="btn small ghost" id="btnAuditClose">إغلاق</button>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <pre id="auditText" class="hint" style="white-space:pre-wrap;margin:0">—</pre>
+</div></div>
+
+<div class="overlay" id="rcOverlay"><div class="modal">
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    <div><div style="font-weight:1000">🧾 الإيصالات</div><div class="hint">طباعة + CSV.</div></div>
+    <div class="noPrint" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn small ghost" id="btnRcCSV">⬆ CSV</button>
+      <button class="btn small ghost" id="btnRcClose">إغلاق</button>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div id="rcList"></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const BUILD="20260214015150";
+  const ROLE={ADMIN:"admin",ASSISTANT:"assistant",VIEW:"view"};
+
+  // utils
+  const $=(id)=>document.getElementById(id);
+  const round2=(n)=>Math.round((Number(n||0))*100)/100;
+  const isoYMD=(d=new Date())=>{ const x=new Date(d); x.setHours(0,0,0,0); return x.toISOString().slice(0,10); };
+  const ymdFromTs=(ts)=>{ const d=new Date(ts); d.setHours(0,0,0,0); return d.toISOString().slice(0,10); };
+  const fmtDMY=(ymd)=>{ const d=new Date(ymd+"T12:00:00"); return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear(); };
+  const todayText=()=>new Date().toLocaleDateString("ar-EG",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  const escapeHtml=(s)=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+  const uid=(p="id")=>`${p}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+  const downloadText=(name,text,mime="text/plain;charset=utf-8")=>{ const b=new Blob([text],{type:mime}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=name; a.click(); URL.revokeObjectURL(a.href); };
+  const toast=(msg)=>{ const t=$("toast"); t.textContent=msg; t.style.display="block"; clearTimeout(toast._t); toast._t=setTimeout(()=>t.style.display="none",2200); };
+
+  // crypto (WebCrypto) for vault + export
+  const KDF_ITERS=200000;
+  const bufToB64=(buf)=>{ const b=new Uint8Array(buf); let bin=""; for(let i=0;i<b.length;i++) bin+=String.fromCharCode(b[i]); return btoa(bin); };
+  const b64ToBuf=(b64)=>{ const bin=atob(b64); const b=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) b[i]=bin.charCodeAt(i); return b.buffer; };
+  async function deriveKeyFromPIN(pin,saltBuf){
+    const enc=new TextEncoder().encode(String(pin||""));
+    const base=await crypto.subtle.importKey("raw", enc, {name:"PBKDF2"}, false, ["deriveKey"]);
+    return crypto.subtle.deriveKey({name:"PBKDF2", salt:saltBuf, iterations:KDF_ITERS, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+  }
+  async function encryptJSON(key,obj){
+    const iv=crypto.getRandomValues(new Uint8Array(12));
+    const plain=new TextEncoder().encode(JSON.stringify(obj));
+    const ct=await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, plain);
+    return {ivB64:bufToB64(iv.buffer), ctB64:bufToB64(ct)};
+  }
+  async function decryptJSON(key,ivB64,ctB64){
+    const iv=new Uint8Array(b64ToBuf(ivB64));
+    const ct=b64ToBuf(ctB64);
+    const plainBuf=await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, ct);
+    return JSON.parse(new TextDecoder().decode(plainBuf));
+  }
+
+  // schema
+  const newCycle=()=>({id:uid("c"), createdAtISO:new Date().toISOString(), sessions:[], attendance:{}, txs:[], notes:{}, carry:{}, receipts:[], closed:false});
+  const makeEmptyDB=()=>{
+    const g={id:uid("g"), name:"مجموعة 1", cycleLen:8, students:[], cycles:[newCycle()], audit:[]};
+    return {settings:{currentGroupId:g.id, chargeMode:"perSessions", brandName:"", brandPhone:"", receiptSeq:1, pinFailCount:0, pinLockUntil:0, saltB64:""}, groups:[g]};
+  };
+  function ensureDefaults(db){
+    if(!db||typeof db!=="object") db=makeEmptyDB();
+    db.settings=db.settings||{};
+    db.groups=Array.isArray(db.groups)?db.groups:[];
+    db.settings.chargeMode = (db.settings.chargeMode==="byAttendance") ? "byAttendance" : "perSessions";
+    db.settings.brandName = String(db.settings.brandName||"");
+    db.settings.brandPhone = String(db.settings.brandPhone||"");
+    db.settings.receiptSeq = Number(db.settings.receiptSeq||1);
+    db.settings.pinFailCount = Number(db.settings.pinFailCount||0);
+    db.settings.pinLockUntil = Number(db.settings.pinLockUntil||0);
+    if(db.groups.length===0){ const f=makeEmptyDB(); db.groups=f.groups; db.settings.currentGroupId=f.settings.currentGroupId; }
+    db.groups.forEach(g=>{
+      g.id=g.id||uid("g");
+      g.name=String(g.name||"مجموعة");
+      g.cycleLen=Math.max(1,Number(g.cycleLen||8));
+      g.students=Array.isArray(g.students)?g.students:[];
+      g.cycles=Array.isArray(g.cycles)&&g.cycles.length?g.cycles:[newCycle()];
+      g.audit=Array.isArray(g.audit)?g.audit:[];
+      g.students.forEach(s=>{
+        s.id=s.id||uid("s");
+        s.name=String(s.name||"طالب");
+        s.price=Number(s.price||0);
+        s.paused=!!s.paused;
+        s.archived=!!s.archived;
+        s.discountType=["none","fixed","percent","exempt"].includes(s.discountType)?s.discountType:"none";
+        s.discountValue=Number(s.discountValue||0);
+      });
+      g.cycles.forEach(c=>{
+        c.id=c.id||uid("c");
+        c.sessions=Array.isArray(c.sessions)?c.sessions:[];
+        c.attendance=(c.attendance&&typeof c.attendance==="object")?c.attendance:{};
+        c.txs=Array.isArray(c.txs)?c.txs:[];
+        c.notes=(c.notes&&typeof c.notes==="object")?c.notes:{};
+        c.carry=(c.carry&&typeof c.carry==="object")?c.carry:{};
+        c.receipts=Array.isArray(c.receipts)?c.receipts:[];
+        c.closed=!!c.closed;
       });
     });
-    if(!hits.length){
-      wrap.innerHTML=`<div class="hint">لا نتائج.</div>`;
+    if(!db.groups.some(g=>g.id===db.settings.currentGroupId)) db.settings.currentGroupId=db.groups[0].id;
+    return db;
+  }
+
+  // calc
+  const curGroup=()=>db.groups.find(g=>g.id===db.settings.currentGroupId)||db.groups[0];
+  const curCycle=(g)=>g.cycles[g.cycles.length-1];
+  const sessionsCount=(c)=>(c.sessions||[]).length;
+  const cycleLen=(g)=>Math.max(1,Number(g.cycleLen||8));
+  function effectivePrice(s){
+    if(s.paused||s.archived) return 0;
+    const base=Math.max(0,Number(s.price||0));
+    const t=s.discountType||"none";
+    const v=Math.max(0,Number(s.discountValue||0));
+    if(t==="exempt") return 0;
+    if(t==="fixed") return Math.max(0, base-v);
+    if(t==="percent"){ const p=Math.max(0,Math.min(100,v)); return Math.max(0, base*(1-p/100)); }
+    return base;
+  }
+  const perSession=(g,s)=>round2(effectivePrice(s)/cycleLen(g));
+  function attendanceCount(c,sid){
+    let n=0;
+    for(const ss of c.sessions||[]){ const map=c.attendance?.[ss.id]||{}; if(map[sid]==="P") n++; }
+    return n;
+  }
+  function dueSoFar(g,c,s){
+    const mode=db.settings.chargeMode||"perSessions";
+    if(mode==="byAttendance") return round2(attendanceCount(c,s.id)*perSession(g,s));
+    return round2(sessionsCount(c)*perSession(g,s));
+  }
+  const carry=(c,sid)=>round2(Number(c.carry?.[sid]||0));
+  const paid=(c,sid)=>Math.max(0, round2((c.txs||[]).filter(t=>t.sid===sid).reduce((a,t)=>a+Number(t.amount||0),0)));
+  function totals(g,c,s){
+    const sub=dueSoFar(g,c,s);
+    const prev=carry(c,s.id);
+    const total=round2(sub+prev);
+    const p=paid(c,s.id);
+    return {sub,prev,total,paid:p,remaining:round2(total-p)};
+  }
+  function groupTotals(g,c){
+    let total=0, paidSum=0, rem=0;
+    g.students.filter(s=>!s.archived).forEach(s=>{ const t=totals(g,c,s); total+=t.total; paidSum+=t.paid; rem+=t.remaining; });
+    return {total:round2(total), paid:round2(paidSum), remaining:round2(rem)};
+  }
+
+  // audit + receipts
+  const auditAdd=(action,meta={})=>{ const g=curGroup(); g.audit.push({id:uid("aud"), tsISO:new Date().toISOString(), role, action, meta}); if(g.audit.length>2000) g.audit.splice(0,g.audit.length-2000); };
+  const auditCSV=()=>{
+    const rows=[["tsISO","role","action","meta"]];
+    db.groups.forEach(g=>(g.audit||[]).forEach(a=>rows.push([a.tsISO,a.role,a.action,JSON.stringify(a.meta||{})])));
+    return rows.map(r=>r.map(x=>`"${String(x??"").replaceAll('"','""')}"`).join(",")).join("\n");
+  };
+  function makeReceipt(g,c,s,amount,note){
+    const seq=Number(db.settings.receiptSeq||1);
+    db.settings.receiptSeq=seq+1;
+    const rid=`R-${String(seq).padStart(6,"0")}`;
+    const t=totals(g,c,s);
+    const rc={id:uid("rc"), rid, tsISO:new Date().toISOString(), groupId:g.id, cycleId:c.id, studentId:s.id, studentName:s.name, amount:Number(amount||0), note:String(note||"").trim(), snapshot:{total:t.total, paid:t.paid, remaining:t.remaining}};
+    c.receipts=c.receipts||[]; c.receipts.push(rc);
+    auditAdd("receipt.created",{rid,studentId:s.id,amount:rc.amount});
+    return rc;
+  }
+  const allReceipts=()=>{
+    const out=[];
+    db.groups.forEach(g=>g.cycles.forEach(c=>(c.receipts||[]).forEach(r=>out.push({g,c,r}))));
+    out.sort((a,b)=>new Date(b.r.tsISO)-new Date(a.r.tsISO));
+    return out;
+  };
+  const receiptsCSV=()=>{
+    const rows=[["rid","tsISO","group","student","amount","note","total","paid","remaining"]];
+    allReceipts().forEach(x=>rows.push([x.r.rid,x.r.tsISO,x.g.name,x.r.studentName,x.r.amount,x.r.note,x.r.snapshot.total,x.r.snapshot.paid,x.r.snapshot.remaining]));
+    return rows.map(r=>r.map(x=>`"${String(x??"").replaceAll('"','""')}"`).join(",")).join("\n");
+  };
+  const receiptPrintHTML=(rc,groupName)=>{
+    const brand=escapeHtml(db.settings.brandName||"");
+    const phone=escapeHtml(db.settings.brandPhone||"");
+    return `
+    <div style="font-family:Tahoma,Arial;direction:rtl">
+      <h2 style="margin:0">${brand||"—"}</h2>
+      <div style="opacity:.7">${phone||"—"}</div>
+      <hr/>
+      <div><b>إيصال:</b> ${escapeHtml(rc.rid)}</div>
+      <div><b>المجموعة:</b> ${escapeHtml(groupName)}</div>
+      <div><b>الطالب:</b> ${escapeHtml(rc.studentName)}</div>
+      <div><b>المبلغ:</b> ${escapeHtml(String(rc.amount))}</div>
+      <div><b>ملاحظة:</b> ${escapeHtml(rc.note||"—")}</div>
+      <hr/>
+      <div><b>الإجمالي:</b> ${escapeHtml(String(rc.snapshot.total))}</div>
+      <div><b>المدفوع:</b> ${escapeHtml(String(rc.snapshot.paid))}</div>
+      <div><b>المتبقي:</b> ${escapeHtml(String(rc.snapshot.remaining))}</div>
+      <hr/>
+      <small>تم إنشاء الإيصال محليًا (Offline).</small>
+    </div>`;
+  };
+
+  // vault (encrypted at rest)
+  const DB_KEY="hedra_v6_teacher_vault";
+  let role=ROLE.ADMIN;
+  let db=ensureDefaults(makeEmptyDB());
+  let sessionKey=null, saltB64=null;
+
+  const hasVault=()=>!!localStorage.getItem(DB_KEY);
+  const isUnlocked=()=>sessionStorage.getItem("hedra_unlocked")==="1";
+  const setUnlocked=(on)=>{ sessionStorage.setItem("hedra_unlocked", on?"1":"0"); touch(); };
+  const touch=()=>sessionStorage.setItem("hedra_last_active", String(Date.now()));
+  async function save(){
+    if(!sessionKey) return;
+    const packed=await encryptJSON(sessionKey, db);
+    localStorage.setItem(DB_KEY, JSON.stringify({v:2,kdf:{name:"PBKDF2",hash:"SHA-256",iters:KDF_ITERS}, saltB64, ...packed}));
+  }
+  async function setupNew(pin){
+    const p=String(pin||"").trim(); if(p.length<4) throw new Error("PIN_SHORT");
+    const salt=crypto.getRandomValues(new Uint8Array(16));
+    saltB64=bufToB64(salt.buffer);
+    sessionKey=await deriveKeyFromPIN(p, salt.buffer);
+    db=ensureDefaults(makeEmptyDB());
+    await save();
+  }
+  async function load(pin){
+    const raw=localStorage.getItem(DB_KEY); if(!raw) return null;
+    const v=JSON.parse(raw);
+    const key=await deriveKeyFromPIN(String(pin||"").trim(), b64ToBuf(v.saltB64));
+    const loaded=ensureDefaults(await decryptJSON(key, v.ivB64, v.ctB64));
+    sessionKey=key; saltB64=v.saltB64;
+    db=loaded;
+    return db;
+  }
+
+  // UI nav
+  const pages={run:$("pageRun"),manage:$("pageManage"),dashboard:$("pageDashboard"),settings:$("pageSettings")};
+  function showTab(key){
+    Object.entries(pages).forEach(([k,el])=>el.style.display=(k===key)?"":"none");
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===key));
+    render();
+  }
+  document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+
+  function refreshGroupSelects(){
+    ["selGroupRun","selGroupManage","selGroupSettings"].forEach(id=>{
+      const sel=$(id); sel.innerHTML="";
+      db.groups.forEach(g=>{ const o=document.createElement("option"); o.value=g.id; o.textContent=g.name; sel.appendChild(o); });
+      sel.value=db.settings.currentGroupId;
+      sel.onchange=async (e)=>{ db.settings.currentGroupId=e.target.value; await save(); render(); };
+    });
+  }
+  function renderTop(){
+    $("topDate").textContent=todayText();
+    $("topRole").textContent = role===ROLE.ADMIN ? "الدور: مدير" : role===ROLE.ASSISTANT ? "الدور: مساعد" : "الدور: عرض فقط";
+    const g=curGroup(); const c=curCycle(g);
+    $("topSession").textContent=`الحصة: ${Math.min(sessionsCount(c)+1,cycleLen(g))} / ${cycleLen(g)}`;
+    $("topCycle").textContent=`الدورة: ${fmtDMY(isoYMD(new Date(c.createdAtISO||Date.now())))} → —`;
+    $("btnExport").style.display = role===ROLE.ADMIN ? "inline-flex":"none";
+    $("btnImport").style.display = role===ROLE.ADMIN ? "inline-flex":"none";
+  }
+
+  function renderRun(){
+    const g=curGroup(); const c=curCycle(g);
+    const wrap=$("runList"); wrap.innerHTML="";
+    const list=g.students.filter(s=>!s.archived).sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+    if(!list.length){ wrap.innerHTML='<div class="hint">أضف طلاب من الإعدادات.</div>'; return; }
+    list.forEach((s,i)=>{
+      const row=document.createElement("div"); row.className="row";
+      row.innerHTML=`<div class="left"><div class="num">${i+1}</div><div><div class="name">${escapeHtml(s.name)}</div><div class="mini">اضغط للدفع/الحضور</div></div></div>
+        <div style="display:flex;gap:8px"><button class="btn small royal noPrint">💳</button><button class="moreBtn noPrint">⋯</button></div>`;
+      row.querySelector(".btn").onclick=()=>openPay(g,c,s);
+      row.querySelector(".moreBtn").onclick=()=>openPay(g,c,s);
+      wrap.appendChild(row);
+    });
+  }
+
+  $("qManage").addEventListener("input",()=>renderManage());
+  function renderManage(){
+    const q=String($("qManage").value||"").trim().toLowerCase();
+    const wrap=$("manageList"); wrap.innerHTML="";
+    if(q){
+      const hits=[];
+      db.groups.forEach(gr=>{
+        const cy=curCycle(gr);
+        gr.students.filter(s=>!s.archived).forEach(s=>{ if(s.name.toLowerCase().includes(q)) hits.push({gr,cy,s,t:totals(gr,cy,s)}); });
+      });
+      if(!hits.length){ wrap.innerHTML='<div class="hint">لا نتائج.</div>'; return; }
+      hits.sort((a,b)=>b.t.remaining-a.t.remaining);
+      hits.slice(0,80).forEach(h=>{
+        const row=document.createElement("div"); row.className="row";
+        row.innerHTML=`<div class="left"><div class="num">🔎</div><div><div class="name">${escapeHtml(h.s.name)}</div>
+          <div class="mini">المجموعة: <b>${escapeHtml(h.gr.name)}</b> • ${role===ROLE.ADMIN?('المتبقي: <span class="mono">'+h.t.remaining+'</span>'):'متأخر'}</div></div></div>
+          <button class="moreBtn noPrint">عرض</button>`;
+        row.querySelector("button").onclick=()=>{ db.settings.currentGroupId=h.gr.id; save().then(()=>{render(); openPay(h.gr,h.cy,h.s);}); };
+        wrap.appendChild(row);
+      });
       return;
     }
-    hits.sort((a,b)=>a.s.name.localeCompare(b.s.name,"ar"));
-    hits.forEach(h=>{
-      const tag = studentSpecialLabel(h.s);
-      const it=document.createElement("div");
-      it.className="row";
-      it.innerHTML=`
-        <div class="left" style="min-width:0">
-          <div class="num">🔎</div>
-          <div style="min-width:0">
-            <div class="name">${escapeHtml(h.s.name)}
-              ${tag?` <span class="badge">${escapeHtml(tag)}</span>`:""}
-            </div>
-            <div class="mini">المجموعة: <b>${escapeHtml(h.gr.name)}</b> • المتبقي: <span class="mono">${h.t.remaining}</span></div>
-          </div>
-        </div>
-        <button class="moreBtn noPrint">عرض</button>
-      `;
-      it.querySelector("button").onclick=()=>{
-        if(!requirePINOnce()) return;
-        // نبدّل المجموعة الحالية لنفس الطالب
-        db.settings.currentGroupId = h.gr.id;
-        saveDB();
-        refreshGroupSelects();
-        openPayModal(h.gr,h.cy,h.s);
-      };
-      wrap.appendChild(it);
+    const g=curGroup(); const c=curCycle(g);
+    const gt=groupTotals(g,c);
+    wrap.innerHTML += `<div class="row"><div class="left"><div class="num">📌</div><div><div class="name">ملخص المجموعة</div>
+      <div class="mini">${role===ROLE.ADMIN?('الإجمالي: <span class="mono">'+gt.total+'</span> • المدفوع: <span class="mono">'+gt.paid+'</span> • المتبقي: <span class="mono">'+gt.remaining+'</span>'):'الإجماليات مخفية'}</div></div></div>
+      <button class="moreBtn noPrint" onclick="window.print()">🖨</button></div>`;
+    g.students.filter(s=>!s.archived).sort((a,b)=>a.name.localeCompare(b.name,"ar")).forEach(s=>{
+      const t=totals(g,c,s);
+      const row=document.createElement("div"); row.className="row";
+      row.innerHTML=`<div class="left"><div class="num">🧾</div><div><div class="name">${escapeHtml(s.name)}</div>
+        <div class="mini">${role===ROLE.ADMIN?('المتبقي: <span class="mono">'+t.remaining+'</span>'):'—'}</div></div></div>
+        <button class="moreBtn noPrint">عرض</button>`;
+      row.querySelector("button").onclick=()=>openPay(g,c,s);
+      wrap.appendChild(row);
     });
-    return;
   }
 
-  // عرض طلاب المجموعة المختارة
-  if(!g || !c){
-    wrap.innerHTML=`<div class="hint">—</div>`;
-    return;
-  }
-  if(!g.students.length){
-    wrap.innerHTML=`<div class="hint">لا يوجد طلاب.</div>`;
-    return;
+  function renderDashboard(){
+    const g=curGroup(); const c=curCycle(g);
+    const cards=$("dashCards"), month=$("dashMonth"), late=$("dashLate");
+    cards.innerHTML=""; month.innerHTML=""; late.innerHTML="";
+    const gt=groupTotals(g,c);
+    const items=[
+      ["👥","الطلاب", g.students.filter(s=>!s.archived).length],
+      ["🗓","الحصص", `${sessionsCount(c)}/${cycleLen(g)}`],
+      ["✅","الحضور", g.students.filter(s=>!s.archived).reduce((a,s)=>a+attendanceCount(c,s.id),0)]
+    ];
+    if(role===ROLE.ADMIN) items.push(["💰","المدفوع", gt.paid],["📌","المتبقي", gt.remaining]);
+    items.forEach(x=>{
+      const el=document.createElement("div"); el.className="row"; el.style.flex="1";
+      el.innerHTML=`<div class="left"><div class="num">${x[0]}</div><div><div class="name">${x[1]}</div><div class="mini mono">${x[2]}</div></div></div>`;
+      cards.appendChild(el);
+    });
+    const m={};
+    g.cycles.forEach(cc=>(cc.txs||[]).forEach(t=>{ const d=new Date(t.tsISO); const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); m[k]=(m[k]||0)+Number(t.amount||0); }));
+    const ks=Object.keys(m).sort().reverse();
+    if(role!==ROLE.ADMIN) month.innerHTML='<div class="hint">الدخل الشهري مخفي في هذا الوضع.</div>';
+    else if(!ks.length) month.innerHTML='<div class="hint">لا توجد عمليات دفع بعد.</div>';
+    else month.innerHTML='<table><thead><tr><th>الشهر</th><th>الدخل</th></tr></thead><tbody>'+ks.map(k=>`<tr><td>${k}</td><td class="mono">${m[k].toFixed(2).replace(".00","")}</td></tr>`).join("")+'</tbody></table>';
+
+    const list=g.students.filter(s=>!s.archived).map(s=>({s,t:totals(g,c,s)})).filter(x=>x.t.remaining>0).sort((a,b)=>b.t.remaining-a.t.remaining).slice(0,10);
+    if(!list.length) late.innerHTML='<div class="hint">لا توجد متأخرات واضحة.</div>';
+    else list.forEach((x,i)=>{
+      const r=document.createElement("div"); r.className="row";
+      r.innerHTML=`<div class="left"><div class="num">${i+1}</div><div><div class="name">${escapeHtml(x.s.name)}</div><div class="mini">${role===ROLE.ADMIN?('المتبقي: <span class="mono">'+x.t.remaining+'</span>'):'متأخر'}</div></div></div>
+      <button class="moreBtn noPrint">عرض</button>`;
+      r.querySelector("button").onclick=()=>openPay(g,c,x.s);
+      late.appendChild(r);
+    });
   }
 
-  const list=[...g.students].sort((a,b)=>a.name.localeCompare(b.name,"ar"));
-  list.forEach(s=>{
+  function renderSettings(){
+    const g=curGroup();
+    $("cycleLen").value=String(g.cycleLen||8);
+    $("chargeMode").value=db.settings.chargeMode||"perSessions";
+    $("brandName").value=db.settings.brandName||"";
+    $("brandPhone").value=db.settings.brandPhone||"";
+    const wrap=$("studentsList"); wrap.innerHTML="";
+    g.students.filter(s=>!s.archived).sort((a,b)=>a.name.localeCompare(b.name,"ar")).forEach(s=>{
+      const row=document.createElement("div"); row.className="row";
+      row.innerHTML=`<div class="left"><div class="num">👤</div><div><div class="name">${escapeHtml(s.name)}</div>
+        <div class="mini">سعر الدورة: <span class="mono">${Number(s.price||0)}</span> • خصم: <span class="mono">${escapeHtml(s.discountType||"none")}</span></div></div></div>
+        <button class="moreBtn noPrint">⋯</button>`;
+      row.querySelector("button").onclick=()=>editStudent(g,s);
+      wrap.appendChild(row);
+    });
+  }
+
+  async function render(){
+    renderTop();
+    refreshGroupSelects();
+    if(pages.run.style.display!=="none") renderRun();
+    if(pages.manage.style.display!=="none") renderManage();
+    if(pages.dashboard.style.display!=="none") renderDashboard();
+    if(pages.settings.style.display!=="none") renderSettings();
+  }
+
+  $("btnDashPrint").onclick=()=>window.print();
+
+  // sessions
+  function addSessionWithDate(g,c,ymd){
+    if(sessionsCount(c)>=cycleLen(g)){ toast("اكتملت حصص الدورة"); return false; }
+    if(c.sessions.some(s=>ymdFromTs(s.tsISO)===ymd)){ toast("تاريخ مكرر"); return false; }
+    c.sessions.push({id:uid("ss"), tsISO:new Date(ymd+"T12:00:00").toISOString()});
+    c.sessions.sort((a,b)=>new Date(a.tsISO)-new Date(b.tsISO));
+    auditAdd("session.add",{groupId:g.id, ymd});
+    return true;
+  }
+  $("btnAddSession").onclick=async ()=>{
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const g=curGroup(); const c=curCycle(g);
+    const y=prompt("تاريخ الحصة (YYYY-MM-DD)", isoYMD(new Date())); if(!y) return;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(y)) return alert("صيغة خطأ");
+    if(addSessionWithDate(g,c,y)){ await save(); toast("تمت الإضافة"); render(); }
+  };
+  $("btnRemoveSession").onclick=async ()=>{
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const g=curGroup(); const c=curCycle(g);
+    if(!c.sessions.length) return toast("لا توجد حصص");
+    const last=c.sessions[c.sessions.length-1];
+    if(!confirm("حذف آخر حصة؟ "+fmtDMY(ymdFromTs(last.tsISO)))) return;
+    c.sessions.pop();
+    auditAdd("session.remove",{groupId:g.id, ymd:ymdFromTs(last.tsISO)});
+    await save(); toast("تم الحذف"); render();
+  };
+
+  // bulk sessions (getDay: 0 Sunday .. 6 Saturday ✅)
+  $("btnBulk").onclick=()=>{ if(role!==ROLE.ADMIN) return toast("غير مسموح"); $("bulkFrom").value=isoYMD(new Date(Date.now()-30*86400000)); $("bulkTo").value=isoYMD(new Date()); document.querySelectorAll(".dow").forEach(x=>x.checked=false); $("bulkOverlay").style.display="block"; };
+  $("btnBulkClose").onclick=()=>$("bulkOverlay").style.display="none";
+  $("btnBulkApply").onclick=async ()=>{
+    const g=curGroup(); const c=curCycle(g);
+    const from=$("bulkFrom").value, to=$("bulkTo").value;
+    const dows=[...document.querySelectorAll(".dow")].filter(x=>x.checked).map(x=>Number(x.value));
+    if(!from||!to) return alert("اختر من/إلى");
+    if(new Date(from)>new Date(to)) return alert("من أكبر من إلى");
+    if(!dows.length) return alert("اختر يوم");
+    let d=new Date(from+"T12:00:00"), end=new Date(to+"T12:00:00"), added=0;
+    while(d<=end){
+      if(dows.includes(d.getDay())){
+        const y=d.toISOString().slice(0,10);
+        if(addSessionWithDate(g,c,y)) added++;
+        if(sessionsCount(c)>=cycleLen(g)) break;
+      }
+      d.setDate(d.getDate()+1);
+    }
+    await save();
+    $("bulkOverlay").style.display="none";
+    toast("تم إنشاء "+added+" حصص");
+    render();
+  };
+
+  // groups / students
+  $("btnAddGroup").onclick=async ()=>{
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const name=(prompt("اسم المجموعة")||"").trim(); if(!name) return;
+    if(db.groups.some(g=>g.name.trim().toLowerCase()===name.toLowerCase())) return alert("موجودة");
+    db.groups.push({id:uid("g"), name, cycleLen:8, students:[], cycles:[newCycle()], audit:[]});
+    db.settings.currentGroupId=db.groups[db.groups.length-1].id;
+    auditAdd("group.add",{name});
+    await save(); toast("تمت إضافة المجموعة"); render();
+  };
+  $("btnAddStudent").onclick=async ()=>{
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const g=curGroup();
+    const name=String($("newStudentName").value||"").trim(); if(!name) return;
+    if(g.students.some(s=>!s.archived && s.name.trim().toLowerCase()===name.toLowerCase())) return alert("موجود");
+    g.students.push({id:uid("s"), name, price:0, paused:false, archived:false, discountType:"none", discountValue:0});
+    $("newStudentName").value="";
+    auditAdd("student.add",{groupId:g.id,name});
+    await save(); toast("تمت إضافة الطالب"); render();
+  };
+  $("cycleLen").onchange=async (e)=>{ if(role!==ROLE.ADMIN) return; const g=curGroup(); g.cycleLen=Number(e.target.value||8); auditAdd("settings.cycleLen",{value:g.cycleLen}); await save(); render(); };
+  $("chargeMode").onchange=async (e)=>{ if(role!==ROLE.ADMIN) return; db.settings.chargeMode=e.target.value||"perSessions"; auditAdd("settings.chargeMode",{value:db.settings.chargeMode}); await save(); toast("تم الحفظ"); render(); };
+  $("brandName").onchange=async (e)=>{ db.settings.brandName=String(e.target.value||""); await save(); };
+  $("brandPhone").onchange=async (e)=>{ db.settings.brandPhone=String(e.target.value||""); await save(); };
+
+  $("btnNewCycle").onclick=async ()=>{
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const g=curGroup(); const c=curCycle(g);
+    if(!confirm("فتح دورة جديدة مع ترحيل المتبقي؟")) return;
+    const carryMap={};
+    g.students.filter(s=>!s.archived).forEach(s=>{ const t=totals(g,c,s); if(Math.abs(t.remaining)>0.0001) carryMap[s.id]=t.remaining; });
+    c.closed=true;
+    const nc=newCycle(); nc.carry=carryMap;
+    g.cycles.push(nc);
+    auditAdd("cycle.new",{groupId:g.id});
+    await save(); toast("تم فتح دورة جديدة"); render();
+  };
+
+  function editStudent(g,s){
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const name=(prompt("اسم الطالب", s.name)||"").trim(); if(!name) return;
+    const price=Number(prompt("سعر الدورة", String(s.price||0))||"0");
+    const discType=(prompt("نوع الخصم: none / fixed / percent / exempt", s.discountType||"none")||"none").trim();
+    const discVal=Number(prompt("قيمة الخصم (0 لو none/exempt)", String(s.discountValue||0))||"0");
+    const paused=confirm("إيقاف الطالب؟ (موافق=نعم)");
+    const archive=confirm("أرشفة الطالب؟ (موافق=نعم)");
+    s.name=name; s.price=price; s.discountType=discType; s.discountValue=discVal; s.paused=paused; if(archive) s.archived=true;
+    auditAdd(archive?"student.archive":"student.update",{studentId:s.id});
+    save().then(()=>{ toast("تم الحفظ"); render(); });
+  }
+
+  // pay modal
+  let payCtx=null, payMode=null;
+  function openPay(g,c,s){
+    $("payTitle").textContent=s.name;
+    $("paySub").textContent=`${g.name} • حصص ${sessionsCount(c)}/${cycleLen(g)}`;
+    $("payNote").value=String(c.notes?.[s.id]||"");
     const t=totals(g,c,s);
-    const tag = studentSpecialLabel(s);
-    const it=document.createElement("div");
-    it.className="row";
-    it.innerHTML=`
-      <div class="left" style="min-width:0">
-        <div class="num">🧾</div>
-        <div style="min-width:0">
-          <div class="name">${escapeHtml(s.name)}
-            ${s.paused?` <span class="badge warn">موقوف</span>`:""}
-            ${tag?` <span class="badge">${escapeHtml(tag)}</span>`:""}
-          </div>
-          <div class="mini">الإجمالي: <span class="mono">${t.total}</span> • المدفوع: <span class="mono">${t.paid}</span> • المتبقي: <span class="mono">${t.remaining}</span></div>
-        </div>
-      </div>
-      <button class="moreBtn noPrint">عرض</button>
-    `;
-    it.querySelector("button").onclick=()=>{
-      if(!requirePINOnce()) return;
-      openPayModal(g,c,s);
-    };
-    wrap.appendChild(it);
-  });
-}
+    $("payBody").innerHTML = (role===ROLE.ADMIN)
+      ? `<table><thead><tr><th>البند</th><th>القيمة</th></tr></thead><tbody>
+          <tr><td>الاشتراك حتى الآن</td><td class="mono">${t.sub}</td></tr>
+          <tr><td>الرصيد المرحّل</td><td class="mono">${t.prev}</td></tr>
+          <tr><td><b>الإجمالي</b></td><td class="mono"><b>${t.total}</b></td></tr>
+          <tr><td>المدفوع</td><td class="mono">${t.paid}</td></tr>
+          <tr><td><b>المتبقي</b></td><td class="mono"><b>${t.remaining}</b></td></tr>
+        </tbody></table>`
+      : `<div class="hint">المبالغ مخفية في هذا الوضع. يمكنك تسجيل حضور/غياب وملاحظة.</div>`;
+    renderAttendance(g,c,s);
+    $("payBtns").style.display = (role===ROLE.ADMIN) ? "flex":"none";
+    $("btnPayReceipt").style.display = (role===ROLE.ADMIN) ? "inline-flex":"none";
+    $("payOverlay").style.display="block";
+    payCtx={g,c,s};
+  }
+  function closePay(){ $("payOverlay").style.display="none"; $("payAmountWrap").style.display="none"; payMode=null; payCtx=null; }
+  $("btnPayClose").onclick=closePay;
+  $("btnPayPrint").onclick=()=>window.print();
+  $("payOverlay").addEventListener("click",(e)=>{ if(e.target===$("payOverlay")) closePay(); });
 
-/* ---------- Monthly Reports ---------- */
-const monthOverlay = document.getElementById("monthOverlay");
-document.getElementById("btnMonthly").onclick=()=>{
-  if(!requirePINOnce()) return;
-  renderMonthly();
-  monthOverlay.style.display="block";
-};
-document.getElementById("btnMonthClose").onclick=()=>monthOverlay.style.display="none";
-monthOverlay.addEventListener("click",(e)=>{ if(e.target===monthOverlay) monthOverlay.style.display="none"; });
+  $("btnPaySet").onclick=()=>{ payMode="set"; $("payAmountLabel").textContent="تعديل المدفوع"; $("payAmount").value=String(paid(payCtx.c,payCtx.s.id)); $("payAmountWrap").style.display="flex"; };
+  $("btnPayAdd").onclick=()=>{ payMode="add"; $("payAmountLabel").textContent="إضافة مبلغ"; $("payAmount").value=""; $("payAmountWrap").style.display="flex"; };
+  $("btnPayMinus").onclick=()=>{ payMode="minus"; $("payAmountLabel").textContent="خصم (تصحيح)"; $("payAmount").value=""; $("payAmountWrap").style.display="flex"; };
 
-function monthKey(tsISO){
-  const d=new Date(tsISO);
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  return `${y}-${m}`;
-}
-function renderMonthly(){
-  const g=curGroup(); if(!g) return;
-  // نجمع txs من كل الدورات
-  const map = {}; // month -> income
-  g.cycles.forEach(c=>{
-    (c.txs||[]).forEach(t=>{
-      const k=monthKey(t.tsISO);
-      map[k]=(map[k]||0)+Number(t.amount||0);
+  $("btnPayApply").onclick=async ()=>{
+    if(!payCtx||!payMode) return;
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const v=Number($("payAmount").value||0);
+    const {g,c,s}=payCtx;
+    if(payMode==="set") {
+      c.txs=(c.txs||[]).filter(t=>t.sid!==s.id);
+      if(v>0) c.txs.push({id:uid("tx"), sid:s.id, amount:v, tsISO:new Date().toISOString(), note:"(تعديل)"});
+      auditAdd("payment.set",{studentId:s.id,value:v});
+    } else if(payMode==="add") {
+      if(!(v>0)) return alert("مبلغ أكبر من صفر");
+      c.txs.push({id:uid("tx"), sid:s.id, amount:v, tsISO:new Date().toISOString(), note:"(إضافة)"});
+      auditAdd("payment.add",{studentId:s.id,value:v});
+    } else {
+      if(!(v>0)) return alert("مبلغ أكبر من صفر");
+      const curPaid=paid(c,s.id);
+      if(v>curPaid) return alert("لا يمكن خصم أكثر من المدفوع الحالي ("+curPaid+")");
+      c.txs.push({id:uid("tx"), sid:s.id, amount:-v, tsISO:new Date().toISOString(), note:"(خصم)"});
+      auditAdd("payment.minus",{studentId:s.id,value:v});
+    }
+    await save();
+    $("payAmountWrap").style.display="none"; payMode=null;
+    toast("تم الحفظ");
+    openPay(g,c,s);
+    render();
+  };
+
+  $("btnPaySaveNote").onclick=async ()=>{
+    if(!payCtx) return;
+    if(role===ROLE.VIEW) return toast("عرض فقط");
+    const {c,s}=payCtx;
+    c.notes=c.notes||{};
+    c.notes[s.id]=String($("payNote").value||"").trim();
+    auditAdd("note.save",{studentId:s.id});
+    await save(); toast("تم حفظ الملاحظة");
+  };
+
+  $("btnPayReceipt").onclick=async ()=>{
+    if(!payCtx) return;
+    if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
+    const amt=Number(prompt("قيمة الإيصال", "0")||"0"); if(!(amt>0)) return;
+    const note=prompt("ملاحظة (اختياري)")||"";
+    const {g,c,s}=payCtx;
+    const rc=makeReceipt(g,c,s,amt,note);
+    await save(); toast("تم إنشاء "+rc.rid);
+    const w=window.open("","_blank");
+    w.document.write("<meta charset='utf-8'><title>"+rc.rid+"</title>"+receiptPrintHTML(rc,g.name)+"<script>window.onload=()=>window.print();</script>");
+    w.document.close();
+  };
+
+  function renderAttendance(g,c,s){
+    const wrap=$("attList"); wrap.innerHTML="";
+    if(!c.sessions.length){ wrap.innerHTML='<div class="hint">لا توجد حصص بعد.</div>'; return; }
+    c.sessions.forEach(ss=>{
+      const y=ymdFromTs(ss.tsISO);
+      const val=c.attendance?.[ss.id]?.[s.id]||"";
+      const label= val==="P" ? "حضور ✅" : val==="A" ? "غياب ❌" : "—";
+      const row=document.createElement("div"); row.className="row";
+      row.innerHTML=`<div class="left"><div class="num">🗓</div><div><div class="name">${fmtDMY(y)}</div><div class="mini">${y}</div></div></div>
+        <button class="btn small ghost noPrint">${label}</button>`;
+      row.querySelector("button").onclick=async ()=>{
+        if(role===ROLE.VIEW) return toast("عرض فقط");
+        c.attendance=c.attendance||{}; c.attendance[ss.id]=c.attendance[ss.id]||{};
+        const cur=c.attendance[ss.id][s.id]||"";
+        const next = cur==="P" ? "A" : cur==="A" ? "" : "P";
+        if(!next) delete c.attendance[ss.id][s.id]; else c.attendance[ss.id][s.id]=next;
+        auditAdd("attendance.toggle",{studentId:s.id, ymd:y, val:next||"—"});
+        await save();
+        openPay(g,c,s);
+        render();
+      };
+      wrap.appendChild(row);
     });
-  });
-
-  const months = Object.keys(map).sort().reverse();
-  const wrap=document.getElementById("monthWrap");
-
-  // المتبقي الحالي (الدورة الحالية)
-  const c=curCycle(g);
-  const gt = groupTotals(g,c);
-
-  if(!months.length){
-    wrap.innerHTML = `<div class="hint">لا توجد عمليات دفع حتى الآن.</div>
-      <div class="hr"></div>
-      <div class="row"><div class="left"><div class="num">📌</div>
-        <div><div class="name">المتبقي الحالي</div><div class="mini mono">${gt.remaining}</div></div></div></div>`;
-    return;
   }
 
-  const rows = months.map(k=>{
-    return `<tr><td>${escapeHtml(k)}</td><td class="mono">${round2(map[k])}</td></tr>`;
-  }).join("");
+  // audit / receipts overlays
+  const closeOverlay=(id)=>$(id).style.display="none";
+  const openOverlay=(id)=>$(id).style.display="block";
 
-  wrap.innerHTML = `
-    <div class="row">
-      <div class="left"><div class="num">📌</div>
-        <div>
-          <div class="name">المتبقي الحالي (الدورة الحالية)</div>
-          <div class="mini">الإجمالي: <span class="mono">${gt.total}</span> • المدفوع: <span class="mono">${gt.paid}</span> • المتبقي: <span class="mono">${gt.remaining}</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="hr"></div>
-    <table>
-      <thead><tr><th>الشهر</th><th>الدخل</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
-}
+  $("btnAudit").onclick=()=>{
+    if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
+    const g=curGroup();
+    $("auditText").textContent=(g.audit||[]).slice(-500).reverse().map(a=>a.tsISO+" | "+a.role+" | "+a.action+" | "+JSON.stringify(a.meta||{})).join("\n")||"—";
+    openOverlay("auditOverlay");
+  };
+  $("btnAuditClose").onclick=()=>closeOverlay("auditOverlay");
+  $("auditOverlay").addEventListener("click",(e)=>{ if(e.target===$("auditOverlay")) closeOverlay("auditOverlay"); });
+  $("btnAuditCSV").onclick=()=>{ downloadText("Hedra_Audit_"+isoYMD(new Date())+".csv", auditCSV(), "text/csv;charset=utf-8"); toast("تم التصدير"); };
 
-
-/* ---------- Dashboard ---------- */
-document.getElementById("btnDashPrint").onclick=()=>window.print();
-
-function renderDashboard(){
-  renderTopBar();
-  const g=curGroup();
-  const c=g?curCycle(g):null;
-
-  const cards=document.getElementById("dashCards");
-  const monthWrap=document.getElementById("dashMonthWrap");
-  const alerts=document.getElementById("dashAlerts");
-  if(!cards || !monthWrap || !alerts) return;
-
-  cards.innerHTML=""; monthWrap.innerHTML=""; alerts.innerHTML="";
-
-  if(!g || !c){
-    cards.innerHTML = `<div class="hint">—</div>`;
-    return;
-  }
-
-  const students = g.students.length;
-  const sessions = sessionsCount(c);
-  const len = cycleLen(g);
-
-  // money only for admin
-  const gt = groupTotals(g,c);
-
-  const items = [
-    { ico:"👥", title:"عدد الطلاب", val: String(students) },
-    { ico:"🗓", title:"حصص الدورة", val: `${sessions} / ${len}` },
-    { ico:"✅", title:"إجمالي الحضور (هذه الدورة)", val: String(g.students.reduce((a,s)=>a+attendanceCountForStudent(c,s.id),0)) }
-  ];
-
-  if(currentRole===ROLE.ADMIN){
-    items.push({ ico:"💰", title:"المدفوع (الدورة الحالية)", val: String(gt.paid) });
-    items.push({ ico:"📌", title:"المتبقي (الدورة الحالية)", val: String(gt.remaining) });
-  }else{
-    items.push({ ico:"🔒", title:"التحصيل", val: "مخفي في هذا الوضع" });
-  }
-
-  items.forEach(x=>{
-    const el=document.createElement("div");
-    el.className="row";
-    el.style.flex="1";
-    el.innerHTML = `
-      <div class="left"><div class="num">${x.ico}</div>
-        <div><div class="name">${escapeHtml(x.title)}</div>
-        <div class="mini mono">${escapeHtml(String(x.val))}</div></div>
-      </div>
-    `;
-    cards.appendChild(el);
-  });
-
-  // monthly income (admin only shows amounts)
-  const map = {};
-  g.cycles.forEach(cc=>{
-    (cc.txs||[]).forEach(t=>{
-      const k=monthKey(t.tsISO);
-      map[k]=(map[k]||0)+Number(t.amount||0);
+  $("btnReceipts").onclick=()=>{
+    if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
+    const list=allReceipts().slice(0,250);
+    const wrap=$("rcList");
+    if(!list.length) wrap.innerHTML='<div class="hint">لا توجد إيصالات.</div>';
+    else wrap.innerHTML=list.map(x=>`<div class="row"><div class="left"><div class="num">🧾</div><div><div class="name">${escapeHtml(x.r.rid)} • ${escapeHtml(x.r.studentName)}</div><div class="mini">${escapeHtml(x.g.name)} • ${x.r.amount}</div></div></div><button class="moreBtn noPrint" data-rid="${escapeHtml(x.r.rid)}">طباعة</button></div>`).join("");
+    wrap.querySelectorAll("button[data-rid]").forEach(b=>b.onclick=()=>{
+      const rid=b.getAttribute("data-rid");
+      const f=allReceipts().find(x=>x.r.rid===rid); if(!f) return;
+      const w=window.open("","_blank");
+      w.document.write("<meta charset='utf-8'><title>"+rid+"</title>"+receiptPrintHTML(f.r,f.g.name)+"<script>window.onload=()=>window.print();</script>");
+      w.document.close();
     });
-  });
-  const months = Object.keys(map).sort().reverse();
+    openOverlay("rcOverlay");
+  };
+  $("btnRcClose").onclick=()=>closeOverlay("rcOverlay");
+  $("rcOverlay").addEventListener("click",(e)=>{ if(e.target===$("rcOverlay")) closeOverlay("rcOverlay"); });
+  $("btnRcCSV").onclick=()=>{ downloadText("Hedra_Receipts_"+isoYMD(new Date())+".csv", receiptsCSV(), "text/csv;charset=utf-8"); toast("تم التصدير"); };
 
-  if(!months.length){
-    monthWrap.innerHTML = `<div class="hint">لا توجد عمليات دفع بعد.</div>`;
-  }else if(currentRole!==ROLE.ADMIN){
-    monthWrap.innerHTML = `<div class="hint">الدخل الشهري مخفي في هذا الوضع.</div>`;
-  }else{
-    const rows = months.map(k=>`<tr><td>${escapeHtml(k)}</td><td class="mono">${round2(map[k])}</td></tr>`).join("");
-    monthWrap.innerHTML = `
-      <table>
-        <thead><tr><th>الشهر</th><th>الدخل</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    `;
-  }
-
-  // alerts: top remaining students (admin only shows amounts; others show names only)
-  const list=[...g.students].map(s=>({s, t: totals(g,c,s)})).sort((a,b)=>b.t.remaining-a.t.remaining);
-  const top=list.filter(x=>x.t.remaining>0.0001).slice(0,8);
-
-  if(!top.length){
-    alerts.innerHTML = `<div class="hint">لا توجد متأخرات واضحة.</div>`;
-    return;
-  }
-  top.forEach((x,i)=>{
-    const it=document.createElement("div");
-    it.className="row";
-    it.innerHTML = `
-      <div class="left" style="min-width:0">
-        <div class="num">${i+1}</div>
-        <div style="min-width:0">
-          <div class="name">${escapeHtml(x.s.name)}</div>
-          <div class="mini">${currentRole===ROLE.ADMIN ? `المتبقي: <span class="mono">${x.t.remaining}</span>` : "متأخر (القيمة مخفية)"}</div>
-        </div>
-      </div>
-      <button class="moreBtn noPrint">عرض</button>
-    `;
-    it.querySelector("button").onclick=()=>{
-      if(!isUnlocked()){ openLockScreen("أدخلي الرقم السري"); return; }
-      openPayModal(g,c,x.s);
+  // Export / Import (encrypted backup)
+  $("btnExport").onclick=async ()=>{
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const pass=prompt("كلمة مرور التصدير (4+ أحرف/أرقام)"); if(!pass||String(pass).trim().length<4) return;
+    const salt=crypto.getRandomValues(new Uint8Array(16));
+    const key=await deriveKeyFromPIN(String(pass).trim(), salt.buffer);
+    const packed=await encryptJSON(key, {type:"hedra_export", ver:"6.0-teacher", exportedAt:new Date().toISOString(), db});
+    const out={type:"hedra_export", v:2, saltB64:bufToB64(salt.buffer), ...packed};
+    downloadText("Hedra_V6_Teacher_Encrypted_Backup_"+isoYMD(new Date())+".json", JSON.stringify(out,null,2), "application/json;charset=utf-8");
+    toast("تم التصدير");
+  };
+  $("btnImport").onclick=()=>{
+    if(role!==ROLE.ADMIN) return toast("غير مسموح");
+    const inp=document.createElement("input"); inp.type="file"; inp.accept="application/json";
+    inp.onchange=()=>{
+      const f=inp.files?.[0]; if(!f) return;
+      const r=new FileReader();
+      r.onload=()=>{ (async ()=>{
+        try{
+          const parsed=JSON.parse(String(r.result||""));
+          let next=null;
+          if(parsed?.type==="hedra_export" && parsed?.v===2){
+            const pass=prompt("كلمة مرور النسخة الاحتياطية"); if(!pass) return;
+            const key=await deriveKeyFromPIN(String(pass).trim(), b64ToBuf(parsed.saltB64));
+            next=await decryptJSON(key, parsed.ivB64, parsed.ctB64);
+            next=next?.db ?? next;
+          } else {
+            next=parsed;
+          }
+          db=ensureDefaults(next);
+          await save(); toast("تم الاستيراد"); render();
+        }catch(e){ alert("فشل الاستيراد"); }
+      })(); };
+      r.readAsText(f);
     };
-    alerts.appendChild(it);
-  });
-}
+    inp.click();
+  };
 
+  // Change PIN (admin only)
+  $("btnChangePIN").onclick=async ()=>{
+    if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
+    if(!sessionKey) return toast("افتح أولاً");
+    const old=prompt("PIN الحالي"); if(!old) return;
+    try{
+      // verify old by trying to decrypt vault
+      const raw=localStorage.getItem(DB_KEY); if(!raw) return toast("لا توجد خزنة");
+      const v=JSON.parse(raw);
+      const key=await deriveKeyFromPIN(String(old).trim(), b64ToBuf(v.saltB64));
+      await decryptJSON(key, v.ivB64, v.ctB64); // verify
+      const np=prompt("PIN جديد (4+ أرقام)"); if(!np||String(np).trim().length<4) return;
+      // re-encrypt with new salt
+      const salt=crypto.getRandomValues(new Uint8Array(16));
+      saltB64=bufToB64(salt.buffer);
+      sessionKey=await deriveKeyFromPIN(String(np).trim(), salt.buffer);
+      await save();
+      toast("تم تغيير PIN");
+      auditAdd("security.pin.change",{});
+      await save();
+    }catch(e){ toast("PIN الحالي خطأ"); }
+  };
 
-/* ---------- Render All ---------- */
-function renderAll(){
-  ensureDefaults();
-  refreshGroupSelects();
-  loadSettingsUI();
-  renderStudentsSettings();
-  renderRun();
-  renderManage();
-  renderDashboard();
-}
+  // Lock / Unlock
+  const openLock=(msg)=>{ $("lockHint").textContent=msg; $("lockOverlay").style.display="block"; };
+  const closeLock=()=>{ $("lockOverlay").style.display="none"; $("pinInput").value=""; };
+  $("btnLockClear").onclick=()=>$("pinInput").value="";
+  $("roleAdmin").onclick=()=>{ role=ROLE.ADMIN; toast("مدير"); renderTop(); };
+  $("roleAssistant").onclick=()=>{ role=ROLE.ASSISTANT; toast("مساعد"); renderTop(); };
+  $("roleView").onclick=()=>{ role=ROLE.VIEW; toast("عرض فقط"); renderTop(); };
 
-/* ---------- Init ---------- */
-(function init(){
-  buildPinPad();
-  // role handlers
-  document.getElementById("btnLockRoleAdmin").onclick=()=>setRole(ROLE.ADMIN);
-  document.getElementById("btnLockRoleAssistant").onclick=()=>setRole(ROLE.ASSISTANT);
-  document.getElementById("btnLockRoleView").onclick=()=>setRole(ROLE.VIEW);
-  document.getElementById("btnUnlock").onclick=()=>tryUnlock();
-  document.getElementById("btnLockClear").onclick=()=>{ pinBuf=""; renderPinDots(); };
-  setRole(ROLE.ADMIN);
-  renderPinDots();
-  // if already unlocked in this session, hide lock
-  if(isUnlocked()) closeLockScreen();
-  loadDB();
-  ensureDefaults();
-  renderAll();
-  // إذا لم تكن الجلسة مفتوحة: نظهر شاشة القفل
-  if(!isUnlocked()) openLockScreen("أدخلي الرقم السري");
+  $("btnUnlock").onclick=async ()=>{
+    const pin=String($("pinInput").value||"").trim();
+    if(pin.length<4) return toast("PIN قصير");
+    const now=Date.now();
+    const lockUntil=Number(db.settings.pinLockUntil||0);
+    if(lockUntil && now<lockUntil) return toast("مقفول مؤقتًا");
+    try{
+      if(!hasVault()) {
+        await setupNew(pin);
+      } else {
+        const loaded=await load(pin);
+        if(!loaded) throw new Error("bad");
+        db.settings.pinFailCount=0; db.settings.pinLockUntil=0;
+        await save();
+      }
+      setUnlocked(true);
+      closeLock();
+      toast("تم الفتح");
+      render();
+    }catch(e){
+      db.settings.pinFailCount = Number(db.settings.pinFailCount||0)+1;
+      if(db.settings.pinFailCount>=5) {
+        db.settings.pinLockUntil = Date.now()+30000;
+        db.settings.pinFailCount=0;
+        toast("قفل 30 ثانية");
+      } else toast("PIN خطأ");
+      $("pinInput").value="";
+    }
+  };
+
+  // auto-lock (10 min) + wipe memory
+  setInterval(()=>{
+    if(!isUnlocked()) return;
+    const last=Number(sessionStorage.getItem("hedra_last_active")||0);
+    if(last && Date.now()-last>10*60*1000){
+      setUnlocked(false);
+      db=ensureDefaults(makeEmptyDB());
+      sessionKey=null; saltB64=null;
+      openLock("تم القفل تلقائيًا");
+    }
+  }, 4000);
+  ["click","keydown","touchstart","mousemove"].forEach(ev=>window.addEventListener(ev,()=>touch(),{passive:true}));
+
+  // PWA install
+  let deferred=null;
+  window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferred=e; $("btnInstall").style.display="inline-flex"; });
+  $("btnInstall").onclick=async ()=>{ if(!deferred) return alert("من القائمة ⋮ ثم Install"); deferred.prompt(); await deferred.userChoice; deferred=null; $("btnInstall").style.display="none"; };
+
+  // SW
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v="+BUILD);
+
+  // First screen
+  openLock(hasVault() ? "أدخل PIN" : "PIN جديد لإنشاء خزنة");
+  showTab("run");
 })();
-
-/* ---------- PWA Install ---------- */
-let deferredPrompt=null;
-window.addEventListener("beforeinstallprompt",(e)=>{
-  e.preventDefault();
-  deferredPrompt=e;
-  document.getElementById("btnInstall").style.display="inline-flex";
-});
-document.getElementById("btnInstall").onclick=async ()=>{
-  if(!deferredPrompt){
-    alert("من المتصفح: القائمة ⋮ ثم (Install) أو (إضافة للشاشة الرئيسية)");
-    return;
-  }
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt=null;
-  document.getElementById("btnInstall").style.display="none";
-};
-
-/* ---------- Service Worker ---------- */
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-  </script>
+</script>
 </body>
 </html>
