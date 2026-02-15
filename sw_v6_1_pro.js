@@ -1,4 +1,4 @@
-const CACHE="hedra-v6-teacher-20260214015150";
+const CACHE="hedra-v6-1-pro-20260215090000";
 const CORE=["./","./index.html","./manifest.json","./icon.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE))); self.skipWaiting();});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))); self.clients.claim();});
