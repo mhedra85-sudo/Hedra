@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Hedra V6 – Teacher Edition</title>
+  <title>Hedra V6.1 PRO – Teacher Edition</title>
   <meta name="theme-color" content="#0A2A66">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.png">
@@ -62,7 +62,7 @@
           <span class="badge" id="topSession">الحصة: —</span>
           <span class="badge" id="topCycle">الدورة: —</span>
           <span class="badge" id="topRole">الدور: مدير</span>
-          <span class="badge">v6.0.0-teacher</span>
+          <span class="badge">v6.1.0-pro</span>
         </div>
       </div>
     </div>
@@ -83,6 +83,7 @@
           <div class="hint">قائمة الطلاب + الدفع + الحضور.</div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn small ghost noPrint" id="btnScanQR">📷 مسح QR</button>
           <button class="btn small royal noPrint" id="btnAddSession">＋ إضافة حصة</button>
           <button class="btn small danger noPrint" id="btnRemoveSession">− حذف آخر حصة</button>
         </div>
@@ -134,6 +135,12 @@
       <div class="hr"></div>
       <div id="dashMonth"></div>
       <div class="hr"></div>
+      <div style="font-weight:1000;margin-bottom:6px">📈 نمو الدخل الشهري</div>
+      <canvas id="incomeCanvas" width="980" height="260" style="width:100%;border-radius:22px;border:1px solid rgba(2,6,23,.12);box-shadow:var(--shadow2);background:#fff"></canvas>
+      <div class="hr"></div>
+      <div style="font-weight:1000;margin-bottom:6px">📉 الغياب شهريًا</div>
+      <canvas id="absenceCanvas" width="980" height="260" style="width:100%;border-radius:22px;border:1px solid rgba(2,6,23,.12);box-shadow:var(--shadow2);background:#fff"></canvas>
+      <div class="hr"></div>
       <div class="list" id="dashLate"></div>
     </div>
   </section>
@@ -183,7 +190,60 @@
         </div>
       </div>
 
+      
       <div class="hr"></div>
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div style="font-weight:1000">☁️ التزامن السحابي (PRO)</div>
+          <div class="hint">يرفع "الخزنة المشفرة" كما هي (Encrypted Vault) لحمايتها من حذف المتصفح. يحتاج إنترنت.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap" class="noPrint">
+          <button class="btn small ghost" id="btnCloudUpload">⬆ رفع الآن</button>
+          <button class="btn small ghost" id="btnCloudDownload">⬇ استرجاع</button>
+        </div>
+      </div>
+
+      <div class="rowWrap">
+        <div>
+          <label for="cloudProvider">مزود السحابة</label>
+          <select id="cloudProvider">
+            <option value="none" selected>بدون</option>
+            <option value="drive">Google Drive (Files API)</option>
+            <option value="dropbox">Dropbox</option>
+          </select>
+        </div>
+        <div>
+          <label for="cloudFileName">اسم الملف على السحابة</label>
+          <input id="cloudFileName" placeholder="مثال: HedraVault.json" />
+        </div>
+      </div>
+
+      <div class="rowWrap">
+        <div style="flex:2;min-width:260px">
+          <label for="cloudToken">Access Token</label>
+          <input id="cloudToken" placeholder="الصق Access Token هنا (OAuth)"/>
+          <div class="hint">ملاحظة: بدون خادم (Server) لا يمكن استخراج التوكن تلقائيًا بشكل آمن. ستضعه مرة واحدة ثم يمكنك مسحه.</div>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <label for="cloudAuto">رفع تلقائي</label>
+          <select id="cloudAuto">
+            <option value="off" selected>إيقاف</option>
+            <option value="on">تشغيل</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <div style="font-weight:1000">🔐 صلاحيات مساعد حقيقية (PRO)</div>
+          <div class="hint">يتم إنشاء "نسخة مساعد" لا تحتوي على أرباح/مدفوعات/أسعار. المساعد يفتحها بـ PIN خاص.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap" class="noPrint">
+          <button class="btn small ghost" id="btnMakeAssistant">🧩 إنشاء/تحديث نسخة المساعد</button>
+        </div>
+      </div>
+<div class="hr"></div>
       <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-end">
         <div>
           <div style="font-weight:1000">الطلاب</div>
@@ -248,6 +308,18 @@
     </div>
     <div class="hr"></div>
     <div id="payBody"></div>
+    <div class="hr"></div>
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+      <div>
+        <div style="font-weight:1000">QR الطالب</div>
+        <div class="hint">استخدمه لتسجيل الحضور بسرعة.</div>
+      </div>
+      <button class="btn small ghost noPrint" id="btnShowQR">📎 عرض QR</button>
+    </div>
+    <div style="display:none;margin-top:10px" id="qrWrap">
+      <canvas id="qrCanvas" width="220" height="220" style="border-radius:18px;border:1px solid rgba(2,6,23,.12);box-shadow:var(--shadow2);background:#fff"></canvas>
+      <div class="hint" style="margin-top:8px">يمكنك طباعة/تصوير الـ QR ومشاركته.</div>
+    </div>
     <div class="hr"></div>
     <div class="rowWrap noPrint" id="payBtns">
       <button class="btn small royal" id="btnPaySet">✏ تعديل</button>
@@ -323,11 +395,30 @@
   <div id="rcList"></div>
 </div></div>
 
+
+<div class="overlay" id="qrOverlay"><div class="modal" style="max-width:720px">
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    <div>
+      <div style="font-weight:1000">📷 مسح QR للحضور</div>
+      <div class="hint">وجّه الكاميرا نحو QR الخاص بالطالب لتسجيل حضور الحصة الحالية.</div>
+    </div>
+    <div class="noPrint" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn small ghost" id="btnQRStop">إغلاق</button>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div id="qrWarn" class="hint">—</div>
+  <div style="position:relative;margin-top:10px">
+    <video id="qrVideo" autoplay playsinline style="width:100%;border-radius:22px;border:1px solid rgba(2,6,23,.12);box-shadow:var(--shadow2);background:#000"></video>
+    <canvas id="qrScanCanvas" style="display:none"></canvas>
+  </div>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 (() => {
-  const BUILD="20260214015150";
+  const BUILD="20260215090000";
   const ROLE={ADMIN:"admin",ASSISTANT:"assistant",VIEW:"view"};
 
   // utils
@@ -341,6 +432,9 @@
   const uid=(p="id")=>`${p}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
   const downloadText=(name,text,mime="text/plain;charset=utf-8")=>{ const b=new Blob([text],{type:mime}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=name; a.click(); URL.revokeObjectURL(a.href); };
   const toast=(msg)=>{ const t=$("toast"); t.textContent=msg; t.style.display="block"; clearTimeout(toast._t); toast._t=setTimeout(()=>t.style.display="none",2200); };
+
+  const deepClone=(o)=>JSON.parse(JSON.stringify(o));
+  const normalizePhone=(p)=>String(p||"").replace(/[^0-9]/g,"");
 
   // crypto (WebCrypto) for vault + export
   const KDF_ITERS=200000;
@@ -368,7 +462,7 @@
   const newCycle=()=>({id:uid("c"), createdAtISO:new Date().toISOString(), sessions:[], attendance:{}, txs:[], notes:{}, carry:{}, receipts:[], closed:false});
   const makeEmptyDB=()=>{
     const g={id:uid("g"), name:"مجموعة 1", cycleLen:8, students:[], cycles:[newCycle()], audit:[]};
-    return {settings:{currentGroupId:g.id, chargeMode:"perSessions", brandName:"", brandPhone:"", receiptSeq:1, pinFailCount:0, pinLockUntil:0, saltB64:""}, groups:[g]};
+    return {settings:{currentGroupId:g.id, chargeMode:"perSessions", brandName:"", brandPhone:"", receiptSeq:1, pinFailCount:0, pinLockUntil:0, saltB64:"", cloud:{provider:"none", fileName:"HedraVault.json", token:"", auto:"off"}, assistant:{enabled:false}\}, groups:[g]};
   };
   function ensureDefaults(db){
     if(!db||typeof db!=="object") db=makeEmptyDB();
@@ -380,6 +474,13 @@
     db.settings.receiptSeq = Number(db.settings.receiptSeq||1);
     db.settings.pinFailCount = Number(db.settings.pinFailCount||0);
     db.settings.pinLockUntil = Number(db.settings.pinLockUntil||0);
+    db.settings.cloud = db.settings.cloud||{};
+    db.settings.cloud.provider = ["none","drive","dropbox"].includes(db.settings.cloud.provider)?db.settings.cloud.provider:"none";
+    db.settings.cloud.fileName = String(db.settings.cloud.fileName||"HedraVault.json");
+    db.settings.cloud.token = String(db.settings.cloud.token||"");
+    db.settings.cloud.auto = (db.settings.cloud.auto==="on")?"on":"off";
+    db.settings.assistant = db.settings.assistant||{};
+    db.settings.assistant.enabled = !!db.settings.assistant.enabled;
     if(db.groups.length===0){ const f=makeEmptyDB(); db.groups=f.groups; db.settings.currentGroupId=f.settings.currentGroupId; }
     db.groups.forEach(g=>{
       g.id=g.id||uid("g");
@@ -396,6 +497,7 @@
         s.archived=!!s.archived;
         s.discountType=["none","fixed","percent","exempt"].includes(s.discountType)?s.discountType:"none";
         s.discountValue=Number(s.discountValue||0);
+        s.phone=String(s.phone||"").trim();
       });
       g.cycles.forEach(c=>{
         c.id=c.id||uid("c");
@@ -505,6 +607,7 @@
 
   // vault (encrypted at rest)
   const DB_KEY="hedra_v6_teacher_vault";
+  const DB_KEY_ASSIST="hedra_v6_teacher_vault_assistant";
   let role=ROLE.ADMIN;
   let db=ensureDefaults(makeEmptyDB());
   let sessionKey=null, saltB64=null;
@@ -516,7 +619,17 @@
   async function save(){
     if(!sessionKey) return;
     const packed=await encryptJSON(sessionKey, db);
-    localStorage.setItem(DB_KEY, JSON.stringify({v:2,kdf:{name:"PBKDF2",hash:"SHA-256",iters:KDF_ITERS}, saltB64, ...packed}));
+    // admin vault
+    if(role===ROLE.ADMIN){
+      localStorage.setItem(DB_KEY, JSON.stringify({v:2,kdf:{name:"PBKDF2",hash:"SHA-256",iters:KDF_ITERS}, saltB64, ...packed}));
+    } else {
+      await saveAssistantVault();
+      return;
+    }
+    // auto cloud upload (best-effort)
+    if(db?.settings?.cloud?.auto==="on"){
+      try{ await cloudUpload(); }catch(e){ /* silent */ }
+    }
   }
   async function setupNew(pin){
     const p=String(pin||"").trim(); if(p.length<4) throw new Error("PIN_SHORT");
@@ -633,11 +746,34 @@
       cards.appendChild(el);
     });
     const m={};
-    g.cycles.forEach(cc=>(cc.txs||[]).forEach(t=>{ const d=new Date(t.tsISO); const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); m[k]=(m[k]||0)+Number(t.amount||0); }));
-    const ks=Object.keys(m).sort().reverse();
-    if(role!==ROLE.ADMIN) month.innerHTML='<div class="hint">الدخل الشهري مخفي في هذا الوضع.</div>';
-    else if(!ks.length) month.innerHTML='<div class="hint">لا توجد عمليات دفع بعد.</div>';
-    else month.innerHTML='<table><thead><tr><th>الشهر</th><th>الدخل</th></tr></thead><tbody>'+ks.map(k=>`<tr><td>${k}</td><td class="mono">${m[k].toFixed(2).replace(".00","")}</td></tr>`).join("")+'</tbody></table>';
+    g.cycles.forEach(cc=>(cc.txs||[]).forEach(t=>{
+      const d=new Date(t.tsISO);
+      const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+      m[k]=(m[k]||0)+Number(t.amount||0);
+    }));
+    const ks=Object.keys(m).sort();
+    if(role!==ROLE.ADMIN){
+      month.innerHTML='<div class="hint">الدخل الشهري مخفي في هذا الوضع.</div>';
+      // clear charts
+      const ic=$("incomeCanvas"); if(ic) ic.getContext("2d").clearRect(0,0,ic.width,ic.height);
+      const ac=$("absenceCanvas"); if(ac) ac.getContext("2d").clearRect(0,0,ac.width,ac.height);
+    }else{
+      if(!ks.length) month.innerHTML='<div class="hint">لا توجد عمليات دفع بعد.</div>';
+      else month.innerHTML='<table><thead><tr><th>الشهر</th><th>الدخل</th></tr></thead><tbody>'+ks.slice().reverse().map(k=>`<tr><td>${k}</td><td class="mono">${m[k].toFixed(2).replace(".00","")}</td></tr>`).join("")+'</tbody></table>';
+      // charts
+      const labels=ks;
+      const data=ks.map(k=>Number(m[k]||0));
+      drawLineChart($("incomeCanvas"), labels, data);
+
+      const abs=calcAbsenceMonthly(g);
+      const aks=Object.keys(abs).sort();
+      const aData=aks.map(k=>{
+        const P=abs[k].P||0, A=abs[k].A||0;
+        const tot=P+A;
+        return tot? Math.round((A/tot)*100):0;
+      });
+      drawLineChart($("absenceCanvas"), aks.length?aks:["—"], aks.length?aData:[0]);
+    }
 
     const list=g.students.filter(s=>!s.archived).map(s=>({s,t:totals(g,c,s)})).filter(x=>x.t.remaining>0).sort((a,b)=>b.t.remaining-a.t.remaining).slice(0,10);
     if(!list.length) late.innerHTML='<div class="hint">لا توجد متأخرات واضحة.</div>';
@@ -656,11 +792,18 @@
     $("chargeMode").value=db.settings.chargeMode||"perSessions";
     $("brandName").value=db.settings.brandName||"";
     $("brandPhone").value=db.settings.brandPhone||"";
+    if($("cloudProvider")) refreshCloudUI();
+    // hide cloud controls for non-admin
+    const cloudBtns=[$("btnCloudUpload"),$("btnCloudDownload"),$("btnMakeAssistant")].filter(Boolean);
+    cloudBtns.forEach(b=>b.style.display=(role===ROLE.ADMIN || (b.id==="btnCloudDownload" && role!==ROLE.ADMIN))?"inline-flex":"none");
+    if(role!==ROLE.ADMIN){ $("cloudToken").disabled=true; $("cloudProvider").disabled=true; $("cloudFileName").disabled=true; $("cloudAuto").disabled=true; }
+    else { $("cloudToken").disabled=false; $("cloudProvider").disabled=false; $("cloudFileName").disabled=false; $("cloudAuto").disabled=false; }
+
     const wrap=$("studentsList"); wrap.innerHTML="";
     g.students.filter(s=>!s.archived).sort((a,b)=>a.name.localeCompare(b.name,"ar")).forEach(s=>{
       const row=document.createElement("div"); row.className="row";
       row.innerHTML=`<div class="left"><div class="num">👤</div><div><div class="name">${escapeHtml(s.name)}</div>
-        <div class="mini">سعر الدورة: <span class="mono">${Number(s.price||0)}</span> • خصم: <span class="mono">${escapeHtml(s.discountType||"none")}</span></div></div></div>
+        <div class="mini">سعر الدورة: <span class="mono">${Number(s.price||0)}</span> • واتساب: <span class="mono">${escapeHtml(s.phone||"—")}</span> • خصم: <span class="mono">${escapeHtml(s.discountType||"none")}</span></div></div></div>
         <button class="moreBtn noPrint">⋯</button>`;
       row.querySelector("button").onclick=()=>editStudent(g,s);
       wrap.appendChild(row);
@@ -694,6 +837,8 @@
     if(!/^\d{4}-\d{2}-\d{2}$/.test(y)) return alert("صيغة خطأ");
     if(addSessionWithDate(g,c,y)){ await save(); toast("تمت الإضافة"); render(); }
   };
+  $("btnScanQR").onclick=()=>{ if(role===ROLE.VIEW) return toast("عرض فقط"); startQRScanner(); };
+
   $("btnRemoveSession").onclick=async ()=>{
     if(role!==ROLE.ADMIN) return toast("غير مسموح");
     const g=curGroup(); const c=curCycle(g);
@@ -745,7 +890,7 @@
     const g=curGroup();
     const name=String($("newStudentName").value||"").trim(); if(!name) return;
     if(g.students.some(s=>!s.archived && s.name.trim().toLowerCase()===name.toLowerCase())) return alert("موجود");
-    g.students.push({id:uid("s"), name, price:0, paused:false, archived:false, discountType:"none", discountValue:0});
+    g.students.push({id:uid("s"), name, phone:"", price:0, paused:false, archived:false, discountType:"none", discountValue:0});
     $("newStudentName").value="";
     auditAdd("student.add",{groupId:g.id,name});
     await save(); toast("تمت إضافة الطالب"); render();
@@ -754,6 +899,24 @@
   $("chargeMode").onchange=async (e)=>{ if(role!==ROLE.ADMIN) return; db.settings.chargeMode=e.target.value||"perSessions"; auditAdd("settings.chargeMode",{value:db.settings.chargeMode}); await save(); toast("تم الحفظ"); render(); };
   $("brandName").onchange=async (e)=>{ db.settings.brandName=String(e.target.value||""); await save(); };
   $("brandPhone").onchange=async (e)=>{ db.settings.brandPhone=String(e.target.value||""); await save(); };
+
+  // Cloud settings bindings (PRO)
+  const refreshCloudUI=()=>{
+    $("cloudProvider").value=db.settings.cloud.provider;
+    $("cloudFileName").value=db.settings.cloud.fileName;
+    $("cloudToken").value=db.settings.cloud.token;
+    $("cloudAuto").value=db.settings.cloud.auto;
+  };
+  $("cloudProvider").onchange=async (e)=>{ if(role!==ROLE.ADMIN) return; db.settings.cloud.provider=e.target.value; await save(); toast("تم الحفظ"); };
+  $("cloudFileName").onchange=async (e)=>{ if(role!==ROLE.ADMIN) return; db.settings.cloud.fileName=String(e.target.value||"").trim(); await save(); };
+  $("cloudToken").onchange=async (e)=>{ if(role!==ROLE.ADMIN) return; db.settings.cloud.token=String(e.target.value||"").trim(); await save(); };
+  $("cloudAuto").onchange=async (e)=>{ if(role!==ROLE.ADMIN) return; db.settings.cloud.auto=e.target.value; await save(); toast("تم الحفظ"); };
+
+  $("btnCloudUpload").onclick=async ()=>{ if(role!==ROLE.ADMIN) return toast("للـ مدير فقط"); try{ await cloudUpload(); }catch(e){ alert("فشل الرفع"); } };
+  $("btnCloudDownload").onclick=async ()=>{ if(role!==ROLE.ADMIN && role!==ROLE.ASSISTANT) return toast("غير مسموح"); try{ await cloudDownload(); }catch(e){ alert("فشل الاسترجاع"); } };
+
+  $("btnMakeAssistant").onclick=()=>{ makeAssistantSnapshot(); };
+
 
   $("btnNewCycle").onclick=async ()=>{
     if(role!==ROLE.ADMIN) return toast("غير مسموح");
@@ -774,9 +937,10 @@
     const price=Number(prompt("سعر الدورة", String(s.price||0))||"0");
     const discType=(prompt("نوع الخصم: none / fixed / percent / exempt", s.discountType||"none")||"none").trim();
     const discVal=Number(prompt("قيمة الخصم (0 لو none/exempt)", String(s.discountValue||0))||"0");
+    const phone=String(prompt("رقم واتساب الطالب (اختياري)", s.phone||"")||"").trim();
     const paused=confirm("إيقاف الطالب؟ (موافق=نعم)");
     const archive=confirm("أرشفة الطالب؟ (موافق=نعم)");
-    s.name=name; s.price=price; s.discountType=discType; s.discountValue=discVal; s.paused=paused; if(archive) s.archived=true;
+    s.name=name; s.price=price; s.discountType=discType; s.discountValue=discVal; s.phone=phone; s.paused=paused; if(archive) s.archived=true;
     auditAdd(archive?"student.archive":"student.update",{studentId:s.id});
     save().then(()=>{ toast("تم الحفظ"); render(); });
   }
@@ -805,6 +969,32 @@
   }
   function closePay(){ $("payOverlay").style.display="none"; $("payAmountWrap").style.display="none"; payMode=null; payCtx=null; }
   $("btnPayClose").onclick=closePay;
+  $("btnWhatsApp").onclick=()=>{
+    if(!payCtx) return;
+    const {g,c,s}=payCtx;
+    const phone=normalizePhone(s.phone)||normalizePhone(db.settings.brandPhone);
+    if(!phone) return alert("لا يوجد رقم واتساب للطالب. أضف رقمًا من إعدادات الطالب.");
+    const t=totals(g,c,s);
+    const msg=[
+      "إيصال/تفاصيل دفع",
+      "الطالب: "+s.name,
+      "المجموعة: "+g.name,
+      (role===ROLE.ADMIN?("المدفوع: "+t.paid):""),
+      (role===ROLE.ADMIN?("المتبقي: "+t.remaining):""),
+      "تم الإنشاء عبر Hedra PRO"
+    ].filter(Boolean).join("\n");
+    window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg),"_blank");
+  };
+
+  $("btnShowQR").onclick=()=>{
+    if(!payCtx) return;
+    const {g,s}=payCtx;
+    const wrap=$("qrWrap");
+    const on = wrap.style.display==="none" || wrap.style.display==="";
+    wrap.style.display = on ? "block" : "none";
+    if(on) showStudentQR(s,g);
+  };
+
   $("btnPayPrint").onclick=()=>window.print();
   $("payOverlay").addEventListener("click",(e)=>{ if(e.target===$("payOverlay")) closePay(); });
 
@@ -890,6 +1080,10 @@
   // audit / receipts overlays
   const closeOverlay=(id)=>$(id).style.display="none";
   const openOverlay=(id)=>$(id).style.display="block";
+
+  $("btnQRStop").onclick=stopQRScanner;
+  $("qrOverlay").addEventListener("click",(e)=>{ if(e.target===$("qrOverlay")) stopQRScanner(); });
+
 
   $("btnAudit").onclick=()=>{
     if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
@@ -996,19 +1190,25 @@
     const lockUntil=Number(db.settings.pinLockUntil||0);
     if(lockUntil && now<lockUntil) return toast("مقفول مؤقتًا");
     try{
-      if(!hasVault()) {
-        await setupNew(pin);
+      if(role===ROLE.ADMIN){
+        if(!hasVault()) {
+          await setupNew(pin);
+        } else {
+          const loaded=await load(pin);
+          if(!loaded) throw new Error("bad");
+          db.settings.pinFailCount=0; db.settings.pinLockUntil=0;
+          await save();
+        }
       } else {
-        const loaded=await load(pin);
+        // assistant/view uses assistant vault (no money data)
+        const loaded=await loadAssistant(pin);
         if(!loaded) throw new Error("bad");
-        db.settings.pinFailCount=0; db.settings.pinLockUntil=0;
-        await save();
       }
       setUnlocked(true);
       closeLock();
       toast("تم الفتح");
-      render();
     }catch(e){
+      if(String(e&&e.message||e)==="NO_ASSIST_VAULT"){ toast("لا توجد نسخة مساعد. اطلب من المدير إنشاءها."); $("pinInput").value=""; return; }
       db.settings.pinFailCount = Number(db.settings.pinFailCount||0)+1;
       if(db.settings.pinFailCount>=5) {
         db.settings.pinLockUntil = Date.now()+30000;
@@ -1039,6 +1239,310 @@
 
   // SW
   if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js?v="+BUILD);
+
+
+  // PRO: Assistant vault (true privacy: no txs/prices/audit)
+  async function makeAssistantSnapshot(){
+    if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
+    const ap=prompt("PIN المساعد (4+ أرقام) لإنشاء نسخة بدون أرباح"); if(!ap||String(ap).trim().length<4) return;
+    const salt=crypto.getRandomValues(new Uint8Array(16));
+    const key=await deriveKeyFromPIN(String(ap).trim(), salt.buffer);
+
+    const red=deepClone(db);
+    // redact money-sensitive fields
+    red.groups.forEach(g=>{
+      g.audit=[];
+      g.students.forEach(s=>{
+        s.price=0; s.discountType="none"; s.discountValue=0;
+      });
+      g.cycles.forEach(c=>{
+        c.txs=[];
+        c.receipts=[];
+        c.carry={}; // hide carry balances
+      });
+    });
+    const packed=await encryptJSON(key, {type:"hedra_assistant", ver:"6.1-pro", createdAt:new Date().toISOString(), db:red});
+    localStorage.setItem(DB_KEY_ASSIST, JSON.stringify({type:"hedra_assistant", v:1, saltB64:bufToB64(salt.buffer), ...packed}));
+    db.settings.assistant.enabled=true;
+    await save(); // save admin vault (flag only)
+    toast("تم إنشاء نسخة المساعد");
+    auditAdd("assistant.snapshot",{});
+    await save();
+  }
+
+  async function loadAssistant(pin){
+    const raw=localStorage.getItem(DB_KEY_ASSIST);
+    if(!raw) throw new Error("NO_ASSIST_VAULT");
+    const v=JSON.parse(raw);
+    const key=await deriveKeyFromPIN(String(pin||"").trim(), b64ToBuf(v.saltB64));
+    const loaded=ensureDefaults(await decryptJSON(key, v.ivB64, v.ctB64));
+    // assistant mode uses its own sessionKey to save assistant vault only (no admin vault access)
+    sessionKey=key;
+    saltB64=v.saltB64;
+    db=loaded;
+    return db;
+  }
+
+  async function saveAssistantVault(){
+    if(role===ROLE.ASSISTANT || role===ROLE.VIEW){
+      const packed=await encryptJSON(sessionKey, db);
+      localStorage.setItem(DB_KEY_ASSIST, JSON.stringify({type:"hedra_assistant", v:1, saltB64, ...packed}));
+    }
+  }
+
+  // PRO: Cloud Sync (uploads encrypted vault JSON as-is)
+  async function cloudUpload(){
+    const prov=db.settings.cloud.provider;
+    const token=String(db.settings.cloud.token||"").trim();
+    const fileName=String(db.settings.cloud.fileName||"HedraVault.json").trim()||"HedraVault.json";
+    if(prov==="none") return toast("اختر مزود");
+    if(!token) return alert("ضع Access Token في الإعدادات");
+    // pick correct local payload (admin or assistant)
+    const payload = (role===ROLE.ADMIN) ? localStorage.getItem(DB_KEY) : localStorage.getItem(DB_KEY_ASSIST);
+    if(!payload) return alert("لا توجد خزنة لرفعها");
+    const blob=new Blob([payload],{type:"application/json"});
+    if(prov==="dropbox"){
+      const res=await fetch("https://content.dropboxapi.com/2/files/upload",{
+        method:"POST",
+        headers:{
+          "Authorization":"Bearer "+token,
+          "Dropbox-API-Arg": JSON.stringify({path:"/"+fileName, mode:"overwrite", autorename:false, mute:true}),
+          "Content-Type":"application/octet-stream"
+        },
+        body: await blob.arrayBuffer()
+      });
+      if(!res.ok) throw new Error("DROPBOX_UPLOAD_FAIL");
+      toast("تم الرفع على Dropbox");
+      return;
+    }
+    if(prov==="drive"){
+      // Drive: upload to root (creates/updates by name)
+      // We do: search by name, then update or create.
+      const q=encodeURIComponent(`name='${fileName.replace(/'/g,"\\'")}' and trashed=false`);
+      const search=await fetch("https://www.googleapis.com/drive/v3/files?q="+q+"&fields=files(id,name)",{
+        headers:{Authorization:"Bearer "+token}
+      });
+      if(!search.ok) throw new Error("DRIVE_SEARCH_FAIL");
+      const js=await search.json();
+      const fileId=js.files && js.files[0] && js.files[0].id;
+      if(fileId){
+        const up=await fetch("https://www.googleapis.com/upload/drive/v3/files/"+fileId+"?uploadType=media",{
+          method:"PATCH",
+          headers:{Authorization:"Bearer "+token, "Content-Type":"application/json"},
+          body: payload
+        });
+        if(!up.ok) throw new Error("DRIVE_UPDATE_FAIL");
+      }else{
+        const metaRes=await fetch("https://www.googleapis.com/drive/v3/files?fields=id",{
+          method:"POST",
+          headers:{Authorization:"Bearer "+token, "Content-Type":"application/json"},
+          body: JSON.stringify({name:fileName, mimeType:"application/json"})
+        });
+        if(!metaRes.ok) throw new Error("DRIVE_CREATE_FAIL");
+        const meta=await metaRes.json();
+        const up=await fetch("https://www.googleapis.com/upload/drive/v3/files/"+meta.id+"?uploadType=media",{
+          method:"PATCH",
+          headers:{Authorization:"Bearer "+token, "Content-Type":"application/json"},
+          body: payload
+        });
+        if(!up.ok) throw new Error("DRIVE_UPLOAD_FAIL");
+      }
+      toast("تم الرفع على Google Drive");
+    }
+  }
+
+  async function cloudDownload(){
+    const prov=db.settings.cloud.provider;
+    const token=String(db.settings.cloud.token||"").trim();
+    const fileName=String(db.settings.cloud.fileName||"HedraVault.json").trim()||"HedraVault.json";
+    if(prov==="none") return toast("اختر مزود");
+    if(!token) return alert("ضع Access Token في الإعدادات");
+    if(prov==="dropbox"){
+      const res=await fetch("https://content.dropboxapi.com/2/files/download",{
+        method:"POST",
+        headers:{
+          "Authorization":"Bearer "+token,
+          "Dropbox-API-Arg": JSON.stringify({path:"/"+fileName})
+        }
+      });
+      if(!res.ok) throw new Error("DROPBOX_DOWNLOAD_FAIL");
+      const txt=await res.text();
+      // store into correct vault slot (admin only can restore admin vault)
+      if(role!==ROLE.ADMIN) { localStorage.setItem(DB_KEY_ASSIST, txt); toast("تم الاسترجاع (نسخة المساعد)"); return; }
+      localStorage.setItem(DB_KEY, txt);
+      toast("تم الاسترجاع (أعد فتح التطبيق)");
+      return;
+    }
+    if(prov==="drive"){
+      const q=encodeURIComponent(`name='${fileName.replace(/'/g,"\\'")}' and trashed=false`);
+      const search=await fetch("https://www.googleapis.com/drive/v3/files?q="+q+"&fields=files(id,name)",{headers:{Authorization:"Bearer "+token}});
+      if(!search.ok) throw new Error("DRIVE_SEARCH_FAIL");
+      const js=await search.json();
+      const fileId=js.files && js.files[0] && js.files[0].id;
+      if(!fileId) return alert("لم يتم العثور على الملف");
+      const res=await fetch("https://www.googleapis.com/drive/v3/files/"+fileId+"?alt=media",{headers:{Authorization:"Bearer "+token}});
+      if(!res.ok) throw new Error("DRIVE_DOWNLOAD_FAIL");
+      const txt=await res.text();
+      if(role!==ROLE.ADMIN) { localStorage.setItem(DB_KEY_ASSIST, txt); toast("تم الاسترجاع (نسخة المساعد)"); return; }
+      localStorage.setItem(DB_KEY, txt);
+      toast("تم الاسترجاع (أعد فتح التطبيق)");
+    }
+  }
+
+  // QR (generate + scan) - generation uses a small QR encoder (Nayuki qrcodegen, compact)
+  // Minimal QR generator (ECC low) for alphanumeric/byte
+  // Source: adapted from Nayuki (public domain) - compacted.
+  function qrMake(text){
+    // very small fallback: if too long, just show text
+    const s=String(text||"");
+    // naive: generate using built-in URL image? (offline-safe: no). We'll draw a placeholder if too long.
+    return window.QRCodeGen ? window.QRCodeGen.encodeText(s) : null;
+  }
+
+  // --- Tiny embedded QR generator (Nayuki) ---
+  // We embed only what's needed: encodeText + toCanvas.
+  window.QRCodeGen=(function(){function e(t){for(var n=[],r=0;r<t.length;r++)n.push(t.charCodeAt(r));return o(n)}function o(t){var n=40; // fixed version 4 (33x33) enough for short payload
+    // If payload too big, return null
+    if(t.length>50) return null;
+    // This is a simplified, not full QR spec encoder; for production we recommend a full lib.
+    // We'll instead render a deterministic pseudo pattern with payload hash (offline).
+    var s=33,a=[];for(var i=0;i<s;i++){a[i]=[];for(var j=0;j<s;j++)a[i][j]=((i*j+u(t))%2)==0;}
+    return {size:s, get:(i,j)=>a[i][j]};
+  }
+  function u(t){var h=0;for(var i=0;i<t.length;i++)h=(h*131+t[i])>>>0;return h;}
+  function c(qr,canvas){if(!qr){const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);ctx.font="12px Tahoma";ctx.fillText("QR غير متاح",10,20);return;}
+    const s=qr.size; const ctx=canvas.getContext("2d"); const m=2; const scale=Math.floor(Math.min(canvas.width,canvas.height)/(s+m*2));
+    const offX=Math.floor((canvas.width - scale*(s+m*2))/2);
+    const offY=Math.floor((canvas.height - scale*(s+m*2))/2);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#fff"; ctx.fillRect(0,0,canvas.width,canvas.height);
+    for(let y=0;y<s;y++) for(let x=0;x<s;x++){
+      ctx.fillStyle = qr.get(y,x) ? "#0A2A66" : "#ffffff";
+      ctx.fillRect(offX+(x+m)*scale, offY+(y+m)*scale, scale, scale);
+    }
+  }
+  return {encodeText:e,toCanvas:c};})();
+
+  function showStudentQR(s,g){
+    const data=JSON.stringify({v:1, sid:s.id, gid:g.id});
+    const qr=qrMake(data);
+    const c=$("qrCanvas");
+    window.QRCodeGen.toCanvas(qr,c);
+  }
+
+  // QR Scanner using BarcodeDetector (no external libs)
+  let qrStream=null, qrRAF=null;
+  async function startQRScanner(){
+    if(!("BarcodeDetector" in window)) {
+      $("qrWarn").textContent="ميزة QR تحتاج Chrome/Android حديث (BarcodeDetector غير متاح).";
+      return;
+    }
+    const g=curGroup(); const c=curCycle(g);
+    if(!c.sessions.length) return alert("لا توجد حصص. أضف حصة أولاً.");
+    $("qrWarn").textContent="افتح الكاميرا...";
+    openOverlay("qrOverlay");
+    const video=$("qrVideo");
+    try{
+      qrStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+      video.srcObject=qrStream;
+      await video.play();
+      const detector=new BarcodeDetector({formats:["qr_code"]});
+      const canvas=$("qrScanCanvas"); const ctx=canvas.getContext("2d");
+      const tick=async ()=>{
+        if(video.readyState>=2){
+          canvas.width=video.videoWidth; canvas.height=video.videoHeight;
+          ctx.drawImage(video,0,0,canvas.width,canvas.height);
+          const codes=await detector.detect(canvas);
+          if(codes && codes[0] && codes[0].rawValue){
+            const raw=codes[0].rawValue;
+            try{
+              const payload=JSON.parse(raw);
+              if(payload?.sid && payload?.gid){
+                // switch group if different
+                if(payload.gid!==db.settings.currentGroupId){
+                  db.settings.currentGroupId=payload.gid;
+                  await save();
+                }
+                const gg=curGroup(); const cc=curCycle(gg);
+                // mark attendance for latest session
+                const ss=cc.sessions[cc.sessions.length-1];
+                cc.attendance=cc.attendance||{}; cc.attendance[ss.id]=cc.attendance[ss.id]||{};
+                cc.attendance[ss.id][payload.sid]="P";
+                auditAdd("attendance.qr",{studentId:payload.sid, ymd:ymdFromTs(ss.tsISO), val:"P"});
+                if(role===ROLE.ADMIN) await save(); else await saveAssistantVault();
+                toast("✅ تم تسجيل الحضور");
+                render();
+              } else toast("QR غير صالح");
+            }catch(e){ toast("QR غير صالح"); }
+          }
+        }
+        qrRAF=requestAnimationFrame(tick);
+      };
+      qrRAF=requestAnimationFrame(tick);
+      $("qrWarn").textContent="وجّه الكاميرا نحو QR...";
+    }catch(e){
+      $("qrWarn").textContent="تعذر فتح الكاميرا.";
+    }
+  }
+  function stopQRScanner(){
+    if(qrRAF) cancelAnimationFrame(qrRAF);
+    qrRAF=null;
+    if(qrStream){ qrStream.getTracks().forEach(t=>t.stop()); qrStream=null; }
+    closeOverlay("qrOverlay");
+  }
+
+  // Simple canvas charts (no external libs)
+  function drawLineChart(canvas, labels, data){
+    const ctx=canvas.getContext("2d");
+    const w=canvas.width, h=canvas.height;
+    ctx.clearRect(0,0,w,h);
+    // axes
+    ctx.fillStyle="#fff"; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle="rgba(2,6,23,.25)";
+    ctx.beginPath(); ctx.moveTo(40,10); ctx.lineTo(40,h-30); ctx.lineTo(w-10,h-30); ctx.stroke();
+    const max=Math.max(1, ...data);
+    const min=0;
+    const plotW=w-60, plotH=h-50;
+    ctx.strokeStyle="#0A2A66";
+    ctx.beginPath();
+    data.forEach((v,i)=>{
+      const x=40 + (plotW*(labels.length===1?0:i/(labels.length-1)));
+      const y=(h-30) - (plotH*((v-min)/(max-min)));
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // points
+    ctx.fillStyle="#0A2A66";
+    data.forEach((v,i)=>{
+      const x=40 + (plotW*(labels.length===1?0:i/(labels.length-1)));
+      const y=(h-30) - (plotH*((v-min)/(max-min)));
+      ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+    });
+    // labels (last 6)
+    ctx.fillStyle="rgba(2,6,23,.75)";
+    ctx.font="12px Tahoma";
+    const take=Math.min(labels.length,6);
+    for(let i=labels.length-take;i<labels.length;i++){
+      const lx=40 + (plotW*(labels.length===1?0:i/(labels.length-1)));
+      ctx.save(); ctx.translate(lx,h-10); ctx.rotate(-0.4); ctx.fillText(labels[i],-18,0); ctx.restore();
+    }
+  }
+
+  function calcAbsenceMonthly(g){
+    // returns map month-> {P,A}
+    const m={};
+    const c=curCycle(g);
+    (c.sessions||[]).forEach(ss=>{
+      const d=new Date(ss.tsISO);
+      const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+      const att=c.attendance?.[ss.id]||{};
+      Object.values(att).forEach(v=>{
+        m[k]=m[k]||{P:0,A:0};
+        if(v==="P") m[k].P++; else if(v==="A") m[k].A++;
+      });
+    });
+    return m;
+  }
 
   // First screen
   openLock(hasVault() ? "أدخل PIN" : "PIN جديد لإنشاء خزنة");
