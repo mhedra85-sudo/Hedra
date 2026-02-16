@@ -1,18 +1,49 @@
-const CACHE="hedra-v6-1-pro-20260215090000";
-const CORE=["./","./index.html","./manifest.json","./icon.png"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE))); self.skipWaiting();});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))); self.clients.claim();});
-self.addEventListener("fetch",e=>{
-  const req=e.request; const url=new URL(req.url);
-  if(url.origin!==location.origin) return;
+// Hedra V6.1 PRO – Service Worker (GitHub Pages safe)
+const CACHE="hedra-v6-1-pro-fixed-20260216";
+
+// Cache relative to current scope (works for /Hedra/ path)
+const SCOPE = self.registration.scope; // e.g. https://user.github.io/Hedra/
+const CORE = [
+  new URL("./", SCOPE).pathname,
+  new URL("./index.html", SCOPE).pathname,
+  new URL("./manifest.json", SCOPE).pathname,
+  new URL("./icon.png", SCOPE).pathname
+];
+
+self.addEventListener("install", e => {
+  e.waitUntil((async()=>{
+    const cache = await caches.open(CACHE);
+    await cache.addAll(CORE);
+    self.skipWaiting();
+  })());
+});
+
+self.addEventListener("activate", e => {
+  e.waitUntil((async()=>{
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));
+    self.clients.claim();
+  })());
+});
+
+self.addEventListener("fetch", e => {
+  const req = e.request;
+  const url = new URL(req.url);
+  if(url.origin !== location.origin) return;
+
   e.respondWith((async()=>{
-    const cache=await caches.open(CACHE);
-    const cached=await cache.match(req);
-    const net=fetch(req).then(res=>{cache.put(req,res.clone()); return res;}).catch(()=>null);
-    if(cached) return cached;
-    const fresh=await net;
-    if(fresh) return fresh;
-    if(req.mode==="navigate") return (await cache.match("./index.html")) || new Response("Offline",{status:503});
-    return new Response("Offline",{status:503});
+    const cache = await caches.open(CACHE);
+    const cached = await cache.match(req);
+    try{
+      const fresh = await fetch(req);
+      if(req.method==="GET") cache.put(req, fresh.clone());
+      return fresh;
+    }catch(_){
+      if(cached) return cached;
+      if(req.mode==="navigate"){
+        return (await cache.match(new URL("./index.html", SCOPE).pathname)) || new Response("Offline",{status:503});
+      }
+      return new Response("Offline",{status:503});
+    }
   })());
 });
