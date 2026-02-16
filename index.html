@@ -1184,12 +1184,16 @@
   $("roleView").onclick=()=>{ role=ROLE.VIEW; toast("عرض فقط"); renderTop(); };
 
   $("btnUnlock").onclick=async ()=>{
-    const pin=String($("pinInput").value||"").trim();
-    if(pin.length<4) return toast("PIN قصير");
-    const now=Date.now();
-    const lockUntil=Number(db.settings.pinLockUntil||0);
-    if(lockUntil && now<lockUntil) return toast("مقفول مؤقتًا");
+    const btn=$("btnUnlock");
+    btn.disabled=true;
+    btn.style.opacity="0.7";
     try{
+      const pin=String($("pinInput").value||"").trim();
+      if(pin.length<4) return toast("PIN قصير");
+      const now=Date.now();
+      const lockUntil=Number(db.settings.pinLockUntil||0);
+      if(lockUntil && now<lockUntil) return toast("مقفول مؤقتًا");
+      toast("جاري الفتح...");
       if(role===ROLE.ADMIN){
         if(!hasVault()) {
           await setupNew(pin);
@@ -1206,8 +1210,10 @@
       }
       setUnlocked(true);
       closeLock();
+      render();
       toast("تم الفتح");
     }catch(e){
+      console.error(e);
       if(String(e&&e.message||e)==="NO_ASSIST_VAULT"){ toast("لا توجد نسخة مساعد. اطلب من المدير إنشاءها."); $("pinInput").value=""; return; }
       db.settings.pinFailCount = Number(db.settings.pinFailCount||0)+1;
       if(db.settings.pinFailCount>=5) {
@@ -1216,6 +1222,9 @@
         toast("قفل 30 ثانية");
       } else toast("PIN خطأ");
       $("pinInput").value="";
+    } finally {
+      btn.disabled=false;
+      btn.style.opacity="1";
     }
   };
 
