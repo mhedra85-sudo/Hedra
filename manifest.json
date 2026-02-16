@@ -1,7 +1,7 @@
 {
   "name": "Hedra V6.1 PRO Teacher Edition",
   "short_name": "Hedra PRO",
-  "start_url": "./",
+  "start_url": "/Hedra/",
   "display": "standalone",
   "background_color": "#07152D",
   "theme_color": "#0A2A66",
@@ -12,5 +12,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "scope": "/Hedra/"
 }
