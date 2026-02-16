@@ -717,7 +717,7 @@
     const gt=groupTotals(g,c);
     wrap.innerHTML += `<div class="row"><div class="left"><div class="num">📌</div><div><div class="name">ملخص المجموعة</div>
       <div class="mini">${role===ROLE.ADMIN?('الإجمالي: <span class="mono">'+gt.total+'</span> • المدفوع: <span class="mono">'+gt.paid+'</span> • المتبقي: <span class="mono">'+gt.remaining+'</span>'):'الإجماليات مخفية'}</div></div></div>
-      <button class="moreBtn noPrint" onclick="window.print()">🖨</button></div>`;
+      <button class="moreBtn noPrint" onclick=>🖨</button></div>`;
     g.students.filter(s=>!s.archived).sort((a,b)=>a.name.localeCompare(b.name,"ar")).forEach(s=>{
       const t=totals(g,c,s);
       const row=document.createElement("div"); row.className="row";
@@ -819,7 +819,7 @@
     if(pages.settings.style.display!=="none") renderSettings();
   }
 
-  $("btnDashPrint").onclick=()=>window.print();
+  $("btnDashPrint").onclick=()=>;
 
   // sessions
   function addSessionWithDate(g,c,ymd){
@@ -995,7 +995,7 @@
     if(on) showStudentQR(s,g);
   };
 
-  $("btnPayPrint").onclick=()=>window.print();
+  $("btnPayPrint").onclick=()=>;
   $("payOverlay").addEventListener("click",(e)=>{ if(e.target===$("payOverlay")) closePay(); });
 
   $("btnPaySet").onclick=()=>{ payMode="set"; $("payAmountLabel").textContent="تعديل المدفوع"; $("payAmount").value=String(paid(payCtx.c,payCtx.s.id)); $("payAmountWrap").style.display="flex"; };
@@ -1048,7 +1048,7 @@
     const rc=makeReceipt(g,c,s,amt,note);
     await save(); toast("تم إنشاء "+rc.rid);
     const w=window.open("","_blank");
-    w.document.write("<meta charset='utf-8'><title>"+rc.rid+"</title>"+receiptPrintHTML(rc,g.name)+"<script>window.onload=()=>window.print();</script>");
+    w.document.write("<meta charset='utf-8'><title>"+rc.rid+"</title>"+receiptPrintHTML(rc,g.name)+"<script>window.onload=()=>;</script>");
     w.document.close();
   };
 
@@ -1105,7 +1105,7 @@
       const rid=b.getAttribute("data-rid");
       const f=allReceipts().find(x=>x.r.rid===rid); if(!f) return;
       const w=window.open("","_blank");
-      w.document.write("<meta charset='utf-8'><title>"+rid+"</title>"+receiptPrintHTML(f.r,f.g.name)+"<script>window.onload=()=>window.print();</script>");
+      w.document.write("<meta charset='utf-8'><title>"+rid+"</title>"+receiptPrintHTML(f.r,f.g.name)+"<script>window.onload=()=>;</script>");
       w.document.close();
     });
     openOverlay("rcOverlay");
