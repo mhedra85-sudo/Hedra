@@ -417,6 +417,26 @@
 
 <div class="toast" id="toast"></div>
 
+<div class="overlay" id="printOverlay"><div class="modal" style="max-width:960px">
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+    <div>
+      <div style="font-weight:1000" id="printTitle">🖨 المعاينة</div>
+      <div class="hint" id="printSub">—</div>
+    </div>
+    <div class="noPrint" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn small ghost" id="btnPrintToggle">فاتورة مختصرة</button>
+      <button class="btn small ghost" id="btnPrintPDF">⬇️ PDF</button>
+      <button class="btn small royal" id="btnPrintNow">🖨 طباعة</button>
+      <button class="btn small ghost" id="btnPrintClose">إغلاق</button>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div style="background:rgba(2,6,23,.04);border:1px solid rgba(2,6,23,.12);border-radius:16px;overflow:hidden">
+    <iframe id="printFrame" title="Print Preview" style="width:100%;height:70vh;border:0;background:#fff"></iframe>
+  </div>
+  <div class="hint" style="margin-top:10px">إذا كنت تستخدم الموبايل: زر PDF ينزل ملف مباشر بدون فتح نافذة الطباعة.</div>
+</div></div>
+
 <div class="overlay" id="studentOverlay"><div class="modal" style="max-width:720px">
   <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
     <div>
@@ -640,27 +660,180 @@
     allReceipts().forEach(x=>rows.push([x.r.rid,x.r.tsISO,x.g.name,x.r.studentName,x.r.amount,x.r.note,x.r.snapshot.total,x.r.snapshot.paid,x.r.snapshot.remaining]));
     return rows.map(r=>r.map(x=>`"${String(x??"").replaceAll('"','""')}"`).join(",")).join("\n");
   };
-  const receiptPrintHTML=(rc,groupName)=>{
-    const brand=escapeHtml(db.settings.brandName||"");
-    const phone=escapeHtml(db.settings.brandPhone||"");
-    return `
-    <div style="font-family:Tahoma,Arial;direction:rtl">
-      <h2 style="margin:0">${brand||"—"}</h2>
-      <div style="opacity:.7">${phone||"—"}</div>
-      <hr/>
-      <div><b>إيصال:</b> ${escapeHtml(rc.rid)}</div>
-      <div><b>المجموعة:</b> ${escapeHtml(groupName)}</div>
-      <div><b>الطالب:</b> ${escapeHtml(rc.studentName)}</div>
-      <div><b>المبلغ:</b> ${escapeHtml(String(rc.amount))}</div>
-      <div><b>ملاحظة:</b> ${escapeHtml(rc.note||"—")}</div>
-      <hr/>
-      <div><b>الإجمالي:</b> ${escapeHtml(String(rc.snapshot.total))}</div>
-      <div><b>المدفوع:</b> ${escapeHtml(String(rc.snapshot.paid))}</div>
-      <div><b>المتبقي:</b> ${escapeHtml(String(rc.snapshot.remaining))}</div>
-      <hr/>
-      <small>تم إنشاء الإيصال محليًا (Offline).</small>
-    </div>`;
-  };
+  // ===== Print PRO (preview + compact invoice + direct PDF) =====
+const receiptPrintHTML=(rc,groupName,mode="full")=>{
+  const brand=escapeHtml(db.settings.brandName||"");
+  const phone=escapeHtml(db.settings.brandPhone||"");
+  const dt=new Date(rc.tsISO);
+  const date=escapeHtml(dt.toLocaleString("ar-EG"));
+  const isCompact = (mode==="compact");
+  const money=(n)=>escapeHtml(String(Number(n||0)));
+  const note=escapeHtml((rc.note||"").trim()||"—");
+  const title = isCompact ? "فاتورة مختصرة" : "إيصال";
+  const lines = isCompact ? `
+    <div class="row"><span>الإجمالي</span><b>${money(rc.snapshot.total)}</b></div>
+    <div class="row"><span>المدفوع</span><b>${money(rc.snapshot.paid)}</b></div>
+    <div class="row"><span>المتبقي</span><b>${money(rc.snapshot.remaining)}</b></div>
+  ` : `
+    <div class="row"><span>المبلغ</span><b>${money(rc.amount)}</b></div>
+    <div class="row"><span>ملاحظة</span><b>${note}</b></div>
+    <div class="row"><span>الإجمالي</span><b>${money(rc.snapshot.total)}</b></div>
+    <div class="row"><span>المدفوع</span><b>${money(rc.snapshot.paid)}</b></div>
+    <div class="row"><span>المتبقي</span><b>${money(rc.snapshot.remaining)}</b></div>
+  `;
+
+  return `<!doctype html>
+  <html lang="ar" dir="rtl"><head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>${escapeHtml(rc.rid)} - ${title}</title>
+    <style>
+      :root{ --ink:#0b1220; --muted:rgba(2,6,23,.65); --b:rgba(2,6,23,.12); }
+      body{ margin:0; font-family:Tahoma,Arial; color:var(--ink); background:#f4f6fb; }
+      .sheet{ max-width:820px; margin:18px auto; background:#fff; border:1px solid var(--b); border-radius:18px; overflow:hidden; }
+      .head{ padding:16px 18px; background:linear-gradient(180deg,#0A2A66,#071A3F); color:#fff; }
+      .brand{ font-weight:900; font-size:20px; }
+      .meta{ opacity:.9; font-size:13px; margin-top:4px }
+      .body{ padding:16px 18px; }
+      .grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+      .card{ border:1px solid var(--b); border-radius:14px; padding:12px; background:#fff; }
+      .row{ display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px dashed rgba(2,6,23,.14); }
+      .row:last-child{ border-bottom:0 }
+      .label{ color:var(--muted); font-size:12px; }
+      .foot{ padding:12px 18px; color:var(--muted); font-size:12px; border-top:1px solid var(--b); background:rgba(2,6,23,.03); }
+      @media print{
+        body{ background:#fff; }
+        .sheet{ margin:0; border:0; border-radius:0; }
+      }
+    </style>
+  </head><body>
+    <div class="sheet">
+      <div class="head">
+        <div class="brand">${brand||"—"}</div>
+        <div class="meta">${phone||"—"} • ${date}</div>
+      </div>
+      <div class="body">
+        <div class="grid">
+          <div class="card">
+            <div class="label">رقم الوثيقة</div>
+            <div style="font-weight:900;font-size:18px">${escapeHtml(rc.rid)}</div>
+            <div class="row"><span>المجموعة</span><b>${escapeHtml(groupName)}</b></div>
+            <div class="row"><span>الطالب</span><b>${escapeHtml(rc.studentName)}</b></div>
+          </div>
+          <div class="card">
+            <div class="label">${title}</div>
+            ${lines}
+          </div>
+        </div>
+      </div>
+      <div class="foot">تم الإنشاء عبر Hedra PRO — يعمل بدون إنترنت.</div>
+    </div>
+  </body></html>`;
+};
+
+// A minimal PDF generator (single-page text) to download direct PDF without print dialog.
+function pdfEscape(s){ return String(s).replaceAll("\\\\","\\\\\\\\").replaceAll("(","\\\\(").replaceAll(")","\\\\)"); }
+function makeSimplePDF(lines, title="Hedra Receipt"){
+  // Very small PDF: Helvetica + text lines. (works in modern viewers)
+  const header = "%PDF-1.4\n";
+  const objs = [];
+  const offsets = [0];
+  const addObj = (s)=>{ offsets.push(header.length + objs.join("").length); objs.push(s); };
+  // 1) Catalog
+  addObj("1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj\n");
+  // 2) Pages
+  addObj("2 0 obj<< /Type /Pages /Kids [3 0 R] /Count 1 >>endobj\n");
+  // 3) Page
+  addObj("3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources<< /Font<< /F1 4 0 R >> >> /Contents 5 0 R >>endobj\n");
+  // 4) Font
+  addObj("4 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>endobj\n");
+  // 5) Content stream
+  const fontSize = 12;
+  const startX = 50;
+  let y = 800;
+  const leading = 16;
+  const content = [];
+  content.push("BT /F1 "+fontSize+" Tf "+startX+" "+y+" Td");
+  content.push("("+pdfEscape(title)+") Tj T*");
+  y -= leading;
+  content.push("0 -"+leading+" Td");
+  lines.forEach((ln,i)=>{
+    content.push("("+pdfEscape(ln)+") Tj T*");
+  });
+  content.push("ET");
+  const stream = content.join("\n")+"\n";
+  addObj(`5 0 obj<< /Length ${stream.length} >>stream\n${stream}endstream\nendobj\n`);
+
+  // xref
+  const body = objs.join("");
+  const xrefOffset = header.length + body.length;
+  let xref = "xref\n0 "+(offsets.length)+"\n0000000000 65535 f \n";
+  for(let i=1;i<offsets.length;i++){
+    xref += String(offsets[i]).padStart(10,"0")+" 00000 n \n";
+  }
+  const trailer = "trailer<< /Size "+offsets.length+" /Root 1 0 R >>\nstartxref\n"+xrefOffset+"\n%%EOF";
+  const pdf = header + body + xref + trailer;
+  return new Uint8Array([...pdf].map(ch=>ch.charCodeAt(0)));
+}
+
+function downloadBytes(bytes, filename, mime){
+  const blob = new Blob([bytes], {type:mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url; a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 500);
+}
+
+// Print preview overlay controller
+const printState = { mode:"full", htmlFull:"", htmlCompact:"", pdfLinesFull:[], pdfLinesCompact:[], filename:"document" };
+function openPrintPreview(opts){
+  printState.mode="full";
+  printState.htmlFull=opts.htmlFull||"";
+  printState.htmlCompact=opts.htmlCompact||opts.htmlFull||"";
+  printState.pdfLinesFull=opts.pdfLinesFull||[];
+  printState.pdfLinesCompact=opts.pdfLinesCompact||opts.pdfLinesFull||[];
+  printState.filename=opts.filename||"document";
+  $("printTitle").textContent = opts.title || "🖨 المعاينة";
+  $("printSub").textContent = opts.sub || "—";
+  $("btnPrintToggle").textContent = "فاتورة مختصرة";
+  const frame=$("printFrame");
+  frame.srcdoc = printState.htmlFull;
+  $("printOverlay").style.display="block";
+}
+function closePrintPreview(){ $("printOverlay").style.display="none"; $("printFrame").srcdoc=""; }
+$("btnPrintClose").onclick=closePrintPreview;
+$("printOverlay").addEventListener("click",(e)=>{ if(e.target===$("printOverlay")) closePrintPreview(); });
+
+$("btnPrintToggle").onclick=()=>{
+  const frame=$("printFrame");
+  if(printState.mode==="full"){
+    printState.mode="compact";
+    $("btnPrintToggle").textContent="فاتورة كاملة";
+    frame.srcdoc = printState.htmlCompact;
+  } else {
+    printState.mode="full";
+    $("btnPrintToggle").textContent="فاتورة مختصرة";
+    frame.srcdoc = printState.htmlFull;
+  }
+};
+
+$("btnPrintNow").onclick=()=>{
+  const frame=$("printFrame");
+  const w = frame.contentWindow;
+  if(!w) return toast("فشل المعاينة");
+  try{ w.focus(); w.print(); }catch(e){ console.error(e); toast("تعذّرت الطباعة"); }
+};
+
+$("btnPrintPDF").onclick=()=>{
+  const lines = (printState.mode==="compact") ? printState.pdfLinesCompact : printState.pdfLinesFull;
+  if(!lines.length) return toast("لا يوجد محتوى PDF");
+  const bytes = makeSimplePDF(lines, (printState.mode==="compact"?"Compact ":"")+printState.filename);
+  downloadBytes(bytes, printState.filename + (printState.mode==="compact"?"_compact":"") + ".pdf", "application/pdf");
+};
+
+
 
   // vault (encrypted at rest)
   const DB_KEY="hedra_v6_teacher_vault";
@@ -1099,7 +1272,62 @@ $("btnStudentDelete").onclick=async ()=>{
     if(on) showStudentQR(s,g);
   };
 
-  $("btnPayPrint").onclick=()=>window.print();
+  $("btnPayPrint").onclick=()=>{
+  if(!payCtx) return;
+  const {g,c,s}=payCtx;
+  const t=totals(g,c,s);
+  const title="كشف الطالب";
+  const brand=escapeHtml(db.settings.brandName||"");
+  const htmlFull = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>${title}</title>
+    <style>
+      body{margin:0;font-family:Tahoma,Arial;background:#f4f6fb}
+      .sheet{max-width:820px;margin:18px auto;background:#fff;border:1px solid rgba(2,6,23,.12);border-radius:18px;overflow:hidden}
+      .head{padding:16px 18px;background:linear-gradient(180deg,#0A2A66,#071A3F);color:#fff}
+      .brand{font-weight:900;font-size:20px}
+      .meta{opacity:.9;font-size:13px;margin-top:4px}
+      .body{padding:16px 18px}
+      .row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed rgba(2,6,23,.14)}
+      .row:last-child{border-bottom:0}
+      .foot{padding:12px 18px;color:rgba(2,6,23,.65);font-size:12px;border-top:1px solid rgba(2,6,23,.12);background:rgba(2,6,23,.03)}
+      @media print{ body{background:#fff}.sheet{margin:0;border:0;border-radius:0} }
+    </style>
+  </head><body>
+    <div class="sheet">
+      <div class="head">
+        <div class="brand">${brand||"—"}</div>
+        <div class="meta">كشف حالة الطالب • ${new Date().toLocaleString("ar-EG")}</div>
+      </div>
+      <div class="body">
+        <div class="row"><span>المجموعة</span><b>${escapeHtml(g.name)}</b></div>
+        <div class="row"><span>الطالب</span><b>${escapeHtml(s.name)}</b></div>
+        <div class="row"><span>الإجمالي</span><b>${escapeHtml(String(t.total))}</b></div>
+        <div class="row"><span>المدفوع</span><b>${escapeHtml(String(t.paid))}</b></div>
+        <div class="row"><span>المتبقي</span><b>${escapeHtml(String(t.remaining))}</b></div>
+      </div>
+      <div class="foot">Hedra PRO — Offline</div>
+    </div>
+  </body></html>`;
+  const pdfLines = [
+    (db.settings.brandName||"—"),
+    "Student Report",
+    "Group: "+g.name,
+    "Student: "+s.name,
+    "Total: "+t.total,
+    "Paid: "+t.paid,
+    "Remaining: "+t.remaining
+  ];
+  openPrintPreview({
+    title:"🖨 كشف الطالب",
+    sub:"معاينة قبل الطباعة + PDF مباشر",
+    htmlFull: htmlFull,
+    htmlCompact: htmlFull, // same for now
+    pdfLinesFull: pdfLines,
+    pdfLinesCompact: pdfLines,
+    filename: "student_"+(s.name||"").replaceAll(" ","_")
+  });
+};
   $("payOverlay").addEventListener("click",(e)=>{ if(e.target===$("payOverlay")) closePay(); });
 
   $("btnPaySet").onclick=()=>{ payMode="set"; $("payAmountLabel").textContent="تعديل المدفوع"; $("payAmount").value=String(paid(payCtx.c,payCtx.s.id)); $("payAmountWrap").style.display="flex"; };
@@ -1144,17 +1372,49 @@ $("btnStudentDelete").onclick=async ()=>{
   };
 
   $("btnPayReceipt").onclick=async ()=>{
-    if(!payCtx) return;
-    if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
-    const amt=Number(prompt("قيمة الإيصال", "0")||"0"); if(!(amt>0)) return;
-    const note=prompt("ملاحظة (اختياري)")||"";
-    const {g,c,s}=payCtx;
-    const rc=makeReceipt(g,c,s,amt,note);
-    await save(); toast("تم إنشاء "+rc.rid);
-    const w=window.open("","_blank");
-    w.document.write("<meta charset='utf-8'><title>"+rc.rid+"</title>"+receiptPrintHTML(rc,g.name)+"<script>window.onload=()=>window.print();</script>");
-    w.document.close();
-  };
+  if(!payCtx) return;
+  if(role!==ROLE.ADMIN) return toast("للـ مدير فقط");
+  const amt=Number(prompt("قيمة الإيصال", "0")||"0"); if(!(amt>0)) return;
+  const note=prompt("ملاحظة (اختياري)")||"";
+  const {g,c,s}=payCtx;
+  const rc=makeReceipt(g,c,s,amt,note);
+  await save(); toast("تم إنشاء "+rc.rid);
+
+  const full = receiptPrintHTML(rc, g.name, "full");
+  const compact = receiptPrintHTML(rc, g.name, "compact");
+
+  const pdfFull = [
+    (db.settings.brandName||"—"),
+    "Receipt: "+rc.rid,
+    "Student: "+rc.studentName,
+    "Group: "+g.name,
+    "Amount: "+rc.amount,
+    "Total: "+rc.snapshot.total,
+    "Paid: "+rc.snapshot.paid,
+    "Remaining: "+rc.snapshot.remaining,
+    (rc.note?("Note: "+rc.note):"")
+  ].filter(Boolean);
+
+  const pdfCompact = [
+    (db.settings.brandName||"—"),
+    "Receipt: "+rc.rid,
+    "Student: "+rc.studentName,
+    "Group: "+g.name,
+    "Total: "+rc.snapshot.total,
+    "Paid: "+rc.snapshot.paid,
+    "Remaining: "+rc.snapshot.remaining
+  ].filter(Boolean);
+
+  openPrintPreview({
+    title:"🧾 "+rc.rid,
+    sub:"إيصال الطالب — جاهز للطباعة أو PDF",
+    htmlFull: full,
+    htmlCompact: compact,
+    pdfLinesFull: pdfFull,
+    pdfLinesCompact: pdfCompact,
+    filename: rc.rid
+  });
+};
 
   function renderAttendance(g,c,s){
     const wrap=$("attList"); wrap.innerHTML="";
@@ -1280,14 +1540,18 @@ $("btnStudentDelete").onclick=async ()=>{
   };
 
   // Lock / Unlock
-  const openLock=(msg)=>{ $("lockHint").textContent=msg; $("lockOverlay").style.display="block"; };
+  const openLock=(msg)=>{ $("lockHint").textContent=msg; $("lockOverlay").style.display="block"; const b=$("btnUnlock"); if(b){ b.disabled=false; b.style.opacity="1"; } $("pinInput").focus(); };
   const closeLock=()=>{ $("lockOverlay").style.display="none"; $("pinInput").value=""; };
   $("btnLockClear").onclick=()=>$("pinInput").value="";
   $("roleAdmin").onclick=()=>{ role=ROLE.ADMIN; toast("مدير"); renderTop(); };
   $("roleAssistant").onclick=()=>{ role=ROLE.ASSISTANT; toast("مساعد"); renderTop(); };
   $("roleView").onclick=()=>{ role=ROLE.VIEW; toast("عرض فقط"); renderTop(); };
 
-  $("btnUnlock").onclick=async ()=>{
+  $("pinInput").addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){ e.preventDefault(); $("btnUnlock").click(); }
+});
+
+$("btnUnlock").onclick=async ()=>{
     const btn=$("btnUnlock");
     btn.disabled=true;
     btn.style.opacity="0.7";

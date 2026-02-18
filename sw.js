@@ -1,5 +1,5 @@
 // Hedra V6.2 PRO – Service Worker (cache-first core + offline fallback)
-const CACHE="hedra-v6-2-pro-"+(new Date().toISOString().slice(0,10)).replaceAll("-","");
+const CACHE="hedra-v6-3-printpro-"+(new Date().toISOString().slice(0,10)).replaceAll("-","");
 
 const SCOPE = self.registration.scope; // e.g. https://user.github.io/Hedra/
 const CORE = [
