@@ -2277,17 +2277,17 @@ function renderAll(){
   // splash hide on any key/click
 const splash = document.getElementById("splash");
 
-function closeSplash(){
-  if(!splash) return;
-  splash.style.display="none";
-  window.removeEventListener("keydown", closeSplash);
-  window.removeEventListener("click", closeSplash);
-  window.removeEventListener("touchstart", closeSplash);
+function closeSplash() {
+  if (!splash) return;
+  splash.style.display = "none";
+}
+
+if (splash) {
+  splash.addEventListener("click", closeSplash);
+  splash.addEventListener("touchstart", closeSplash);
 }
 
 window.addEventListener("keydown", closeSplash);
-window.addEventListener("click", closeSplash);
-window.addEventListener("touchstart", closeSplash);
 })();
   </script>
 </body>
