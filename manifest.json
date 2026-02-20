@@ -1,7 +1,7 @@
 {
-  "name": "Hedra V8 PRO Teacher Edition",
-  "short_name": "Hedra PRO",
-  "start_url": "./",
+  "name": "Hedra V9 Local Pro",
+  "short_name": "Hedra V9",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#07152D",
   "theme_color": "#0A2A66",
