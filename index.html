@@ -2275,15 +2275,19 @@ function renderAll(){
   renderAll();
 
   // splash hide on any key/click
-  const splash=document.getElementById("splash");
-  function closeSplash(){
-    if(!splash) return;
-    splash.style.display="none";
-    window.removeEventListener("keydown", closeSplash);
-    window.removeEventListener("pointerdown", closeSplash);
-  }
-  window.addEventListener("keydown", closeSplash);
-  window.addEventListener("pointerdown", closeSplash);
+const splash = document.getElementById("splash");
+
+function closeSplash(){
+  if(!splash) return;
+  splash.style.display="none";
+  window.removeEventListener("keydown", closeSplash);
+  window.removeEventListener("click", closeSplash);
+  window.removeEventListener("touchstart", closeSplash);
+}
+
+window.addEventListener("keydown", closeSplash);
+window.addEventListener("click", closeSplash);
+window.addEventListener("touchstart", closeSplash);
 })();
   </script>
 </body>
