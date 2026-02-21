@@ -2248,60 +2248,54 @@ function renderAll(){
   renderDashboard();
 }
 
-/* ---------- Init ---------- */
-(async function init(){
-  // load
-  const loaded = await tryLoadDB();
-  if(loaded && loaded.corrupted){
-    const ok = recoverFromBackups();
-    if(!ok){
-      // fallback fresh
-      db = { version: 9, settings:{currentGroupId:""}, groups:[] };
+  /* ---------- Init ---------- */
+  (async function init(){
+    // load
+    const loaded = await tryLoadDB();
+    if(loaded && loaded.corrupted){
+      const ok = recoverFromBackups();
+      if(!ok){
+        db = { version: 9, settings:{currentGroupId:""}, groups:[] };
+        ensureDefaults();
+        await saveDB("fresh");
+      }else{
+        ensureDefaults();
+        await saveDB("recovered");
+      }
+    }else if(loaded){
+      db = loaded;
       ensureDefaults();
-      await saveDB("fresh");
+      await saveDB("load");
     }else{
       ensureDefaults();
-      await saveDB("recovered");
+      await saveDB("fresh");
     }
-  }else if(loaded){
-    db = loaded;
-    ensureDefaults();
-    await saveDB("load"); // ensure meta + backup
-  }else{
-    ensureDefaults();
-    await saveDB("fresh");
-  }
 
-  renderAll();
+    renderAll();
+  })();
 
-const splash = document.getElementById("splash");
+  /* ---------- Splash Screen ---------- */
+  document.addEventListener("DOMContentLoaded", function () {
+    const splash = document.getElementById("splash");
 
-if (splash) {
-  setTimeout(() => {
-    splash.style.display = "none";
-  }, 1000); // تختفي بعد 1 ثانية
-}
-const splash = document.getElementById("splash");
-
-function closeSplash() {
-  if (!splash) return;
-  splash.style.display = "none";
-}
-
-if (splash) {
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const splash = document.getElementById("splash");
-  if (splash) {
-    setTimeout(function () {
+    function hideSplash() {
+      if (!splash) return;
+      splash.style.transition = "opacity 0.5s ease";
       splash.style.opacity = "0";
-      splash.style.transition = "opacity 0.6s ease";
-      setTimeout(function () {
+      setTimeout(() => {
         splash.style.display = "none";
-      }, 600);
-    }, 1200);
-  }
-});
+      }, 500);
+    }
+
+    // تختفي تلقائي بعد 1.2 ثانية
+    setTimeout(hideSplash, 1200);
+
+    // أو عند الضغط على أي مفتاح
+    document.addEventListener("keydown", hideSplash);
+
+    // أو عند الضغط بالماوس
+    document.addEventListener("click", hideSplash);
+  });
 </script>
 </body>
 </html>
