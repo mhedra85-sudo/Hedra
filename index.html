@@ -2274,7 +2274,13 @@ function renderAll(){
 
   renderAll();
 
-  // splash hide on any touch/click
+const splash = document.getElementById("splash");
+
+if (splash) {
+  setTimeout(() => {
+    splash.style.display = "none";
+  }, 1000); // تختفي بعد 1 ثانية
+}
 const splash = document.getElementById("splash");
 
 function closeSplash() {
